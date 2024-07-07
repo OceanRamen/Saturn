@@ -8,9 +8,10 @@ priority = 0
 target = "functions/misc_functions.lua"
 pattern = "function init_localization()"
 position = "after"
-payload = 'Saturn.ST.addCounterLocalization()'
+payload = 'if Saturn.USER.SETTINGS.STATTRACK then Saturn.ST.addCounterLocalization() end'
 match_indent = true
 overwrite = false
+
 
 [[patches]] #   Card:init()
 [patches.pattern]

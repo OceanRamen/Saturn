@@ -1,0 +1,38 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]] #   Reduce padding of "OPTIONS" button in main menu
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "UIBox_button{button = 'options', colour = G.C.ORANGE, minw = 2.65, minh = 1.35, label = {localize('b_options_cap')}, scale = text_scale * 1.2, col = true},"
+position = "at"
+payload = "UIBox_button{button = 'options', colour = G.C.ORANGE, minw = 2, minh = 1.35, label = {localize('b_options_cap')}, scale = text_scale * 1.2, col = true},"
+match_indent = true
+overwrite = true
+
+[[patches]] #   Reduce padding of "QUIT" button in main menu
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "G.F_QUIT_BUTTON and UIBox_button{button = quit_func, colour = G.C.RED, minw = 2.65, minh = 1.35, label = {localize('b_quit_cap')}, scale = text_scale * 1.2, col = true} or nil,"
+position = "at"
+payload = "G.F_QUIT_BUTTON and UIBox_button{button = quit_func, colour = G.C.RED, minw = 2, minh = 1.35, label = {localize('b_quit_cap')}, scale = text_scale * 1.2, col = true} or nil,"
+match_indent = true
+overwrite = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})"
+position = "after"
+payload = "local saturn_settings = UIBox_button({button = 'saturnUI_prefs_button', label = {'Saturn'}, colour = G.C.SECONDARY_SET.Planet, minw = 5, focus_args = {snap_to = true}})"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "local t = create_UIBox_generic_options({ contents = {"
+position = "after"
+payload = "saturn_settings,"
+match_indent = true
