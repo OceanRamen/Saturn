@@ -9,7 +9,7 @@ A balatro Quality Of Life Mod
 
 ### Todo
 
-- [ ] In-game settings page
+- [ ] In-game settings page #feat 2024-07-07
 
 ### In Progress
 
