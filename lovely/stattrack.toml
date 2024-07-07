@@ -1,0 +1,13 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/misc_functions.lua"
+pattern = "function init_localization()"
+position = "after"
+payload = 'Saturn.STATTRACK.addCounterLocalization()'
+match_indent = true
+overwrite = false
