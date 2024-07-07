@@ -1,6 +1,6 @@
 # QualityOfBalatro
 
-A balatro Quality Of Life Mod
+## A balatro Quality Of Life Mod
 
 ### Format
 
