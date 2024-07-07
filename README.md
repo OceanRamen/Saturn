@@ -4,7 +4,7 @@
 
 ## Features
 
-## Instalation
+## Installation
 
 ## Request a Feature
 
