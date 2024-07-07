@@ -51,9 +51,84 @@ match_indent = true
 overwrite = false
 
 # ----------------------------------------------------------------
+#MANUAL LOC_VAR OVERRIDE
+
+#Raised Fist
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Raised Fist' then"
+position = "at"
+payload = "elseif self.ability.name == 'Raised Fist' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Supernova
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Supernova' then"
+position = "at"
+payload = "elseif self.ability.name == 'Supernova' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Mime
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Mime' then"
+position = "at"
+payload = "elseif self.ability.name == 'Mime' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Marble
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Marble Joker' then"
+position = "at"
+payload = "elseif self.ability.name == 'Marble Joker' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Burnt
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Burnt Joker' then"
+position = "at"
+payload = "elseif self.ability.name == 'Burnt Joker' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Chicot
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Chicot' then"
+position = "at"
+payload = "elseif self.ability.name == 'Chicot' then loc_vars = {}"
+match_indent = true
+overwrite = true
+
+#Cartomancer
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Cartomancer' then"
+position = "at"
+payload = "elseif self.ability.name == 'Cartomancer' then loc_vars = {}"
+match_indent = true
+overwrite = false
+
+# ----------------------------------------------------------------
+#COUNTER INCREMENTATION
+#money generators
 
 # Golden Joker
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Golden Joker' then"
@@ -63,7 +138,7 @@ match_indent = true
 overwrite = false
 
 # Golden Ticket
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "context.other_card.ability.name == 'Gold Card' then"
@@ -73,7 +148,7 @@ match_indent = true
 overwrite = false
 
 # Business Card
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "pseudorandom('business') < G.GAME.probabilities.normal/self.ability.extra then"
@@ -83,7 +158,7 @@ match_indent = true
 overwrite = false
 
 # Delayed Gratification
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Delayed Gratification' and G.GAME.current_round.discards_used == 0 and G.GAME.current_round.discards_left > 0 then"
@@ -93,7 +168,7 @@ match_indent = true
 overwrite = false
 
 # Faceless Joker
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if face_cards >= self.ability.extra.faces then"
@@ -103,7 +178,7 @@ match_indent = true
 overwrite = false
 
 # To Do List
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'To Do List' and context.scoring_name == self.ability.to_do_poker_hand then"
@@ -113,7 +188,7 @@ match_indent = true
 overwrite = false
 
 # Rough Gem
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'context.other_card:is_suit("Diamonds") then'
@@ -123,7 +198,7 @@ match_indent = true
 overwrite = false
 
 # Matador
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'if G.GAME.blind.triggered then'
@@ -133,7 +208,7 @@ match_indent = true
 overwrite = false
 
 # Cloud 9
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Cloud 9' and self.ability.nine_tally and self.ability.nine_tally > 0 then"
@@ -143,7 +218,7 @@ match_indent = true
 overwrite = false
 
 # Rocket
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Rocket' then"
@@ -153,7 +228,7 @@ match_indent = true
 overwrite = false
 
 # Satellite
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if planets_used == 0 then return end"
@@ -163,7 +238,7 @@ match_indent = true
 overwrite = false
 
 # Mail-In Rebate
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "context.other_card:get_id() == G.GAME.current_round.mail_card.id then"
@@ -173,7 +248,7 @@ match_indent = true
 overwrite = false
 
 # Gift Card
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "v.ability.extra_value = (v.ability.extra_value or 0) + self.ability.extra"
@@ -183,7 +258,7 @@ match_indent = true
 overwrite = false
 
 # Reserved Parking
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + self.ability.extra.dollars"
@@ -192,8 +267,30 @@ payload = "self.counter = self.counter + self.ability.extra.dollars"
 match_indent = true
 overwrite = false
 
+# Trading Card
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = "G.GAME.current_round.discards_used <= 0 and #context.full_hand == 1 then"
+position = "after"
+payload = "self.counter = self.counter + self.ability.extra"
+match_indent = true
+overwrite = false
+
+# To the Moon
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'To the Moon' then"
+position = "after"
+payload = "self.counter = self.counter + self.ability.extra"
+match_indent = true
+overwrite = false
+
+#card generators
+
 # 8 Ball
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if (context.other_card:get_id() == 8) and (pseudorandom('8ball') < G.GAME.probabilities.normal/self.ability.extra) then"
@@ -203,7 +300,7 @@ match_indent = true
 overwrite = false
 
 # Space Joker
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Space Joker' and pseudorandom('space') < G.GAME.probabilities.normal/self.ability.extra then"
@@ -213,7 +310,7 @@ match_indent = true
 overwrite = false
 
 # DNA
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "G.playing_card = (G.playing_card and G.playing_card + 1) or 1"
@@ -223,7 +320,7 @@ match_indent = true
 overwrite = false
 
 # Sixth Sense
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = "if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then"
@@ -233,7 +330,7 @@ match_indent = true
 overwrite = false
 
 # Superposition
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'if aces >= 1 and next(context.poker_hands["Straight"]) then'
@@ -243,7 +340,7 @@ match_indent = true
 overwrite = false
 
 # Seance
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'if next(context.poker_hands[self.ability.extra.poker_hand]) then'
@@ -253,7 +350,7 @@ match_indent = true
 overwrite = false
 
 # Riff-Raff
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'local jokers_to_create = math.min(2, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))'
@@ -263,10 +360,787 @@ match_indent = true
 overwrite = false
 
 # Vagabond
-[[patches]] #   Counter incrementation
+[[patches]] 
 [patches.pattern]
 target = "card.lua"
 pattern = 'if G.GAME.dollars <= self.ability.extra then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Hallucination
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = "if pseudorandom('halu'..G.GAME.round_resets.ante) < G.GAME.probabilities.normal/self.ability.extra then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Certificate
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = 'local _card = create_playing_card({'
+position = "before"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Cartomancer
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Cartomancer' and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# +mult jokers
+
+# Jimbo
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Joker' then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Greedy, Lusty, Wrathful, Gluttenous
+[[patches]] 
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:is_suit(self.ability.extra.suit) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Jolly, Zany, Mad, Crazy, Droll
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if self.ability.t_mult > 0 and next(context.poker_hands[self.ability.type]) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Halfsies
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Half Joker' and # context.full_hand <= self.ability.extra.size then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Ceremonial Dagger
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'G.GAME.joker_buffer = G.GAME.joker_buffer - 1'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Mystic Summit
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Mystic Summit' and G.GAME.current_round.discards_left == self.ability.extra.d_remaining then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Raised Fist
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'local raised_card = nil'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Fibonacci
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:get_id() == 14) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Abstract
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'local x = 0'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Gros Michel
+#TODO: REGEX
+
+# Even Steven
+# TODO: REGEX
+
+# Supernova
+#TODO: REGEX
+
+# Ride the Bus
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Ride the Bus' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Green Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Green Joker' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Red Card
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Red Card' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Erosion
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Erosion' and (G.GAME.starting_deck_size - # G.playing_cards) > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Fortune Teller
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Fortune Teller' and G.GAME.consumeable_usage_total and G.GAME.consumeable_usage_total.tarot > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Flash Card
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Flash Card' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Popcorn
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Popcorn' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Trousers
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Spare Trousers' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Smiley
+# TODO: REGEX
+
+# Swashbonkler
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Swashbuckler' and self.ability.mult > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Onyx Agate
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:is_suit("Clubs") then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Shoot the Moon
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:get_id() == 12 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Bootstraps
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Bootstraps' and math.floor((G.GAME.dollars + (G.GAME.dollar_buffer or 0))/self.ability.extra.dollars) >= 1 then "
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# +chips joker
+
+# Sly, Crafty, Clever, Devious
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if self.ability.t_chips > 0 and next(context.poker_hands[self.ability.type]) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Banner
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Banner' and G.GAME.current_round.discards_left > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Scary Face
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:is_face()) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Odd Todd
+# TODO: REGEX
+
+# Runner
+# TODO: REGEX
+
+# Icecream
+# TODO: REGEX
+
+# Blue Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Blue Joker' and # G.deck.cards > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Hiker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "context.other_card.ability.perma_bonus = context.other_card.ability.perma_bonus + self.ability.extra"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Square
+# TODO: REGEX
+
+# Stone Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Stone Joker' and self.ability.stone_tally > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Bull
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Bull' and (G.GAME.dollars + (G.GAME.dollar_buffer or 0)) > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Castle
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Castle' and (self.ability.extra.chips > 0) then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Wee
+# TODO: REGEX
+
+# Stuntman
+# TODO: REGEX
+
+# xmult jokers
+
+# Stencil
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if (G.jokers.config.card_limit - # G.jokers.cards) > 0 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Loyalty Card
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'self.ability.loyalty_remaining = (self.ability.extra.every-1-(G.GAME.hands_played - self.ability.hands_played_at_create))%(self.ability.extra.every+1)'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Steel Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Steel Joker' and self.ability.steel_tally > 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Blackboard
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'local black_suits, all_cards = 0, 0'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Constellation
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Constellation' and not context.blueprint and context.consumeable.ability.set == 'Planet' then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Cavendish
+#TODO: REGEX
+
+# Card Sharp
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Card Sharp' and G.GAME.hands[context.scoring_name] and G.GAME.hands[context.scoring_name].played_this_round > 1 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Madness
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Madness' and not context.blueprint and not context.blind.boss then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Vampire
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Vampire' and not context.blueprint then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Hologram
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'and context.cards and context.cards[1] then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Baron
+# counts activations on debuffed cards. would need to regex to prevent that.
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:get_id() == 13 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Obelisk
+[[patches]] #    counter decrement on reset
+[patches.pattern]
+target = "card.lua"
+pattern = 'if reset then'
+position = "after"
+payload = "self.counter = self.counter - 1"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Obelisk' and not context.blueprint then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Photograph
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'local first_face = nil'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Lucky Cat
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Lucky Cat' and context.other_card.lucky_trigger and not context.blueprint then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Baseball Card
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Baseball Card' and context.other_joker.config.center.rarity == 2 and self ~= context.other_joker then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Ancient Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:is_suit(G.GAME.current_round.ancient_card.suit) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Ramen
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Ramen' and not context.blueprint then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Campfire
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Campfire' and not context.blueprint then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Acrobat
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Acrobat' and G.GAME.current_round.hands_left == 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Throwback
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'self.ability.x_mult = 1 + G.GAME.skips*self.ability.extra'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Bloodstone
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "pseudorandom('bloodstone') < G.GAME.probabilities.normal/self.ability.extra.odds then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Glass Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if glass_cards > 0 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Flower Pot
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'suits["Clubs"] > 0 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Idol
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:is_suit(G.GAME.current_round.idol_card.suit) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Seeing Double
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 and (self.ability.type == '' or next(context.poker_hands[self.ability.type])) then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Hit the Road
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Hit the Road' and self.ability.x_mult > 1 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Duo, Trio, Family, Order, Tribe
+# TODO: find where they are calculated
+
+# Drivers License
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if (self.ability.driver_tally or 0) >= 16 then '
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Canio
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Caino' and self.ability.caino_xmult > 1 then "
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Triboulet
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '(context.other_card:get_id() == 12 or context.other_card:get_id() == 13) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Yorick
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if self.ability.yorick_discards <= 1 then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Miscellaneous jokers
+
+# Walkie Talkie
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "(context.other_card:get_id() == 10 or context.other_card:get_id() == 4) then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# scholar
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "context.other_card:get_id() == 14 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Mime
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = '(next(context.card_effects[1]) or # context.card_effects > 1) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Marble Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Marble Joker' and not (context.blueprint_card or self).getting_sliced  then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Dusk
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Dusk' and G.GAME.current_round.hands_left == 0 then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Hack
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card:get_id() == 5) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Burglar
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Burglar' and not (context.blueprint_card or self).getting_sliced then"
+position = "after"
+payload = "self.counter = self.counter + self.ability.extra"
+match_indent = true
+overwrite = false
+
+# Sock and Buskin
+# TODO: REGEX
+
+# Hanging Chad
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'context.other_card == context.scoring_hand[1]) then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Burnt Joker
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.ability.name == 'Burnt Joker' and G.GAME.current_round.discards_used <= 0 and not context.hook then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Chicot
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'and context.blind.boss and not self.getting_sliced then'
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Perkeo
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'if G.consumeables.cards[1] then'
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
