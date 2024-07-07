@@ -1,4 +1,4 @@
-# QualityOfBalatro[^Name]
+# QualityOfBalatro
 
 ## About
 
@@ -10,5 +10,3 @@
 
 ## Report a Bug
 
-
-[^Name]: Name Subject to change
