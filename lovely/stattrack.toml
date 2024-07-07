@@ -8,6 +8,6 @@ priority = 0
 target = "functions/misc_functions.lua"
 pattern = "function init_localization()"
 position = "after"
-payload = 'Saturn.STATTRACK.addCounterLocalization()'
+payload = 'Saturn.ST.addCounterLocalization()'
 match_indent = true
 overwrite = false

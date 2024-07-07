@@ -7,4 +7,10 @@ priority = 0
 [patches.copy]
 target = "main.lua"
 position = "append"
-sources = ["core/core.lua", "modules/nativefs.lua"]
+sources = ["core/core.lua"]
+
+[[patches]]
+[patches.module]
+source = 'modules/nativefs.lua'
+before = 'main.lua'
+name = 'nativefs'
