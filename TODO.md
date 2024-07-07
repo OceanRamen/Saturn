@@ -1,4 +1,4 @@
-# QualityOfBalatro
+# Saturn
 
 ## A balatro Quality Of Life Mod
 

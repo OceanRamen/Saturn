@@ -1,4 +1,4 @@
-# QualityOfBalatro
+# Saturn
 
 ## About
 
@@ -9,4 +9,3 @@
 ## Request a Feature
 
 ## Report a Bug
-
