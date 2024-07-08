@@ -1,5 +1,117 @@
 local lovely = require("lovely")
 local nativefs = require("nativefs")
+Saturn.UI = {}
+Saturn.UI.COLOURS = {
+  MAIN = G.C.SECONDARY_SET.Planet,
+  MENUS = {
+    BACKGROUND = G.C.L_BLACK,
+    SUB_OPTION_BUTTON = G.C.BOOSTER,
+    TAB_HEADING_BUTTON = G.C.SECONDARY_SET.Planet,
+    CHECK_ACTIVE = G.C.BOOSTER,
+  },
+}
+
+local G_FUNCS_options_ref = G.FUNCS.options
+G.FUNCS.options = function(e)
+  G_FUNCS_options_ref(e)
+  nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+  G:set_language()
+end
+
+
+--- UI Helper function
+function saturnUI_create_toggle(args)
+  args = args or {}
+  args.active_colour = args.active_colour or G.C.RED
+  args.inactive_colour = args.inactive_colour or G.C.BLACK
+  args.w = args.w or 3
+  args.h = args.h or 0.5
+  args.scale = args.scale or 1
+  args.label = args.label or nil
+  args.label_scale = args.label_scale or 0.4
+  args.ref_table = args.ref_table or {}
+  args.ref_value = args.ref_value or "test"
+
+  local check = Sprite(0, 0, 0.5 * args.scale, 0.5 * args.scale, G.ASSET_ATLAS["icons"], { x = 1, y = 0 })
+  check.states.drag.can = false
+  check.states.visible = false
+
+  local info = nil
+  if args.info then
+    info = {}
+    for k, v in ipairs(args.info) do
+      table.insert(info, {
+        n = G.UIT.R,
+        config = { align = "cm", minh = 0.05 },
+        nodes = {
+          { n = G.UIT.T, config = { text = v, scale = 0.25, colour = G.C.UI.TEXT_LIGHT } },
+        },
+      })
+    end
+    info = { n = G.UIT.R, config = { align = "cm", minh = 0.05 }, nodes = info }
+  end
+
+  local t = {
+    n = args.col and G.UIT.C or G.UIT.R,
+    config = { align = "cm", padding = 0.1, r = 0.1, colour = G.C.CLEAR, focus_args = { funnel_from = true } },
+    nodes = {
+      {
+        n = G.UIT.C,
+        config = { align = "cl", minw = 0.3 * args.w },
+        nodes = {
+          {
+            n = G.UIT.C,
+            config = { align = "cm", r = 0.1, colour = G.C.BLACK },
+            nodes = {
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  r = 0.1,
+                  padding = 0.03,
+                  minw = 0.4 * args.scale,
+                  minh = 0.4 * args.scale,
+                  outline_colour = G.C.WHITE,
+                  outline = 1.2 * args.scale,
+                  line_emboss = 0.5 * args.scale,
+                  ref_table = args,
+                  colour = args.inactive_colour,
+                  button = "toggle_button",
+                  button_dist = 0.2,
+                  hover = true,
+                  toggle_callback = args.callback,
+                  func = "toggle",
+                  focus_args = { funnel_to = true },
+                },
+                nodes = {
+                  { n = G.UIT.O, config = { object = check } },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  }
+  if args.label then
+    ins = {
+      n = G.UIT.C,
+      config = { align = "cr", minw = args.w },
+      nodes = {
+        { n = G.UIT.T, config = { text = args.label, scale = args.label_scale, colour = G.C.UI.TEXT_LIGHT } },
+        { n = G.UIT.B, config = { w = 0.1, h = 0.1 } },
+      },
+    }
+    table.insert(t.nodes, 1, ins)
+  end
+  if args.info then
+    t = { n = args.col and G.UIT.C or G.UIT.R, config = { align = "cm" }, nodes = {
+      t,
+      info,
+    } }
+  end
+  return t
+end
 
 --- UI Helper function
 function saturnUI_create_tabs(args)
@@ -65,6 +177,7 @@ function saturnUI_create_tabs(args)
       id = "tab_but_" .. (v.label or ""),
       ref_table = v,
       button = "change_tab",
+      colour = args.colour,
       label = { v.label },
       minh = 0.8 * args.scale,
       minw = 2.5 * args.scale,
@@ -272,7 +385,7 @@ function saturnUI_create_UIBox_generic_options(args)
   }
 end
 
---- title screen buttons ref function 
+--- title screen buttons ref function
 local create_UIBox_main_menu_buttonsRef = create_UIBox_main_menu_buttons
 function create_UIBox_main_menu_buttons()
   local text_scale = 0.45
@@ -295,88 +408,179 @@ function create_UIBox_main_menu_buttons()
   return menu
 end
 
-
 --- StatTrack
 function G.FUNCS.stattrack_options(e) -- StatTrack options button
   G.SETTINGS.paused = true
+  left_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  right_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  local stattrack_settings = {
+    { id = "MONEY_GEN", name = "Money Generating Jokers" },
+    { id = "CARD_GEN", name = "Card Generating Jokers" },
+    { id = "PLUS_CHIPS", name = "Plus Chips Jokers"},
+    { id = "PLUS_MULT", name = "Plus Mult Jokers"},
+    { id = "X_MULT", name = "X-Mult Jokers"},
+    { id = "MISCELLANEOUS", name = "Misc. Jokers"},
+  }
+  for k, v in pairs(stattrack_settings) do
+    right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
+      label = "",
+      ref_table = Saturn.USER.SETTINGS.STATTRACK,
+      ref_value = v.id,
+      active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+      callback = function(x)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+      end,
+    })
+    left_settings.nodes[#left_settings.nodes + 1] = {
+      n = G.UIT.R,
+      config = { align = "cl", padding = 0.1 },
+      nodes = {
+        {
+          n = G.UIT.R,
+          config = { align = "cl", padding = 0.075 },
+          nodes = {
+            {
+              n = G.UIT.O,
+              config = {
+                object = DynaText({
+                  string = v.name,
+                  colours = { G.C.WHITE },
+                  shadow = false,
+                  scale = 0.5,
+                }),
+              },
+            },
+          },
+        },
+      },
+    }
+  end
+  local t = create_UIBox_generic_options({
+    back_func = "saturnUI_prefs_button",
+    colour = Saturn.UI.COLOURS.MENUS.BACKGROUND,
+    contents = {
+      {
+        n = G.UIT.R,
+        config = { align = "cm" },
+        nodes = {
+          {
+            n = G.UIT.O,
+            config = {
+              object = DynaText({
+                string = "StatTrack Options",
+                colours = { G.C.WHITE },
+                shadow = true,
+                scale = 0.4,
+              }),
+            },
+          },
+        },
+      },
+      {
+        n = G.UIT.R,
+        config = {
+          align = "tm",
+          padding = 0,
+        },
+        nodes = {
+          left_settings,
+          right_settings,
+        },
+      },
+    },
+  })
   G.FUNCS.overlay_menu({
-    definition = saturnUI_create_UIBox_stattrack_preferences_button(),
+    definition = t,
   })
 end
 
-function saturnUI_create_UIBox_stattrack_preferences_button() -- StatTrack options box
+--- DeckViewer+
+function G.FUNCS.deckviewer_options(e) -- StatTrack options button
+  G.SETTINGS.paused = true
+  left_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  right_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  local stattrack_settings = {
+    { id = "HIDE_PLAYED", name = "Hide Played Cards" },
+  }
+  for k, v in pairs(stattrack_settings) do
+    right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
+      label = "",
+      ref_table = Saturn.USER.SETTINGS.STATTRACK,
+      ref_value = v.id,
+      active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+      callback = function(x)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+      end,
+    })
+    left_settings.nodes[#left_settings.nodes + 1] = {
+      n = G.UIT.R,
+      config = { align = "cl", padding = 0.1 },
+      nodes = {
+        {
+          n = G.UIT.R,
+          config = { align = "cl", padding = 0.075 },
+          nodes = {
+            {
+              n = G.UIT.O,
+              config = {
+                object = DynaText({
+                  string = v.name,
+                  colours = { G.C.WHITE },
+                  shadow = false,
+                  scale = 0.5,
+                }),
+              },
+            },
+          },
+        },
+      },
+    }
+  end
   local t = create_UIBox_generic_options({
     back_func = "saturnUI_prefs_button",
+    colour = Saturn.UI.COLOURS.MENUS.BACKGROUND,
     contents = {
-      --- TODO: TEXT "StatTrack Options"
-      create_toggle({
-        label = "Track Money Generators",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "MONEY_GEN",
-        callback = function(_set_toggle)
-          nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-          G:set_language()
-        end,
-      }),
-      create_toggle({
-        label = "Track Card Generators",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "CARD_GEN",
-        callback = function(_set_toggle)
-          nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-          G:set_language()
-        end,
-      }),
-      create_toggle({
-        label = "Track Plus Mult Triggers",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "PLUS_MULT",
-        callback = function(_set_toggle)
-        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-        G:set_language()
-        end,
-      }),
-      create_toggle({
-        label = "Track Plus Chips Triggers",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "PLUS_CHIPS",
-        callback = function(_set_toggle)
-        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-        G:set_language()
-        end,
-      }),
-      create_toggle({
-        label = "Track X MULT Triggers",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "X_MULT",
-        callback = function(_set_toggle)
-        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-        G:set_language()
-        end,
-      }),
-      create_toggle({
-        label = "Track Miscellaneous Counters",
-        ref_table = Saturn.USER.SETTINGS.STATTRACK,
-        ref_value = "MISCELLANEOUS",
-        callback = function(_set_toggle)
-        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-        G:set_language()
-        end,
-      }),
+      {
+        n = G.UIT.R,
+        config = { align = "cm" },
+        nodes = {
+          {
+            n = G.UIT.O,
+            config = {
+              object = DynaText({
+                string = "DeckViewer+ Options",
+                colours = { G.C.WHITE },
+                shadow = true,
+                scale = 0.4,
+              }),
+            },
+          },
+        },
+      },
+      {
+        n = G.UIT.R,
+        config = {
+          align = "tm",
+          padding = 0,
+        },
+        nodes = {
+          left_settings,
+          right_settings,
+        },
+      },
     },
   })
-  return t
+  G.FUNCS.overlay_menu({
+    definition = t,
+  })
 end
+
 
 --- Saturn Settings Menu
 function G.FUNCS.saturnUI_prefs_button(e) -- Saturn settings menu button
   G.SETTINGS.paused = true
-  G.FUNCS.overlay_menu({
-    definition = saturnUI_create_UIBox_preferences_button(),
-  })
-end
-
-function saturnUI_create_UIBox_preferences_button() -- Saturn settings menu box
   local _tabs = {}
   _tabs[#_tabs + 1] = {
     label = "Features",
@@ -392,36 +596,183 @@ function saturnUI_create_UIBox_preferences_button() -- Saturn settings menu box
   local t = saturnUI_create_UIBox_generic_options({
     back_func = "options",
     contents = {
-      saturnUI_create_tabs({ tabs = _tabs, tab_h = 7.05, tab_alignment = "tm", snap_to_nav = true }),
+      saturnUI_create_tabs({
+        tabs = _tabs,
+        tab_h = 7.05,
+        tab_alignment = "tm",
+        snap_to_nav = true,
+        colour = Saturn.UI.COLOURS.MENUS.TAB_HEADING_BUTTON,
+      }),
     },
   })
-  return t
+  G.FUNCS.overlay_menu({
+    definition = t,
+  })
 end
 
-function G.UIDEF.saturnUI_settings_tab(_tab)  -- Saturn settings menu tabs
+function G.UIDEF.saturnUI_settings_tab(_tab) -- Saturn settings menu tabs
   if _tab == "Features" then
+    local t = {
+      {
+        n = G.UIT.R,
+        config = { align = "cm", padding = 0.05, colour = G.C.CLEAR, r = 0.3 },
+        nodes = {
+          {
+            n = G.UIT.R,
+            config = {
+              align = "cm",
+              padding = 0.05,
+              colour = G.C.L_BLACK,
+              r = 0.3,
+            },
+            nodes = {
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  {
+                    n = G.UIT.O,
+                    config = {
+                      object = DynaText({
+                        string = "Enable StatTracker",
+                        colours = { G.C.WHITE },
+                        shadow = false,
+                        scale = 0.5,
+                      }),
+                    },
+                  },
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  saturnUI_create_toggle({
+                    ref_table = Saturn.USER.SETTINGS.STATTRACK,
+                    ref_value = "ENABLED",
+                    active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+                    callback = function(x)
+                      nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+                      G:set_language()
+                    end,
+                    col = true,
+                  }),
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  UIBox_button({
+                    label = { "Config" },
+                    button = "stattrack_options",
+                    minw = 2,
+                    minh = 0.75,
+                    scale = 0.5,
+                    colour = Saturn.UI.COLOURS.MENUS.SUB_OPTION_BUTTON,
+                    col = true,
+                  }),
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        n = G.UIT.R,
+        config = { align = "cm", padding = 0.05, colour = G.C.CLEAR, r = 0.3 },
+        nodes = {
+          {
+            n = G.UIT.R,
+            config = {
+              align = "cm",
+              padding = 0.05,
+              colour = G.C.L_BLACK,
+              r = 0.3,
+            },
+            nodes = {
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  {
+                    n = G.UIT.O,
+                    config = {
+                      object = DynaText({
+                        string = "Enable DeckViewer+",
+                        colours = { G.C.WHITE },
+                        shadow = false,
+                        scale = 0.5,
+                      }),
+                    },
+                  },
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  saturnUI_create_toggle({
+                    ref_table = Saturn.USER.SETTINGS.DECKVIEWER,
+                    ref_value = "ENABLED",
+                    active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+                    callback = function(x)
+                      nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+                      G:set_language()
+                    end,
+                    col = true,
+                  }),
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  UIBox_button({
+                    label = { "Config" },
+                    button = "deckviewer_options",
+                    minw = 2,
+                    minh = 0.75,
+                    scale = 0.5,
+                    colour = Saturn.UI.COLOURS.MENUS.SUB_OPTION_BUTTON,
+                    col = true,
+                  }),
+                },
+              },
+            },
+          },
+        },
+      },
+    }
     return {
       n = G.UIT.ROOT,
       config = { align = "cm", padding = 0.05, colour = G.C.CLEAR },
-      nodes = {
-        UIBox_button({ label = { "StatTrack Options" }, button = "stattrack_options", minw = 5, minh = 0.7, scale = 0.6, colour = G.C.UI.BACKGROUND_DARK}),
-        create_toggle({
-          label = "Deck View: Hide Played Cards",
-          ref_table = Saturn.USER.SETTINGS,
-          ref_value = "HIDE_PLAYED",
-          callback = function(_set_toggle)
-            nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-          end,
-        }),
-      },
+      nodes = t,
     }
   end
   if _tab == "Aesthetics" then
     return {
       n = G.UIT.ROOT,
       config = { align = "cm", padding = 0.05, colour = G.C.CLEAR },
-      nodes = {
-      },
+      nodes = {},
     }
   end
 

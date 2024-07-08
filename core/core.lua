@@ -1,7 +1,7 @@
 local nativefs = require("nativefs")
 Saturn = {}
 Saturn.MOD = {}
-Saturn.MOD.VERSION = "1.0.0"
+Saturn.MOD.VERSION = "1.1.1"
 Saturn.MOD.RELEASE = false
 
 Saturn.USER = {}
@@ -47,7 +47,7 @@ local function tableToString(tbl, indent)
   return result
 end
 
-local default_settings = {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
+local default_settings = {["STATTRACK"]={["ENABLED"]=true,["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
 function Saturn.initSaturn()
   local lovely = require("lovely")
   local nativefs = require("nativefs")
