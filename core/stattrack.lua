@@ -19,7 +19,8 @@ localizations.money_generators = {
     {id = "j_mail", counter_text = "{C:inactive}(Total $$$ generated: {C:money}$#3#{C:inactive}){}" },
     {id = "j_gift", counter_text = "{C:inactive}(Total value added: {C:money}$#2#{C:inactive}){}" },
     {id = "j_reserved_parking", counter_text = "{C:inactive}(Total $$$ generated: {C:money}$#4#{C:inactive}){}" },
-    {id = "j_trading", counter_text = "{C:inactive}(Total $$$ generated: {C:mult}#2#{C:inactive}){}"},
+    {id = "j_trading", counter_text = "{C:inactive}(Total $$$ generated: {C:money}#2#{C:inactive}){}"},
+    {id = "j_to_the_moon", counter_text = "{C:inactive}(Total $$$ generated: {C:money}#2#{C:inactive}){}"},
 }
 localizations.card_generators = {
     {id = "j_8_ball", counter_text = "{C:inactive}(Total cards generated: {C:tarot}#3#{C:inactive}){}" },
@@ -31,7 +32,8 @@ localizations.card_generators = {
     {id = "j_riff_raff", counter_text = "{C:inactive}(Total jokers generated: {C:joker}#2#{C:inactive}){}" },
     {id = "j_vagabond", counter_text = "{C:inactive}(Total cards generated: {C:tarot}#2#{C:inactive}){}" },
     {id = "j_hallucination", counter_text = "{C:inactive}(Total cards generated: {C:tarot}#3#{C:inactive}){}"},
-    {id = "j_certificate", counter_text = "{C:inactive}(Total cards generated: {C:mult}#2#{C:inactive}){}"},
+    {id = "j_certificate", counter_text = "{C:inactive}(Total cards generated: {C:tarot}#1#{C:inactive}){}"},
+    {id = "j_cartomancer", counter_text = "{C:inactive}(Total cards generated: {C:tarot}#1#{C:inactive}){}"}
 }
 localizations.plus_mults = {
     {id = "j_joker", counter_text = "{C:inactive}(Total +mult activations: {C:mult}#2#{C:inactive}){}" },
@@ -69,6 +71,7 @@ localizations.plus_mults = {
 }
 localizations.plus_chips = {
     {id = "j_sly", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+    {id = "j_wily", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
     {id = "j_crafty", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
     {id = "j_clever", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
     {id = "j_devious", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
@@ -89,7 +92,7 @@ localizations.plus_chips = {
 }
 localizations.x_mults = {
     {id = "j_stencil", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
-    {id = "j_loyalty_card", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#5#{C:inactive}){}"},
+    {id = "j_loyalty_card", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#4#{C:inactive}){}"},
     {id = "j_steel_joker", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_blackboard", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#4#{C:inactive}){}"},
     {id = "j_constellation", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
@@ -103,7 +106,7 @@ localizations.x_mults = {
     {id = "j_photograph", counter_text = "{C:inactive}(Total xmult increases: {C:mult}#2#{C:inactive}){}"},
     {id = "j_lucky_cat", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_baseball", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
-    {id = "j_ancient", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#4#{C:inactive}){}"},
+    {id = "j_ancient", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_ramen", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_campfire", counter_text = "{C:inactive}(Total sell activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_acrobat", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
@@ -111,9 +114,9 @@ localizations.x_mults = {
     {id = "j_bloodstone", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#4#{C:inactive}){}"},
     {id = "j_glass", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_flower_pot", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
-    {id = "j_idol", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#5#{C:inactive}){}"},
+    {id = "j_idol", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#4#{C:inactive}){}"},
     {id = "j_seeing_double", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
-    {id = "j_hit_the_road", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
+    {id = "j_hit_the_road", counter_text = "{C:inactive}(Total xmult increases: {C:mult}#3#{C:inactive}){}"},
     {id = "j_duo", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_trio", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
     {id = "j_family", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#3#{C:inactive}){}"},
@@ -125,8 +128,11 @@ localizations.x_mults = {
     {id = "j_yorick", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#5#{C:inactive}){}"},
 }
 localizations.miscellaneous = {
+    {id = "j_scholar", counter_text = "{C:inactive}(Total +mult/chips activations: {C:attention}#3#{C:inactive}){}"},
+    {id = "j_walkie_talkie", counter_text = "{C:inactive}(Total +mult/chips activations: {C:attention}#3#{C:inactive}){}"},
     {id = "j_mime", counter_text = "{C:inactive}(Total retrigger activations: {C:attention}#1#{C:inactive}){}"},
     {id = "j_marble", counter_text = "{C:inactive}(Total stones added: {C:attention}#1#{C:inactive}){}"},
+    {id = "j_midas_mask", counter_text = "{C:inactive}(Total cards modified: {C:attention}#1#{C:inactive}){}"},
     {id = "j_dusk", counter_text = "{C:inactive}(Total retrigger activations: {C:attention}#2#{C:inactive}){}"},
     {id = "j_hack", counter_text = "{C:inactive}(Total retrigger activations: {C:attention}#2#{C:inactive}){}"},
     {id = "j_burglar", counter_text = "{C:inactive}(Total hands given: {C:attention}#2#{C:inactive}){}"},
@@ -134,7 +140,7 @@ localizations.miscellaneous = {
     {id = "j_hanging_chad", counter_text = "{C:inactive}(Total retrigger activations: {C:attention}#2#{C:inactive}){}"},
     {id = "j_burnt", counter_text = "{C:inactive}(Total planet levels: {C:attention}#1#{C:inactive}){}"},
     {id = "j_chicot", counter_text = "{C:inactive}(Total blinds deactivated: {C:attention}#1#{C:inactive}){}"},
-    {id = "j_perkeo", counter_text = "{C:inactive}(Total perkolations: {C:attention}#2#{C:inactive}){}"},
+    {id = "j_perkeo", counter_text = "{C:inactive}(Total perkolations: {C:attention}#1#{C:inactive}){}"},
 }
 
 function Saturn.ST.addCounterLocalization(type) 

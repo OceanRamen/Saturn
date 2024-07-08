@@ -128,7 +128,17 @@ pattern = "elseif self.ability.name == 'Cartomancer' then"
 position = "at"
 payload = "elseif self.ability.name == 'Cartomancer' then loc_vars = {}"
 match_indent = true
-overwrite = false
+overwrite = true
+
+#Midas Mask
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "elseif self.ability.name == 'Midas Mask' then"
+position = "at"
+payload = "elseif self.ability.name == 'Midas Mask' then loc_vars = {}"
+match_indent = true
+overwrite = true
 
 # ----------------------------------------------------------------
 #COUNTER INCREMENTATION
@@ -290,7 +300,7 @@ overwrite = false
 target = "card.lua"
 pattern = "if self.ability.name == 'To the Moon' then"
 position = "after"
-payload = "self.counter = self.counter + self.ability.extra"
+payload = "self.counter = self.counter + self.ability.extra*math.min(math.floor(G.GAME.dollars/5), G.GAME.interest_cap/5)"
 match_indent = true
 overwrite = false
 
@@ -746,7 +756,16 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'self.ability.loyalty_remaining = (self.ability.extra.every-1-(G.GAME.hands_played - self.ability.hands_played_at_create))%(self.ability.extra.every+1)'
+pattern = 'if self.ability.loyalty_remaining == self.ability.extra.every then' #blueprint case
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = 'elseif self.ability.loyalty_remaining == self.ability.extra.every then' #regular case
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -849,7 +868,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = "if self.ability.name == 'Obelisk' and not context.blueprint then"
+pattern = "self.ability.x_mult = self.ability.x_mult + self.ability.extra"
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -859,7 +878,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'local first_face = nil'
+pattern = 'if context.other_card == first_face then'
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -929,7 +948,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'self.ability.x_mult = 1 + G.GAME.skips*self.ability.extra'
+pattern = "if self.ability.name == 'Throwback' and not context.blueprint then"
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -989,7 +1008,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = "if self.ability.name == 'Hit the Road' and self.ability.x_mult > 1 then"
+pattern = "context.other_card:get_id() == 11 and not context.blueprint then"
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -1050,7 +1069,7 @@ payload = "self.counter = self.counter + 1"
 match_indent = true
 overwrite = false
 
-# scholar
+# Scholar
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -1066,7 +1085,7 @@ overwrite = false
 target = "card.lua"
 pattern = '(next(context.card_effects[1]) or # context.card_effects > 1) then'
 position = "after"
-payload = "self.counter = self.counter + 1"
+payload = "self.counter = self.counter + self.ability.extra"
 match_indent = true
 overwrite = false
 
@@ -1119,7 +1138,7 @@ overwrite = false
 target = "card.lua"
 pattern = 'context.other_card == context.scoring_hand[1]) then'
 position = "after"
-payload = "self.counter = self.counter + 1"
+payload = "self.counter = self.counter + self.ability.extra"
 match_indent = true
 overwrite = false
 
@@ -1128,6 +1147,16 @@ overwrite = false
 [patches.pattern]
 target = "card.lua"
 pattern = "if self.ability.name == 'Burnt Joker' and G.GAME.current_round.discards_used <= 0 and not context.hook then"
+position = "after"
+payload = "self.counter = self.counter + 1"
+match_indent = true
+overwrite = false
+
+# Midas Mask
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "v:set_ability(G.P_CENTERS.m_gold, nil, true)"
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
