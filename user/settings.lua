@@ -1,1 +1,1 @@
-return {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=false,["PLUS_CHIPS"]=false,["X_MULT"]=false,["PLUS_MULT"]=false,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
+return {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}

@@ -25,6 +25,28 @@ local function requireWithNFS(modulePath)
   return result
 end
 
+-- Function to convert table to a string in Lua code format
+local function tableToString(tbl, indent)
+  indent = indent or 0
+  local result = "{\n"
+  local padding = string.rep("  ", indent + 1)
+
+  for k, v in pairs(tbl) do
+    if type(k) == "string" then
+      k = '"' .. k .. '"'
+    end
+
+    if type(v) == "table" then
+      result = result .. padding .. "[" .. k .. "] = " .. tableToString(v, indent + 1) .. ",\n"
+    else
+      result = result .. padding .. "[" .. k .. "] = " .. tostring(v) .. ",\n"
+    end
+  end
+
+  result = result .. string.rep("  ", indent) .. "}"
+  return result
+end
+
 local default_settings = {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
 function Saturn.initSaturn()
   local lovely = require("lovely")
@@ -43,14 +65,16 @@ function Saturn.initSaturn()
     end
   else
     Saturn.TOOLS.LOGGER.logInfo("settings.lua not found... attempting to create new settings.lua file")
-    local success, err = nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", default_settings)
+    local settings_content = "return " .. tableToString(default_settings)
+    local success, err = nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", settings_content)
     if success then
-      Saturn.TOOLS.LOGGER.logInfo("Sucessfully created settings.lua")
+      Saturn.TOOLS.LOGGER.logInfo("Successfully created settings.lua")
+      Saturn.USER.SETTINGS = default_settings
     else
       Saturn.TOOLS.LOGGER.logError("Unable to create settings.lua... please check your folder permissions")
     end
   end
-  
+
   Saturn.TOOLS.LOGGER.logInfo(Saturn.TOOLS.INSPECTOR.inspectDepth(Saturn.USER.SETTINGS))
   --- Load Saturn Components
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/stattrack.lua")))()
