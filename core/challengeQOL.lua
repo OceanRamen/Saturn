@@ -40,7 +40,7 @@ function create_UIBox_game_over()
               {n=G.UIT.T, config={text = localize('b_next'), scale = 0.5, colour = G.C.UI.TEXT_LIGHT, focus_args = {nav = 'wide', snap_to = true}}}
             }}
           }}
-        }} or
+        }} or -- isChallenge and
         {n=G.UIT.R, config={align = "cm"}, nodes = {
           {n=G.UIT.C, config={align = "cl", padding = 0.1}, nodes={
             {n=G.UIT.R, config={id = 'from_game_over', align = "cm", minw = 5, padding = 0.1, r = 0.1, hover = true, colour = G.C.RED, button = "notify_then_setup_run", shadow = true, focus_args = {nav = 'wide', snap_to = true}}, nodes={
@@ -61,7 +61,11 @@ function create_UIBox_game_over()
               }}
             }},
           }},
-        }},
+        }}
+        or 
+        {
+          -- Default without retry
+        }
       }},
     }}
 }})
