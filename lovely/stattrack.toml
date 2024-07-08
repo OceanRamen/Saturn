@@ -362,7 +362,7 @@ overwrite = false
 target = "card.lua"
 pattern = 'local jokers_to_create = math.min(2, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))'
 position = "after"
-payload = "self.counter = self.counter + 2"
+payload = "self.counter = self.counter + jokers_to_create"
 match_indent = true
 overwrite = false
 

@@ -25,6 +25,7 @@ local function requireWithNFS(modulePath)
   return result
 end
 
+local default_settings = {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
 function Saturn.initSaturn()
   local lovely = require("lovely")
   local nativefs = require("nativefs")
@@ -37,10 +38,19 @@ function Saturn.initSaturn()
     local settings_file = STR_UNPACK(nativefs.read((Saturn.MOD.PATH .. "user/settings.lua") ))
     if settings_file ~= nil then
       Saturn.USER.SETTINGS = settings_file
+    else
+      Saturn.USER.SETTINGS = default_settings
     end
   else
-    Saturn.TOOLS.LOGGER.logError("user-settings file not found")
+    Saturn.TOOLS.LOGGER.logInfo("settings.lua not found... attempting to create new settings.lua file")
+    local success, err = nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", default_settings)
+    if success then
+      Saturn.TOOLS.LOGGER.logInfo("Sucessfully created settings.lua")
+    else
+      Saturn.TOOLS.LOGGER.logError("Unable to create settings.lua... please check your folder permissions")
+    end
   end
+  
   Saturn.TOOLS.LOGGER.logInfo(Saturn.TOOLS.INSPECTOR.inspectDepth(Saturn.USER.SETTINGS))
   --- Load Saturn Components
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/stattrack.lua")))()
