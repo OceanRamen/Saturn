@@ -36,3 +36,19 @@ pattern = "local t = create_UIBox_generic_options({ contents = {"
 position = "after"
 payload = "saturn_settings,"
 match_indent = true
+
+[[patches]] #   Saturn VERSION dispaly on Main Menu
+[patches.pattern]
+target = "game.lua"
+pattern = "if replace_card and (G.P_CENTERS.j_blueprint.unlocked) then"
+position = "before"
+payload = """
+UIBox{
+  definition = 
+  {n=G.UIT.ROOT, config={align = "cm", colour = G.C.UI.TRANSPARENT_DARK}, nodes={
+    {n=G.UIT.T, config={text = "SATURN-"..Saturn.MOD.VERSION, scale = 0.3, colour = G.C.SECONDARY_SET.Planet}}
+  }}, 
+  config = {align="tri", offset = {x=0,y=0.3}, major = G.ROOM_ATTACH, bond = 'Weak'}
+}
+"""
+match_indent = true

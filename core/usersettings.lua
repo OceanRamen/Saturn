@@ -1,6 +1,7 @@
 local lovely = require("lovely")
 local nativefs = require("nativefs")
 
+--- UI Helper function
 function saturnUI_create_tabs(args)
   args = args or {}
   args.colour = args.colour or G.C.RED
@@ -162,7 +163,7 @@ function saturnUI_create_tabs(args)
 
   return t
 end
-
+--- UI Helper function
 function saturnUI_create_UIBox_generic_options(args)
   args = args or {}
   local back_func = args.back_func or "exit_overlay_menu"
@@ -271,6 +272,7 @@ function saturnUI_create_UIBox_generic_options(args)
   }
 end
 
+--- title screen buttons ref function 
 local create_UIBox_main_menu_buttonsRef = create_UIBox_main_menu_buttons
 function create_UIBox_main_menu_buttons()
   local text_scale = 0.45
@@ -293,20 +295,99 @@ function create_UIBox_main_menu_buttons()
   return menu
 end
 
-function G.FUNCS.saturnUI_prefs_button(e)
+
+--- StatTrack
+function G.FUNCS.stattrack_options(e) -- StatTrack options button
+  G.SETTINGS.paused = true
+  G.FUNCS.overlay_menu({
+    definition = saturnUI_create_UIBox_stattrack_preferences_button(),
+  })
+end
+
+function saturnUI_create_UIBox_stattrack_preferences_button() -- StatTrack options box
+  local t = create_UIBox_generic_options({
+    back_func = "saturnUI_prefs_button",
+    contents = {
+      --- TODO: TEXT "StatTrack Options"
+      create_toggle({
+        label = "Track Money Generators",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "MONEY_GEN",
+        callback = function(_set_toggle)
+          nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+          G:set_language()
+        end,
+      }),
+      create_toggle({
+        label = "Track Card Generators",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "CARD_GEN",
+        callback = function(_set_toggle)
+          nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+          G:set_language()
+        end,
+      }),
+      create_toggle({
+        label = "Track Plus Mult Triggers",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "PLUS_MULT",
+        callback = function(_set_toggle)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+        end,
+      }),
+      create_toggle({
+        label = "Track Plus Chips Triggers",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "PLUS_CHIPS",
+        callback = function(_set_toggle)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+        end,
+      }),
+      create_toggle({
+        label = "Track X MULT Triggers",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "X_MULT",
+        callback = function(_set_toggle)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+        end,
+      }),
+      create_toggle({
+        label = "Track Miscellaneous Counters",
+        ref_table = Saturn.USER.SETTINGS.STATTRACK,
+        ref_value = "MISCELLANEOUS",
+        callback = function(_set_toggle)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+        G:set_language()
+        end,
+      }),
+    },
+  })
+  return t
+end
+
+--- Saturn Settings Menu
+function G.FUNCS.saturnUI_prefs_button(e) -- Saturn settings menu button
   G.SETTINGS.paused = true
   G.FUNCS.overlay_menu({
     definition = saturnUI_create_UIBox_preferences_button(),
   })
 end
 
-function saturnUI_create_UIBox_preferences_button()
+function saturnUI_create_UIBox_preferences_button() -- Saturn settings menu box
   local _tabs = {}
   _tabs[#_tabs + 1] = {
-    label = "Preferences",
+    label = "Features",
     chosen = true,
     tab_definition_function = G.UIDEF.saturnUI_settings_tab,
-    tab_definition_function_args = "Preferences",
+    tab_definition_function_args = "Features",
+  }
+  _tabs[#_tabs + 1] = {
+    label = "Aesthetics",
+    tab_definition_function = G.UIDEF.saturnUI_settings_tab,
+    tab_definition_function_args = "Aesthetics",
   }
   local t = saturnUI_create_UIBox_generic_options({
     back_func = "options",
@@ -317,21 +398,13 @@ function saturnUI_create_UIBox_preferences_button()
   return t
 end
 
-function G.UIDEF.saturnUI_settings_tab(_tab)
-  if _tab == "Preferences" then
+function G.UIDEF.saturnUI_settings_tab(_tab)  -- Saturn settings menu tabs
+  if _tab == "Features" then
     return {
       n = G.UIT.ROOT,
       config = { align = "cm", padding = 0.05, colour = G.C.CLEAR },
       nodes = {
-        create_toggle({
-          label = "StatTrack Jokers",
-          ref_table = Saturn.USER.SETTINGS,
-          ref_value = "STATTRACK",
-          callback = function(_set_toggle)
-            nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-            G:set_language()
-          end,
-        }),
+        UIBox_button({ label = { "StatTrack Options" }, button = "stattrack_options", minw = 5, minh = 0.7, scale = 0.6, colour = G.C.UI.BACKGROUND_DARK}),
         create_toggle({
           label = "Deck View: Hide Played Cards",
           ref_table = Saturn.USER.SETTINGS,
@@ -340,6 +413,14 @@ function G.UIDEF.saturnUI_settings_tab(_tab)
             nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
           end,
         }),
+      },
+    }
+  end
+  if _tab == "Aesthetics" then
+    return {
+      n = G.UIT.ROOT,
+      config = { align = "cm", padding = 0.05, colour = G.C.CLEAR },
+      nodes = {
       },
     }
   end

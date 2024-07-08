@@ -49,5 +49,3 @@ function Saturn.initSaturn()
 
   Saturn.TOOLS.LOGGER.logInfo("initialization succesful")
 end
-
-
