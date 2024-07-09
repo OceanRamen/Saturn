@@ -482,7 +482,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'local raised_card = nil'
+pattern = 'if raised_card == context.other_card then'
 position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
@@ -1181,3 +1181,4 @@ position = "after"
 payload = "self.counter = self.counter + 1"
 match_indent = true
 overwrite = false
+

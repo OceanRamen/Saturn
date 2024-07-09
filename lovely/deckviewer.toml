@@ -1,0 +1,59 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "{card_limit = #SUITS[suit_map[j]], type = 'title', view_deck = true, highlight_limit = 0, card_w = G.CARD_W*0.7, draw_layers = {'card'}})"
+position = "after"
+payload = "local card_count = 0"
+overwrite = false
+match_indent = true
+
+[[patches]]
+[patches.regex]
+target = "functions/UI_definitions.lua"
+pattern = 'if\s+unplayed_only\s+and\s+not\s+\(\(\s*SUITS\[suit_map\[j\]\]\[i\]\.area\s+and\s+SUITS\[suit_map\[j\]\]\[i\]\.area\s*==\s*G\.deck\s*\)\s*or\s*SUITS\[suit_map\[j\]\]\[i\]\.ability\.wheel_flipped\s*\)\s*then\s*greyed\s*=\s*true\s*end\s*local\s+copy\s*=\s*copy_card\s*\(\s*SUITS\[suit_map\[j\]\]\[i\]\s*,\s*nil\s*,\s*_scale\s*\)\s*copy\.greyed\s*=\s*greyed\s*copy\.T\.x\s*=\s*view_deck\.T\.x\s*\+\s*view_deck\.T\.w\s*\/\s*2\s*copy\.T\.y\s*=\s*view_deck\.T\.y\s*copy:hard_set_T\(\)\s*view_deck:emplace\(copy\)'
+position = 'at'
+line_prepend = '$indent'
+payload = '''
+if
+  unplayed_only
+  and not (
+    (SUITS[suit_map[j]][i].area and SUITS[suit_map[j]][i].area == G.deck)
+    or SUITS[suit_map[j]][i].ability.wheel_flipped
+  )
+then
+  greyed = true
+end
+if not greyed and Saturn.USER.SETTINGS.HIDE_PLAYED then
+  card_count = card_count + 1
+  local copy = copy_card(SUITS[suit_map[j]][i], nil, _scale)
+  copy.greyed = greyed
+  copy.T.x = view_deck.T.x + view_deck.T.w / 2
+  copy.T.y = view_deck.T.y
+  copy:hard_set_T()
+  view_deck:emplace(copy)
+else
+  if not Saturn.USER.SETTINGS.HIDE_PLAYED then
+    card_count = card_count + 1
+    local copy = copy_card(SUITS[suit_map[j]][i], nil, _scale)
+    copy.greyed = greyed
+    copy.T.x = view_deck.T.x + view_deck.T.w / 2
+    copy.T.y = view_deck.T.y
+    copy:hard_set_T()
+    view_deck:emplace(copy)
+  end
+end
+'''
+overwrite = true
+
+[[patches]]
+[patches.regex]
+target = "functions/UI_definitions.lua"
+pattern = 'end\s*\n\s*end\s*\n\s*local\s+flip_col\s*=\s*G\.C\.WHITE'
+position = 'before'
+line_prepend = '$indent'
+payload = 'view_deck.config.card_limit = card_count'

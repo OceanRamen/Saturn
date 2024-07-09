@@ -47,7 +47,18 @@ local function tableToString(tbl, indent)
   return result
 end
 
-local default_settings = {["STATTRACK"]={["ENABLED"]=true,["MONEY_GEN"]=true,["MISCELLANEOUS"]=true,["PLUS_CHIPS"]=true,["X_MULT"]=true,["PLUS_MULT"]=true,["CARD_GEN"]=true,},["HIDE_PLAYED"]=true,}
+local default_settings = {
+  ["STATTRACK"] = {
+    ["ENABLED"] = true,
+    ["MONEY_GEN"] = true,
+    ["MISCELLANEOUS"] = true,
+    ["PLUS_CHIPS"] = true,
+    ["X_MULT"] = true,
+    ["PLUS_MULT"] = true,
+    ["CARD_GEN"] = true,
+  },
+  ["HIDE_PLAYED"] = true,
+}
 function Saturn.initSaturn()
   local lovely = require("lovely")
   local nativefs = require("nativefs")
@@ -57,7 +68,7 @@ function Saturn.initSaturn()
   Saturn.TOOLS.INSPECTOR = requireWithNFS(Saturn.MOD.PATH .. "tools/inspector.lua")
   --- Load User Settings
   if nativefs.getInfo(Saturn.MOD.PATH .. "user/settings.lua") then
-    local settings_file = STR_UNPACK(nativefs.read((Saturn.MOD.PATH .. "user/settings.lua") ))
+    local settings_file = STR_UNPACK(nativefs.read((Saturn.MOD.PATH .. "user/settings.lua")))
     if settings_file ~= nil then
       Saturn.USER.SETTINGS = settings_file
     else
@@ -75,11 +86,10 @@ function Saturn.initSaturn()
     end
   end
 
-  Saturn.TOOLS.LOGGER.logInfo(Saturn.TOOLS.INSPECTOR.inspectDepth(Saturn.USER.SETTINGS))
+  -- Saturn.TOOLS.LOGGER.logInfo(Saturn.TOOLS.INSPECTOR.inspectDepth(Saturn.USER.SETTINGS))
   --- Load Saturn Components
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/stattrack.lua")))()
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/usersettings.lua")))()
-  assert(load(nativefs.read(Saturn.MOD.PATH .. "core/deckviewer.lua")))()
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/challengeQOL.lua")))()
 
   Saturn.TOOLS.LOGGER.logInfo("initialization succesful")
