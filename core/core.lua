@@ -79,7 +79,6 @@ function Saturn.initSaturn()
   --- Load Saturn Components
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/stattrack.lua")))()
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/usersettings.lua")))()
-  assert(load(nativefs.read(Saturn.MOD.PATH .. "core/hide_played.lua")))()
 
   Saturn.TOOLS.LOGGER.logInfo("initialization succesful")
 end
