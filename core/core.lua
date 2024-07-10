@@ -1,7 +1,7 @@
 local nativefs = require("nativefs")
 Saturn = {}
 Saturn.MOD = {}
-Saturn.MOD.VERSION = "1.1.1"
+Saturn.MOD.VERSION = "1.2.2-PRE-ALPHA"
 Saturn.MOD.RELEASE = false
 
 Saturn.USER = {}
