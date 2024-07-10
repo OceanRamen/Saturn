@@ -18,7 +18,6 @@ G.FUNCS.options = function(e)
   G:set_language()
 end
 
-
 --- UI Helper function
 function saturnUI_create_toggle(args)
   args = args or {}
@@ -416,10 +415,10 @@ function G.FUNCS.stattrack_options(e) -- StatTrack options button
   local stattrack_settings = {
     { id = "MONEY_GEN", name = "Money Generating Jokers" },
     { id = "CARD_GEN", name = "Card Generating Jokers" },
-    { id = "PLUS_CHIPS", name = "Plus Chips Jokers"},
-    { id = "PLUS_MULT", name = "Plus Mult Jokers"},
-    { id = "X_MULT", name = "X-Mult Jokers"},
-    { id = "MISCELLANEOUS", name = "Misc. Jokers"},
+    { id = "PLUS_CHIPS", name = "Plus Chips Jokers" },
+    { id = "PLUS_MULT", name = "Plus Mult Jokers" },
+    { id = "X_MULT", name = "X-Mult Jokers" },
+    { id = "MISCELLANEOUS", name = "Misc. Jokers" },
   }
   for k, v in pairs(stattrack_settings) do
     right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
@@ -496,22 +495,21 @@ function G.FUNCS.stattrack_options(e) -- StatTrack options button
 end
 
 --- DeckViewer+
-function G.FUNCS.deckviewer_options(e) -- StatTrack options button
+function G.FUNCS.deckviewer_options(e)
   G.SETTINGS.paused = true
   left_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
   right_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
-  local stattrack_settings = {
-    { id = "HIDE_PLAYED", name = "Hide Played Cards" },
+  local deckviewer_settings = {
+    { feat = "HIDE_PLAYED", setting = "ENABLED", name = "Hide Played Cards" },
   }
-  for k, v in pairs(stattrack_settings) do
+  for k, v in pairs(deckviewer_settings) do
     right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
       label = "",
-      ref_table = Saturn.USER.SETTINGS.STATTRACK,
-      ref_value = v.id,
+      ref_table = Saturn.USER.SETTINGS.DECKVIEWER[v.feat],
+      ref_value = v.setting,
       active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
       callback = function(x)
         nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
-        G:set_language()
       end,
     })
     left_settings.nodes[#left_settings.nodes + 1] = {
@@ -577,6 +575,86 @@ function G.FUNCS.deckviewer_options(e) -- StatTrack options button
   })
 end
 
+--- GENQOL
+function G.FUNCS.genqol_options(e)
+  G.SETTINGS.paused = true
+  left_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  right_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
+  local genqol_settings = {
+    { feat = "RETRY_BUTTON", setting = "ENABLED", name = "\"Retry\" Button" },
+  }
+  for k, v in pairs(genqol_settings) do
+    right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
+      label = "",
+      ref_table = Saturn.USER.SETTINGS.GENQOL[v.feat],
+      ref_value = v.setting,
+      active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+      callback = function(x)
+        nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+      end,
+    })
+    left_settings.nodes[#left_settings.nodes + 1] = {
+      n = G.UIT.R,
+      config = { align = "cl", padding = 0.1 },
+      nodes = {
+        {
+          n = G.UIT.R,
+          config = { align = "cl", padding = 0.075 },
+          nodes = {
+            {
+              n = G.UIT.O,
+              config = {
+                object = DynaText({
+                  string = v.name,
+                  colours = { G.C.WHITE },
+                  shadow = false,
+                  scale = 0.5,
+                }),
+              },
+            },
+          },
+        },
+      },
+    }
+  end
+  local t = create_UIBox_generic_options({
+    back_func = "saturnUI_prefs_button",
+    colour = Saturn.UI.COLOURS.MENUS.BACKGROUND,
+    contents = {
+      {
+        n = G.UIT.R,
+        config = { align = "cm" },
+        nodes = {
+          {
+            n = G.UIT.O,
+            config = {
+              object = DynaText({
+                string = "GenQOL Options",
+                colours = { G.C.WHITE },
+                shadow = true,
+                scale = 0.4,
+              }),
+            },
+          },
+        },
+      },
+      {
+        n = G.UIT.R,
+        config = {
+          align = "tm",
+          padding = 0,
+        },
+        nodes = {
+          left_settings,
+          right_settings,
+        },
+      },
+    },
+  })
+  G.FUNCS.overlay_menu({
+    definition = t,
+  })
+end
 
 --- Saturn Settings Menu
 function G.FUNCS.saturnUI_prefs_button(e) -- Saturn settings menu button
@@ -749,6 +827,79 @@ function G.UIDEF.saturnUI_settings_tab(_tab) -- Saturn settings menu tabs
                   UIBox_button({
                     label = { "Config" },
                     button = "deckviewer_options",
+                    minw = 2,
+                    minh = 0.75,
+                    scale = 0.5,
+                    colour = Saturn.UI.COLOURS.MENUS.SUB_OPTION_BUTTON,
+                    col = true,
+                  }),
+                },
+              },
+            },
+          },
+        },
+      },
+      {
+        n = G.UIT.R,
+        config = { align = "cm", padding = 0.05, colour = G.C.CLEAR, r = 0.3 },
+        nodes = {
+          {
+            n = G.UIT.R,
+            config = {
+              align = "cm",
+              padding = 0.05,
+              colour = G.C.L_BLACK,
+              r = 0.3,
+            },
+            nodes = {
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  {
+                    n = G.UIT.O,
+                    config = {
+                      object = DynaText({
+                        string = "Enable GEN-QOL",
+                        colours = { G.C.WHITE },
+                        shadow = false,
+                        scale = 0.5,
+                      }),
+                    },
+                  },
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  saturnUI_create_toggle({
+                    ref_table = Saturn.USER.SETTINGS.GENQOL,
+                    ref_value = "ENABLED",
+                    active_colour = Saturn.UI.COLOURS.MENUS.CHECK_ACTIVE,
+                    callback = function(x)
+                      nativefs.write(Saturn.MOD.PATH .. "user/settings.lua", STR_PACK(Saturn.USER.SETTINGS))
+                    end,
+                    col = true,
+                  }),
+                },
+              },
+              {
+                n = G.UIT.C,
+                config = {
+                  align = "cm",
+                  padding = 0.1,
+                },
+                nodes = {
+                  UIBox_button({
+                    label = { "Config" },
+                    button = "genqol_options",
                     minw = 2,
                     minh = 0.75,
                     scale = 0.5,

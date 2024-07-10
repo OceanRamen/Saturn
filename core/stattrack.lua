@@ -70,25 +70,25 @@ localizations.plus_mults = {
     {id = "j_bootstraps", counter_text = "{C:inactive}(Total +mult activations: {C:mult}#4#{C:inactive}){}" },
 }
 localizations.plus_chips = {
-    {id = "j_sly", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_wily", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_crafty", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_clever", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_devious", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_banner", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
-    {id = "j_scary_face", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
-    {id = "j_odd_todd", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
-    {id = "j_runner", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_ice_cream", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_blue_joker", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_hiker", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
-    {id = "j_square", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_stone", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_bull", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_castle", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#4#{C:inactive}){}" },
-    {id = "j_arrowhead", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
-    {id = "j_wee", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
-    {id = "j_stuntman", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_sly", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_wily", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_crafty", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_clever", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_devious", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_banner", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
+  { id = "j_scary_face", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
+  { id = "j_odd_todd", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
+  { id = "j_runner", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_ice_cream", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_blue_joker", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_hiker", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
+  { id = "j_square", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_stone", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_bull", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_castle", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#4#{C:inactive}){}" },
+  { id = "j_arrowhead", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#2#{C:inactive}){}" },
+  { id = "j_wee", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
+  { id = "j_stuntman", counter_text = "{C:inactive}(Total +chips activations: {C:chips}#3#{C:inactive}){}" },
 }
 localizations.x_mults = {
     {id = "j_stencil", counter_text = "{C:inactive}(Total xmult activations: {C:mult}#2#{C:inactive}){}"},
@@ -143,9 +143,9 @@ localizations.miscellaneous = {
     {id = "j_space", counter_text = "{C:inactive}(Total hands upgraded: {C:planet}#3#{C:inactive}){}" },
 }
 
-function Saturn.ST.addCounterLocalization(type) 
-    for _, k in ipairs(localizations[type]) do
-        local text = G.localization.descriptions.Joker[k.id].text
-        table.insert(text, #text+1, k.counter_text)
-    end
+function Saturn.ST.addCounterLocalization(type)
+  for _, k in ipairs(localizations[type]) do
+    local text = G.localization.descriptions.Joker[k.id].text
+    table.insert(text, #text + 1, k.counter_text)
+  end
 end

@@ -1,0 +1,12 @@
+{
+	"prettier.endOfLine": "auto",
+	"prettier.useTabs": true,
+	"[lua]": {
+		"editor.defaultFormatter": "JohnnyMorganz.stylua"
+	},
+	"editor.fontSize": 16,
+	"editor.formatOnPaste": true,
+	"editor.insertSpaces": true,
+	"editor.tabSize": 2,
+	"editor.detectIndentation": false,
+}
