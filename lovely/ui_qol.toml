@@ -9,7 +9,7 @@ target = "functions/UI_definitions.lua"
 pattern = "show_lose_cta and"
 position = "before"
 payload = """
-not show_lose_cta and {
+(not show_lose_cta and Saturn.USER.SETTINGS.GENQOL.ENABLED and Saturn.USER.SETTINGS.GENQOL.RETRY_BUTTON.ENABLED) and {
   n = G.UIT.R,
   config = { align = "cm" },
   nodes = {
@@ -76,7 +76,6 @@ not show_lose_cta and {
         },
       },
     },
-    --- RETRY BUTTON
     {
       n = G.UIT.C,
       config = { align = "cl", padding = 0.1 },

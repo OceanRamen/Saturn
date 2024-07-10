@@ -57,8 +57,21 @@ local default_settings = {
     ["PLUS_MULT"] = true,
     ["CARD_GEN"] = true,
   },
-  ["HIDE_PLAYED"] = true,
+  ["DECKVIEWER"] = {
+    ["ENABLED"] = true,
+    ["HIDE_PLAYED"] = {
+      ["ENABLED"] = true,
+    },
+  },
+  ["GENQOL"] = {
+    ["ENABLED"] = true,
+    ["RETRY_BUTTON"] = {
+      ["ENABLED"] = true,
+      ["COLOUR"] = HEX("13afce"),
+    }
+  }
 }
+
 function Saturn.initSaturn()
   local lovely = require("lovely")
   local nativefs = require("nativefs")
