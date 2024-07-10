@@ -1,1 +1,1 @@
-return {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=false,["CARD_GEN"]=true,["PLUS_CHIPS"]=false,["ENABLED"]=true,["X_MULT"]=false,["HIDE_PLAYED"]=true,["PLUS_MULT"]=false,},["SATURNUI"]={["ENABLED"]=true,},["HIDE_PLAYED"]=true,}
+return {["STATTRACK"]={["MONEY_GEN"]=true,["MISCELLANEOUS"]=false,["PLUS_MULT"]=false,["PLUS_CHIPS"]=false,["ENABLED"]=true,["X_MULT"]=false,["HIDE_PLAYED"]=true,["CARD_GEN"]=true,},["SATURNUI"]={["ENABLED"]=true,},["HIDE_PLAYED"]=true,}
