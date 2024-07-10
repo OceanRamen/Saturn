@@ -629,7 +629,7 @@ function G.FUNCS.genqol_options(e)
             n = G.UIT.O,
             config = {
               object = DynaText({
-                string = "DeckViewer+ Options",
+                string = "GenQOL Options",
                 colours = { G.C.WHITE },
                 shadow = true,
                 scale = 0.4,
