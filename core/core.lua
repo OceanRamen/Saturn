@@ -1,12 +1,15 @@
+local lovely = require("lovely")
 local nativefs = require("nativefs")
 Saturn = {}
 Saturn.MOD = {}
 Saturn.MOD.VERSION = "1.2.2-PRE-ALPHA"
 Saturn.MOD.RELEASE = false
+Saturn.MOD.PATH = lovely.mod_dir .. "/Saturn/"
 
 Saturn.USER = {}
 Saturn.TOOLS = {}
 Saturn.debug_true = true
+
 local function requireWithNFS(modulePath)
   -- Read the file content
   local content, err = nativefs.read(modulePath)
@@ -72,11 +75,12 @@ local default_settings = {
   }
 }
 
+local Timer = requireWithNFS(Saturn.MOD.PATH .. "functions/timer.lua")
+
 function Saturn.initSaturn()
   local lovely = require("lovely")
   local nativefs = require("nativefs")
-
-  Saturn.MOD.PATH = lovely.mod_dir .. "/Saturn/"
+  
   Saturn.TOOLS.LOGGER = requireWithNFS(Saturn.MOD.PATH .. "tools/logger.lua")
   Saturn.TOOLS.INSPECTOR = requireWithNFS(Saturn.MOD.PATH .. "tools/inspector.lua")
   --- Load User Settings
@@ -103,7 +107,52 @@ function Saturn.initSaturn()
   --- Load Saturn Components
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/stattrack.lua")))()
   assert(load(nativefs.read(Saturn.MOD.PATH .. "core/usersettings.lua")))()
-  assert(load(nativefs.read(Saturn.MOD.PATH .. "core/challengeQOL.lua")))()
-
+  assert(load(nativefs.read(Saturn.MOD.PATH .. "core/genqol.lua")))()
   Saturn.TOOLS.LOGGER.logInfo("initialization succesful")
+end
+
+local function onTimerStop(elapsedTime)
+  print("Timer stopped at: " .. string.format("%.2f", elapsedTime) .. " seconds")
+end
+
+local game_start_run_ref = Game.start_run
+function Game:start_run(args)
+  game_start_run_ref(self, args)
+  if Saturn.USER.SETTINGS.GENQOL["ENABLED"] and Saturn.USER.SETTINGS.GENQOL.TIMER["ENABLED"] then
+    Saturn.TIMER = Timer:new()
+    Saturn.TIMER:start(onTimerStop)
+  end
+end
+
+local game_update_game_over_ref = Game.update_game_over
+function Game:update_game_over(dt)
+  if Saturn.TIMER and Saturn.TIMER.running then 
+    Saturn.TIMER:stop()
+    print(Saturn.TIMER.elapsed)
+  end
+  game_update_game_over_ref(self, dt)
+end
+
+local game_update_ref = Game.update
+function Game:update(dt)
+  game_update_ref(self, dt)
+  if Saturn.TIMER and Saturn.TIMER.running then
+    Saturn.TIMER:update(dt)
+  end
+  if Saturn.USER.SETTINGS.GENQOL["ENABLED"] and Saturn.USER.SETTINGS.GENQOL.TIMER["ENABLED"] and Saturn.USER.SETTINGS.GENQOL.TIMER["DISPLAY"] then
+    
+  end
+end
+
+local game_draw_ref = Game.draw
+function Game:draw()
+  game_draw_ref(self)
+  if Saturn.USER.SETTINGS.GENQOL["ENABLED"] and Saturn.USER.SETTINGS.GENQOL.TIMER["ENABLED"] and Saturn.USER.SETTINGS.GENQOL.TIMER["DISPLAY"] then
+    if Saturn.TIMER then
+      love.graphics.push()
+      love.graphics.setColor(G.C.WHITE)
+      love.graphics.print(Saturn.TIMER:getFormattedTime(), 20, 50)
+      love.graphics.pop()
+    end
+  end
 end

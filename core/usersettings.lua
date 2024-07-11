@@ -656,6 +656,8 @@ function G.FUNCS.genqol_options(e)
   })
 end
 
+--- TODO: timer settings page
+
 --- Saturn Settings Menu
 function G.FUNCS.saturnUI_prefs_button(e) -- Saturn settings menu button
   G.SETTINGS.paused = true
