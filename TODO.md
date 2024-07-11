@@ -14,9 +14,11 @@
 
 ### In Progress
 
-- [ ] StatTrack.lua #feat 2024-07-07
-- [ ] Challenge "Retry" Button #feat 2024-07-08
+- [ ] StatTrack.lua #fix 2024-07-07
+  - Few bugs needing to be squashed
 
 ### Done ✓
 
 - [X] In-game settings page #feat 2024-07-08
+- [X] Challenge "Retry" Button #feat 2024-07-10
+- [X] Deckviewer+ Hide played Cards #feat 2024-07-10

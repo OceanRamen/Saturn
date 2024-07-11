@@ -9,12 +9,14 @@ target = "functions/misc_functions.lua"
 pattern = "function init_localization()"
 position = "after"
 payload = """
-if Saturn.USER.SETTINGS.STATTRACK.MONEY_GEN then Saturn.ST.addCounterLocalization("money_generators") end
-if Saturn.USER.SETTINGS.STATTRACK.CARD_GEN then Saturn.ST.addCounterLocalization("card_generators") end
-if Saturn.USER.SETTINGS.STATTRACK.PLUS_MULT then Saturn.ST.addCounterLocalization("plus_mults") end
-if Saturn.USER.SETTINGS.STATTRACK.PLUS_CHIPS then Saturn.ST.addCounterLocalization("plus_chips") end
-if Saturn.USER.SETTINGS.STATTRACK.X_MULT then Saturn.ST.addCounterLocalization("x_mults") end
-if Saturn.USER.SETTINGS.STATTRACK.MISCELLANEOUS then Saturn.ST.addCounterLocalization("miscellaneous") end
+if Saturn.USER.SETTINGS.STATTRACK.ENABLED then
+  if Saturn.USER.SETTINGS.STATTRACK.MONEY_GEN then Saturn.ST.addCounterLocalization("money_generators") end
+  if Saturn.USER.SETTINGS.STATTRACK.CARD_GEN then Saturn.ST.addCounterLocalization("card_generators") end
+  if Saturn.USER.SETTINGS.STATTRACK.PLUS_MULT then Saturn.ST.addCounterLocalization("plus_mults") end
+  if Saturn.USER.SETTINGS.STATTRACK.PLUS_CHIPS then Saturn.ST.addCounterLocalization("plus_chips") end
+  if Saturn.USER.SETTINGS.STATTRACK.X_MULT then Saturn.ST.addCounterLocalization("x_mults") end
+  if Saturn.USER.SETTINGS.STATTRACK.MISCELLANEOUS then Saturn.ST.addCounterLocalization("miscellaneous") end
+end
 """
 match_indent = true
 overwrite = false
