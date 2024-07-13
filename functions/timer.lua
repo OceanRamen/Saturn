@@ -6,6 +6,7 @@ function Timer:new(callback)
     callback = callback or nil,
     elapsed = 0,
     running = false,
+    disp = "",
   }
   setmetatable(obj, Timer)
   return obj

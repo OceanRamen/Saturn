@@ -581,7 +581,8 @@ function G.FUNCS.genqol_options(e)
   left_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
   right_settings = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
   local genqol_settings = {
-    { feat = "RETRY_BUTTON", setting = "ENABLED", name = "\"Retry\" Button" },
+    { feat = "RETRY_BUTTON", setting = "ENABLED", name = "Show \"Retry\" Button" },
+    { feat = "TIMER", setting = "ENABLED", name = "Show Run Timer"},
   }
   for k, v in pairs(genqol_settings) do
     right_settings.nodes[#right_settings.nodes + 1] = create_toggle({
