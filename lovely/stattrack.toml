@@ -484,7 +484,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = 'if raised_card == context.other_card then'
+pattern = "if self.ability.name == 'Raised Fist' then"
 position = "after"
 payload = "if self.counter then self.counter = self.counter + 1 end"
 match_indent = true
@@ -510,14 +510,60 @@ payload = "if self.counter then self.counter = self.counter + 1 end"
 match_indent = true
 overwrite = false
 
-# Gros Michel
-#TODO: REGEX
+# Gros Michel, Cavendish
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''return\s*\{\s*message\s*=\s*localize\('k_safe_ex'\)\s*\}'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+self.counter = self.counter + 1
+return {
+  message = localize('k_safe_ex')
+}
+'''
+match_indent = true
 
 # Even Steven
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Even\sSteven'\sand\s*context.other_card:get_id\(\)\s<=\s10\sand\s*context.other_card:get_id\(\)\s>=\s0\sand\s*context.other_card:get_id\(\)%2\s==\s0\s*then\s*return\s\{\s*mult\s=\sself.ability.extra\,\s*card\s=\sself\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Even Steven' and
+context.other_card:get_id() <= 10 and 
+context.other_card:get_id() >= 0 and
+context.other_card:get_id()%2 == 0
+then
+    self.counter = self.counter + 1
+    return {
+        mult = self.ability.extra,
+        card = self
+    }
+end
+'''
+match_indent = true
 
 # Supernova
-#TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Supernova'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_mult'\,vars=\{G.GAME.hands\[context.scoring_name\].played\}\}\,\s*mult_mod\s=\sG.GAME.hands\[context.scoring_name\].played\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Supernova' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_mult',vars={G.GAME.hands[context.scoring_name].played}},
+        mult_mod = G.GAME.hands[context.scoring_name].played
+    }
+end
+'''
+match_indent = true
 
 # Ride the Bus
 [[patches]]
@@ -599,9 +645,6 @@ payload = "if self.counter then self.counter = self.counter + 1 end"
 match_indent = true
 overwrite = false
 
-# Smiley
-# TODO: REGEX
-
 # Swashbonkler
 [[patches]]
 [patches.pattern]
@@ -664,7 +707,7 @@ payload = "if self.counter then self.counter = self.counter + 1 end"
 match_indent = true
 overwrite = false
 
-# Scary Face
+# Scary Face, Smiley Face, Sock and Buskin
 [[patches]]
 [patches.pattern]
 target = "card.lua"
@@ -675,13 +718,61 @@ match_indent = true
 overwrite = false
 
 # Odd Todd
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''\s*\(context.other_card:get_id\(\)\s==\s14\)\)\s*then\s*return\s\{\s*chips\s=\sself.ability.extra\,\s*card\s=\sself\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+(context.other_card:get_id() == 14))
+then
+    self.counter = self.counter + 1
+    return {
+        mult = self.ability.extra,
+        card = self
+    }
+end
+'''
+match_indent = true
 
 # Runner
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Runner'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_chips'\,vars=\{self.ability.extra.chips\}\}\,\s*chip_mod\s=\sself.ability.extra.chips\,\s*colour\s=\sG.C.CHIPS\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Runner' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
+        chip_mod = self.ability.extra.chips, 
+        colour = G.C.CHIPS
+    }
+end
+'''
+match_indent = true
 
 # Icecream
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Ice\sCream'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_chips'\,vars=\{self.ability.extra.chips\}\}\,\s*chip_mod\s=\sself.ability.extra.chips\,\s*colour\s=\sG.C.CHIPS\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Ice Cream' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
+        chip_mod = self.ability.extra.chips, 
+        colour = G.C.CHIPS
+    }
+end
+'''
+match_indent = true
 
 # Blue Joker
 [[patches]]
@@ -704,7 +795,23 @@ match_indent = true
 overwrite = false
 
 # Square
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Square\sJoker'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_chips'\,vars=\{self.ability.extra.chips\}\}\,\s*chip_mod\s=\sself.ability.extra.chips\,\s*colour\s=\sG.C.CHIPS\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Square Joker' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
+        chip_mod = self.ability.extra.chips, 
+        colour = G.C.CHIPS
+    }
+end
+'''
+match_indent = true
 
 # Stone Joker
 [[patches]]
@@ -737,10 +844,39 @@ match_indent = true
 overwrite = false
 
 # Wee
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Wee\sJoker'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_chips'\,vars=\{self.ability.extra.chips\}\}\,\s*chip_mod\s=\sself.ability.extra.chips\,\s*colour\s=\sG.C.CHIPS\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Wee Joker' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_chips',vars={self.ability.extra.chips}},
+        chip_mod = self.ability.extra.chips, 
+        colour = G.C.CHIPS
+    }
+end
+'''
 
 # Stuntman
-# TODO: REGEX
+[[patches]]
+[patches.regex]
+target = "card.lua"
+pattern = '''if\sself.ability.name\s==\s'Stuntman'\sthen\s*return\s\{\s*message\s=\slocalize\{type='variable'\,key='a_chips'\,vars=\{self.ability.extra.chip_mod\}\}\,\s*chip_mod\s=\sself.ability.extra.chip_mod\,\s*\}\s*end'''
+position = "at"
+line_prepend = '$indent'
+payload = '''
+if self.ability.name == 'Stuntman' then
+    self.counter = self.counter + 1
+    return {
+        message = localize{type='variable',key='a_chips',vars={self.ability.extra.chip_mod}},
+        chip_mod = self.ability.extra.chip_mod
+    }
+end
+'''
 
 # xmult jokers
 
@@ -847,15 +983,29 @@ match_indent = true
 overwrite = false
 
 # Baron
-# counts activations on debuffed cards. would need to regex to prevent that.
 [[patches]]
-[patches.pattern]
+[patches.regex]
 target = "card.lua"
-pattern = 'context.other_card:get_id() == 13 then'
-position = "after"
-payload = "if self.counter then self.counter = self.counter + 1 end"
-match_indent = true
-overwrite = false
+pattern = '''if self.ability.name == 'Baron' and\s*context.other_card:get_id\(\) == 13 then\s*if context.other_card.debuff then\s*return \{\s*message = localize\('k_debuffed'\)\,\s*colour = G.C.RED\,\s*card = self\,\s*\}\s*else\s*return \{\s*x_mult = self.ability.extra\,\s*card = self\s*\}\s*end\s*end'''
+position = "at"
+payload = '''
+if self.ability.name == 'Baron' and
+    context.other_card:get_id() == 13 then
+    if context.other_card.debuff then
+        return {
+            message = localize('k_debuffed'),
+            colour = G.C.RED,
+            card = self,
+        }
+    else
+    self.counter = self.counter + 1
+        return {
+            x_mult = self.ability.extra,
+            card = self
+        }
+    end
+end
+'''
 
 # Obelisk
 [[patches]] #    counter decrement on reset
@@ -1017,7 +1167,7 @@ match_indent = true
 overwrite = false
 
 # Duo, Trio, Family, Order, Tribe
-# TODO: find where they are calculated
+# these are not calced in card.lua, maybe in future track, but not a priority.
 
 # Drivers License
 [[patches]]
@@ -1085,7 +1235,7 @@ overwrite = false
 [[patches]]
 [patches.pattern]
 target = "card.lua"
-pattern = '(next(context.card_effects[1]) or # context.card_effects > 1) then'
+pattern = '(next(context.card_effects[1]) or #context.card_effects > 1) then'
 position = "after"
 payload = "if self.counter then self.counter = self.counter + self.ability.extra end"
 match_indent = true
@@ -1130,9 +1280,6 @@ position = "after"
 payload = "if self.counter then self.counter = self.counter + self.ability.extra end"
 match_indent = true
 overwrite = false
-
-# Sock and Buskin
-# TODO: REGEX
 
 # Hanging Chad
 [[patches]]
