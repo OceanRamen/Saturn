@@ -20,15 +20,6 @@ name = 'nativefs'
 target = "game.lua"
 pattern = "self:load_profile(G.SETTINGS.profile or 1)"
 position = "after"
-payload = "Saturn.initSaturn()"
+payload = "S:start_up()"
 match_indent = true
 overwrite = false
-
-[[patches]] #   Replace splash-screen Jimbo with saturn
-[patches.pattern]
-target = "game.lua"
-pattern = "SC = Card(G.ROOM.T.w/2 - SC_scale*G.CARD_W/2, 10. + G.ROOM.T.h/2 - SC_scale*G.CARD_H/2, SC_scale*G.CARD_W, SC_scale*G.CARD_H, G.P_CARDS.empty, G.P_CENTERS['j_joker'])"
-position = "at"
-payload = "SC = Card(G.ROOM.T.w/2 - SC_scale*G.CARD_W/2, 10. + G.ROOM.T.h/2 - SC_scale*G.CARD_H/2, SC_scale*G.CARD_W, SC_scale*G.CARD_H, G.P_CARDS.empty, G.P_CENTERS['c_saturn'])"
-match_indent = true
-overwrite = true

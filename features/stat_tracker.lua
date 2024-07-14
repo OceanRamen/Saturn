@@ -1,8 +1,6 @@
 local lovely = require("lovely")
 local nativefs = require("nativefs")
 
-Saturn.ST = {}
-
 local localizations = {}
 localizations.money_generators = {
     { id = "j_golden", counter_text = "{C:inactive}(Total $ generated: {C:money}$#2#{C:inactive}){}" },
@@ -143,7 +141,7 @@ localizations.miscellaneous = {
     {id = "j_space", counter_text = "{C:inactive}(Total hands upgraded: {C:planet}#3#{C:inactive}){}" },
 }
 
-function Saturn.ST.addCounterLocalization(type)
+function addCounterLocalization(type)
   for _, k in ipairs(localizations[type]) do
     local text = G.localization.descriptions.Joker[k.id].text
     table.insert(text, #text + 1, k.counter_text)

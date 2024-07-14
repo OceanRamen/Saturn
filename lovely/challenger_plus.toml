@@ -9,7 +9,7 @@ target = "functions/UI_definitions.lua"
 pattern = "show_lose_cta and"
 position = "before"
 payload = """
-(not show_lose_cta and Saturn.USER.SETTINGS.GENQOL.ENABLED and Saturn.USER.SETTINGS.GENQOL.RETRY_BUTTON.ENABLED) and {
+(not show_lose_cta and S.SETTINGS.modules.challenger_plus.enabled and S.SETTINGS.modules.challenger_plus.features.retry_button) and {
   n = G.UIT.R,
   config = { align = "cm" },
   nodes = {

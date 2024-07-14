@@ -28,7 +28,7 @@ if
 then
   greyed = true
 end
-if Saturn.USER.SETTINGS.DECKVIEWER.ENABLED and Saturn.USER.SETTINGS.DECKVIEWER.HIDE_PLAYED.ENABLED then
+if S.SETTINGS.modules.deckviewer_plus.enabled and S.SETTINGS.modules.deckviewer_plus.features.hide_played_cards then
   if not greyed then
     card_count = card_count + 1
     local copy = copy_card(SUITS[suit_map[j]][i], nil, _scale)

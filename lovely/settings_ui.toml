@@ -26,7 +26,7 @@ overwrite = true
 target = "functions/UI_definitions.lua"
 pattern = "local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})"
 position = "after"
-payload = "local saturn_settings = UIBox_button({button = 'saturnUI_prefs_button', label = {'Saturn'}, colour = G.C.SECONDARY_SET.Planet, minw = 5, focus_args = {snap_to = true}})"
+payload = "local saturn_settings = UIBox_button({button = 'saturn_preferences_button', label = {'Saturn'}, colour = G.C.SECONDARY_SET.Planet, minw = 5, focus_args = {snap_to = true}})"
 match_indent = true
 
 [[patches]]
@@ -37,7 +37,7 @@ position = "after"
 payload = "saturn_settings,"
 match_indent = true
 
-[[patches]] #   Saturn VERSION dispaly on Main Menu
+[[patches]] # Display Saturn Version on main menu
 [patches.pattern]
 target = "game.lua"
 pattern = "if replace_card and (G.P_CENTERS.j_blueprint.unlocked) then"
@@ -46,7 +46,7 @@ payload = """
 UIBox{
   definition = 
   {n=G.UIT.ROOT, config={align = "cm", colour = G.C.UI.TRANSPARENT_DARK}, nodes={
-    {n=G.UIT.T, config={text = "SATURN-"..Saturn.MOD.VERSION, scale = 0.3, colour = G.C.SECONDARY_SET.Planet}}
+    {n=G.UIT.T, config={text = "SATURN-"..S.VERSION, scale = 0.3, colour = G.C.SECONDARY_SET.Planet}}
   }}, 
   config = {align="tri", offset = {x=0,y=0.3}, major = G.ROOM_ATTACH, bond = 'Weak'}
 }
