@@ -1,8 +1,5 @@
--- Helper.lua
-local Helper = {}
-
 -- Function to inspect a table up to a certain depth
-function Helper.inspectDepth(tbl, indent, depth)
+function inspectDepth(tbl, indent, depth)
   if depth and depth > 5 then
     return "Depth limit reached"
   end
@@ -18,7 +15,7 @@ function Helper.inspectDepth(tbl, indent, depth)
     local formatting = string.rep("  ", indent) .. tostring(k) .. ": "
     if type(v) == "table" then
       str = str .. formatting .. "\n"
-      str = str .. Helper.inspectDepth(v, indent + 1, (depth or 0) + 1)
+      str = str .. inspectDepth(v, indent + 1, (depth or 0) + 1)
     elseif type(v) == "function" then
       str = str .. formatting .. "function\n"
     elseif type(v) == "boolean" then
@@ -34,7 +31,7 @@ end
 --- Inspects a table and returns its string representation.
 -- @param tbl The table to inspect.
 -- @return A string representation of the table.
-function Helper.inspect(tbl)
+function inspect(tbl)
   if type(tbl) ~= "table" then
     return "Not a table"
   end
@@ -48,4 +45,17 @@ function Helper.inspect(tbl)
   return str
 end
 
-return Helper
+function deepcopy(orig)
+  local orig_type = type(orig)
+  local copy
+  if orig_type == "table" then
+    copy = {}
+    for orig_key, orig_value in next, orig, nil do
+      copy[deepcopy(orig_key)] = deepcopy(orig_value)
+    end
+    setmetatable(copy, deepcopy(getmetatable(orig)))
+  else -- number, string, boolean, etc
+    copy = orig
+  end
+  return copy
+end

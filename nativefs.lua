@@ -576,4 +576,22 @@ else
 	end
 end
 
+function nativefs.require(modulePath)
+    -- Read the file content
+  local content, err = nativefs.read(modulePath)
+  if not content then
+    error("Error reading module file: " .. tostring(err))
+  end
+
+  -- Load the content as a chunk
+  local chunk, loadErr = load(content, modulePath)
+  if not chunk then
+    error("Error loading module chunk: " .. tostring(loadErr))
+  end
+
+  -- Execute the chunk and return the module
+  local result = chunk()
+  return result
+end
+
 return nativefs

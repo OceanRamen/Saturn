@@ -9,13 +9,13 @@ target = "functions/misc_functions.lua"
 pattern = "function init_localization()"
 position = "after"
 payload = """
-if Saturn.USER.SETTINGS.STATTRACK.ENABLED then
-  if Saturn.USER.SETTINGS.STATTRACK.MONEY_GEN then Saturn.ST.addCounterLocalization("money_generators") end
-  if Saturn.USER.SETTINGS.STATTRACK.CARD_GEN then Saturn.ST.addCounterLocalization("card_generators") end
-  if Saturn.USER.SETTINGS.STATTRACK.PLUS_MULT then Saturn.ST.addCounterLocalization("plus_mults") end
-  if Saturn.USER.SETTINGS.STATTRACK.PLUS_CHIPS then Saturn.ST.addCounterLocalization("plus_chips") end
-  if Saturn.USER.SETTINGS.STATTRACK.X_MULT then Saturn.ST.addCounterLocalization("x_mults") end
-  if Saturn.USER.SETTINGS.STATTRACK.MISCELLANEOUS then Saturn.ST.addCounterLocalization("miscellaneous") end
+if S.SETTINGS.modules.stattrack.enabled then
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.money_generators then addCounterLocalization("money_generators") end
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.card_generators then addCounterLocalization("card_generators") end
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.chips_plus then addCounterLocalization("plus_mults") end
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.mult_plus then addCounterLocalization("plus_chips") end
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.mult_mult then addCounterLocalization("x_mults") end
+  if S.SETTINGS.modules.stattrack.features.joker_tracking.groups.miscellaneous then addCounterLocalization("miscellaneous") end
 end
 """
 match_indent = true
@@ -280,9 +280,13 @@ overwrite = false
 [[patches]] 
 [patches.pattern]
 target = "card.lua"
-pattern = "G.GAME.dollar_buffer = (G.GAME.dollar_buffer or 0) + self.ability.extra.dollars"
+pattern = "pseudorandom('parking') < G.GAME.probabilities.normal/self.ability.extra.odds then"
 position = "after"
-payload = "if self.counter then self.counter = self.counter + self.ability.extra.dollars end"
+payload = '''
+if not context.other_card.debuff then
+  if self.counter then self.counter = self.counter + self.ability.extra.dollars end
+end
+'''
 match_indent = true
 overwrite = false
 
