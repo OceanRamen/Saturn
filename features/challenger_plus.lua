@@ -21,17 +21,10 @@ end
 G.FUNCS.mass_use_card = function(e)
   local selected_card = e.config.ref_table
 
-  if selected_card.ability.set == "Planet" then
-    --- Mass_use planet cards
-  end
-
-  if selected_card.ability.set == "Tarot" and (selected_card.ability.name == "Temperance" or selected_card.ability.name == "Hermit") then
-    --- Mass_use temperance + hermit
-  end
-
   local area = G.STATE
   local to_consume = {}
   local cards = G.consumeables.cards
+
   -- First pass: Collect cards to be consumed
   for k, v in pairs(cards) do
     if v:can_use_consumeable() then
@@ -41,27 +34,125 @@ G.FUNCS.mass_use_card = function(e)
     end
   end
 
-  -- Second pass: Use the collected cards
-  for _, card in ipairs(to_consume) do
-    local e = { config = { ref_table = card } }
-    -- G.FUNCS.use_card(e)
-    if card.area then
-      card.area:remove_card(card)
+  if selected_card.ability.set == "Planet" then
+    local area = G.STATE
+    local to_consume = {}
+    local cards = G.consumeables.cards
+
+    -- First pass: Collect cards to be consumed
+    for k, v in pairs(cards) do
+      if v:can_use_consumeable() then
+        if v.label == selected_card.label then
+          table.insert(to_consume, v)
+        end
+      end
     end
 
-    card:use_consumeable(area)
-    draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute)
-    for i = 1, #G.jokers.cards do
-      G.jokers.cards[i]:calculate_joker({ using_consumeable = true, consumeable = card })
+    -- Second pass: Use the collected cards
+    local n_levels = #to_consume
+
+    for _, card in ipairs(to_consume) do
+      local e = { config = { ref_table = card } }
+
+      -- G.FUNCS.use_card(e)
+      if card.area then
+        card.area:remove_card(card)
+      end
+      for i = 1, #G.jokers.cards do
+        G.jokers.cards[i]:calculate_joker({ using_consumeable = true, consumeable = card })
+      end
+      -- card:remove()
+      card:start_dissolve()
     end
-    -- card:remove()
+
+    update_hand_text({ sound = "button", volume = 0.7, pitch = 0.8, delay = 0.3 }, {
+      handname = localize(selected_card.ability.consumeable.hand_type, "poker_hands"),
+      chips = G.GAME.hands[selected_card.ability.consumeable.hand_type].chips,
+      mult = G.GAME.hands[selected_card.ability.consumeable.hand_type].mult,
+      level = G.GAME.hands[selected_card.ability.consumeable.hand_type].level,
+    })
+    delay(1.3)
+    level_up_hand(selected_card, selected_card.ability.consumeable.hand_type, nil, n_levels)
+    update_hand_text(
+      { sound = "button", volume = 0.7, pitch = 1.1, delay = 0 },
+      { mult = 0, chips = 0, handname = "", level = "" }
+    )
+  end
+
+  if
+    selected_card.ability.set == "Tarot"
+    and (selected_card.ability.name == "Temperance" or selected_card.ability.name == "The Hermit")
+  then
+    local money_tot = G.GAME.dollars
+    stop_use()
+    if selected_card.ability.name == "The Hermit" then
+      for i = 1, #to_consume do
+        money_tot = money_tot + math.max(0, math.min(money_tot, selected_card.ability.extra))
+      end
+      money_tot = money_tot - G.GAME.dollars
+      G.E_MANAGER:add_event(Event({
+        trigger = "after",
+        delay = 0.4,
+        func = function()
+          play_sound("timpani")
+          selected_card:juice_up(0.3, 0.5)
+          ease_dollars(money_tot, true)
+          return true
+        end,
+      }))
+      delay(0.6)
+    elseif selected_card.ability.name == "Temperance" then
+      money_tot = 0
+      for i = 1, #to_consume do
+        money_tot = money_tot + selected_card.ability.money
+      end
+      G.E_MANAGER:add_event(Event({
+        trigger = "after",
+        delay = 0.4,
+        func = function()
+          play_sound("timpani")
+          selected_card:juice_up(0.3, 0.5)
+          ease_dollars(money_tot, true)
+          return true
+        end,
+      }))
+      delay(0.6)
+    end
+  end
+
+  -- Second pass: Use the collected cards
+  for _, card in ipairs(to_consume) do
+    if card.area then
+      card:remove()
+    end
     card:start_dissolve()
+  end
+end
+
+G.FUNCS.check_mass_use = function(e)
+  local card = e.config.ref_table
+  if
+    card:can_use_consumeable()
+    and (
+      (card.ability.set == "Planet")
+      or (card.ability.set == "Tarot" and (card.ability.name == "Hermit" or card.ability.name == "Temperance"))
+    )
+  then
+    return true
+  else
+    return false
   end
 end
 
 G.FUNCS.can_mass_use = function(e)
   local card = e.config.ref_table
-  if e.config.ref_table:can_use_consumeable() then
+  if
+    card:can_use_consumeable()
+    and (
+      (card.ability.set == "Planet")
+      or (card.ability.set == "Tarot" and (card.ability.name == "Hermit" or card.ability.name == "Temperance"))
+    )
+  then
     e.config.colour = G.C.SECONDARY_SET.Planet
     e.config.button = "mass_use_card"
   else
