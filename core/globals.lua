@@ -7,6 +7,8 @@ function Saturn:set_globals()
   self.VERSION = VERSION
   self.MOD_PATH = lovely.mod_dir .. "/Saturn/"
   
+  self.consume_cards = false
+
   self.SETTINGS = {
     modules = {
       stattrack = {

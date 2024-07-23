@@ -13,6 +13,10 @@ function Saturn:start_up()
   self:fetch_settings()
 end
 
+function Saturn:update(dt)
+
+end
+
 function Saturn:fetch_settings()
   if not nativefs.getInfo(self.MOD_PATH .. "user_settings.lua") then
     local function tableToString(tbl, indent)
@@ -37,10 +41,14 @@ function Saturn:fetch_settings()
     end
     local settings_default = "return " .. tableToString(self.SETTINGS)
     local success, err = nativefs.write(self.MOD_PATH .. "user_settings.lua", settings_default)
-    if not success then return error(err) end
+    if not success then
+      return error(err)
+    end
   end
-  local user_settings = STR_UNPACK(nativefs.read(self.MOD_PATH.. "user_settings.lua"))
-  if user_settings ~= nil then self.SETTINGS = user_settings end
+  local user_settings = STR_UNPACK(nativefs.read(self.MOD_PATH .. "user_settings.lua"))
+  if user_settings ~= nil then
+    self.SETTINGS = user_settings
+  end
 end
 
 function Saturn:write_settings()

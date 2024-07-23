@@ -23,3 +23,12 @@ position = "after"
 payload = "S:start_up()"
 match_indent = true
 overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "timer_checkpoint('e_manager', 'update')"
+position = "after"
+payload = "S:update(dt)"
+match_indent = true
+overwrite = false
