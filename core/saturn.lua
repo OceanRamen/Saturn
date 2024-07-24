@@ -14,7 +14,42 @@ function Saturn:start_up()
 end
 
 function Saturn:update(dt)
-
+  if G.latest_uht and G.latest_uht.config and G.latest_uht.vals then
+    s_update_hand_text(G.latest_uht.config, G.latest_uht.vals)
+    G.latest_uht = nil
+  end 
+  if S.dollar_update then
+    local dollar_UI = G.HUD:get_UIE_by_ID("dollar_text_UI")
+    dollar_UI.config.object:update()
+    G.HUD:recalculate()
+    local function _mod(mod)
+      mod = mod or 0
+      local text = "+" .. localize("$")
+      local col = G.C.MONEY
+      if mod < 0 then
+        text = "-" .. localize("$")
+        col = G.C.RED
+      end
+      attention_text({
+        text = text .. tostring(math.abs(mod)),
+        scale = 0.8,
+        hold = 1.5,
+        cover = dollar_UI.parent,
+        cover_colour = col,
+        align = "cm",
+      })
+      play_sound("coin1")
+    end
+    G.E_MANAGER:add_event(Event({
+      trigger = "immediate",
+      func = function()
+        _mod(S.add_dollar_amt)
+        S.add_dollar_amt = 0
+        return true
+      end,
+    }), "other")
+    S.dollar_update = false
+  end
 end
 
 function Saturn:fetch_settings()

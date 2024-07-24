@@ -26,21 +26,6 @@ end
 local function saturn_get_settings_tab(_tab)
   if _tab == "Features" then
     local t = {
-      {
-        n = G.UIT.R,
-        config = { align = "cm", padding = 0.1 },
-        nodes = {
-          UIBox_button({
-            label = { "Use Consumeables" },
-            button = "use_consumeables",
-            minw = 2,
-            minh = 0.75,
-            scale = 0.5,
-            colour = G.C.BOOSTER,
-            col = true,
-          }),
-        },
-      },
       s_create_feature_options({
         name = "StatTracker",
         toggle_ref = S.TEMP_SETTINGS.modules.stattrack,
