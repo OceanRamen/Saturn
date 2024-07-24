@@ -6,18 +6,20 @@ VERSION = VERSION .. "-DEVELOPMENT"
 function Saturn:set_globals()
   self.VERSION = VERSION
   self.MOD_PATH = lovely.mod_dir .. "/Saturn/"
-  
+
+  self.add_dollar_amt = 0
+  self.dollar_update = false
   self.SETTINGS = {
     modules = {
       stattrack = {
-        enabled = false,
+        enabled = true,
         features = {
           joker_tracking = {
-            enabled = false, 
+            enabled = true, 
             groups = {
-              money_generators = false, 
-              card_generators = false, 
-              miscellaneous = false,
+              money_generators = true, 
+              card_generators = true, 
+              miscellaneous = true,
               chips_plus = false, 
               mult_plus = false, 
               mult_mult = false,
@@ -27,16 +29,20 @@ function Saturn:set_globals()
         },
       },
       deckviewer_plus = {
-        enabled = false,
+        enabled = true,
         features = {
-          hide_played_cards = false,
+          hide_played_cards = true,
         },
       },
       challenger_plus = {
-        enabled = false,
+        enabled = true,
         features = {
-          retry_button = false,
+          retry_button = true,
+          mass_use_button = true,
         }
+      },
+      remove_animations = {
+        enabled = true,
       }
     }
   }

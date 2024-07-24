@@ -58,7 +58,7 @@ end
 
 function G.FUNCS.saturn_preferences(e)
   G.SETTINGS.paused = true
-  
+
   local _tabs = {}
   _tabs[#_tabs + 1] = {
     label = "Features",
@@ -437,4 +437,42 @@ function G.FUNCS.config_challenger(e)
   G.FUNCS.overlay_menu({
     definition = t,
   })
+end
+
+
+function G.FUNCS.use_consumeables(e)
+  G.FUNCS:exit_overlay_menu()
+  if G.consumeables and G.consumeables.cards then
+    consume_cards(G.consumeables.cards)
+  end
+end
+
+function consume_cards(cards)
+  local area = G.STATE
+  local to_consume = {}
+
+  -- First pass: Collect cards to be consumed
+  for k, v in pairs(cards) do
+    if v:can_use_consumeable() then
+      table.insert(to_consume, v)
+    end
+  end
+
+  -- Second pass: Use the collected cards
+  for _, card in ipairs(to_consume) do
+    local e = { config = { ref_table = card } }
+    -- G.FUNCS.use_card(e)
+    if card.area then
+      card.area:remove_card(card)
+    end
+
+    card:use_consumeable(area)
+    draw_card(G.hand, G.play, 1, 'up', true, card, nil, mute)
+    for i = 1, #G.jokers.cards do
+      G.jokers.cards[i]:calculate_joker({ using_consumeable = true, consumeable = card })
+    end
+    -- card:remove()
+    card:start_dissolve()
+  end
+
 end

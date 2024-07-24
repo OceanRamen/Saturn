@@ -10,6 +10,7 @@ priority = 0
 target = "card.lua"
 pattern = '''if pseudorandom('halu'..G.GAME.round_resets.ante) < G.GAME.probabilities.normal/self.ability.extra then'''
 position = "after"
+
 payload = '''
   self:increment_st_counter(1)
 '''

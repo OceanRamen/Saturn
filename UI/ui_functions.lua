@@ -11,6 +11,7 @@ G.FUNCS.saturn_preferences_button = function(e)
   S.TEMP_SETTINGS = deepcopy(S.SETTINGS)
   return G.FUNCS.saturn_preferences()
 end
+
 function s_create_toggle(args)
   args = args or {}
   args.active_colour = args.active_colour or G.C.RED
