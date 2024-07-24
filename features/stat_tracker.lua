@@ -207,10 +207,16 @@ local type_table = {
     },
     ['retriggers'] = {
         'Cards Retriggered',
+<<<<<<< Updated upstream
         G.C.SECONDARY_SET.Spectral,
     },
     ['hands upgraded'] = {
         'Hands Upgraded',
+=======
+    },
+    ['hands upgraded'] = {
+        'Hands Upgraded:',
+>>>>>>> Stashed changes
         G.C.HAND_LEVELS[6],
     },
     ['joker gen'] = {
@@ -228,7 +234,11 @@ local type_table = {
     },
     ['blinds disabled'] = {
         'Blind Disabled',
+<<<<<<< Updated upstream
         G.C.BLIND.Boss
+=======
+        G.C.RED
+>>>>>>> Stashed changes
     },
     ['+ hands'] = {
         'Hands Given',
@@ -249,11 +259,18 @@ local type_table = {
         'Mult Given',
     },
     ['chips/mult'] = {
+<<<<<<< Updated upstream
         'Chips Mult',
     },
     ['obelisk'] = {
         'Most Played Hand',
         G.C.L_BLACK
+=======
+        'Chips / Mult',
+    },
+    ['obelisk'] = {
+        'Most Played Hand',
+>>>>>>> Stashed changes
     }
 }
 
@@ -262,6 +279,10 @@ function Card:add_to_deck()
     if self.ability.set == 'Joker' and not self.st_counter then
         self:init_st_counter()
         self.st_ref_table = self.st_counter
+<<<<<<< Updated upstream
+=======
+        ben()
+>>>>>>> Stashed changes
     end
     add_to_deck_ref(self)
 end
@@ -300,11 +321,26 @@ function Card:hover()
             self.st_ref_table = self.st_counter
         end
         if self.st_counter then
+<<<<<<< Updated upstream
+=======
+            ben('no')
+>>>>>>> Stashed changes
             self:show_st_counter()
         end
     end
 end
 
+<<<<<<< Updated upstream
+=======
+function ben(string)
+    if string then
+        print(string)
+    else
+        print('ben')
+    end
+end
+
+>>>>>>> Stashed changes
 -- hooks for calculating if a counter should be incremented
 
 local calculate_joker_ref = Card.calculate_joker
@@ -336,13 +372,21 @@ function Card:init_st_counter(args)
     self.st_counter = {
         _type = args.type or 'ERROR',
         text = args.text or type_table[args.type][1] or 'ERROR',
+<<<<<<< Updated upstream
         text_colour = args.text_colour or G.C.UI.TEXT_LIGHT,
+=======
+        text_colour = G.C.UI.TEXT_LIGHT,
+>>>>>>> Stashed changes
         text_size = args.text_size or 0.3,
         prefix = type_table[args.type][3] or '',
         value = args.value or 0,
         value_text = args.value_text or 'None',
         value_num = args.value_num or 1,
+<<<<<<< Updated upstream
         value_colour = type_table[args.type][2] or G.C.UI.TEXT_DARK,
+=======
+        value_colour = type_table[args.type][2] or G.C.UI.TEXT_LIGHT,
+>>>>>>> Stashed changes
         value_size = args.value_size or 0.3,
         offset = 0.05,
         node_pos = nil,
@@ -351,12 +395,17 @@ function Card:init_st_counter(args)
         UIBox = {},
         UI = nil,
     }
+<<<<<<< Updated upstream
+=======
+    self.st_ref_table = self.st_counter
+>>>>>>> Stashed changes
 end
 
 -- generates a definition for the counter
 -- part of the ui box
 
 function Card:generate_st_counter_defintion()
+<<<<<<< Updated upstream
     self.st_counter.definition = {
         n = G.UIT.ROOT,
         config = {
@@ -370,30 +419,54 @@ function Card:generate_st_counter_defintion()
                 config = {
                     align = "cm",
                 },
+=======
+    if self.st_counter then
+        if not S.SETTINGS.modules.stattrack.features.joker_tracking.groups.compact_view then
+            self.st_counter.definition = {
+                n = G.UIT.ROOT,
+                config = {
+                    align = 'cm',
+                    colour = G.C.CLEAR,
+                    padding = 0.02,
+                }, 
+>>>>>>> Stashed changes
                 nodes = {
                     {
                         n = G.UIT.R,
                         config = {
                             align = "cm",
+<<<<<<< Updated upstream
                             colour = lighten(G.C.JOKER_GREY, 0.5),
                             r = 0.1,
                             padding = 0.05,
                             emboss = 0.05,
+=======
+                            colour = G.C.CLEAR,
+>>>>>>> Stashed changes
                         },
                         nodes = {
                             {
                                 n = G.UIT.R,
                                 config = {
                                     align = "cm",
+<<<<<<< Updated upstream
                                     colour = adjust_alpha(G.C.SET.Joker, 0.8),
                                     r = 0.1,
                                     padding = 0.1,
                                 }, 
+=======
+                                    colour = lighten(G.C.JOKER_GREY, 0.5),
+                                    r = 0.1,
+                                    padding = 0.05,
+                                    emboss = 0.05,
+                                },
+>>>>>>> Stashed changes
                                 nodes = {
                                     {
                                         n = G.UIT.R,
                                         config = {
                                             align = "cm",
+<<<<<<< Updated upstream
                                             minh = 0.36,
                                         }, 
                                         nodes = {
@@ -418,19 +491,53 @@ function Card:generate_st_counter_defintion()
                                             r = 0.1,
                                             padding = 0.05,
                                             colour = G.C.WHITE,
+=======
+                                            colour = adjust_alpha(G.C.SET.Joker, 0.8),
+                                            r = 0.1,
+                                            padding = 0.1,
+>>>>>>> Stashed changes
                                         }, 
                                         nodes = {
                                             {
                                                 n = G.UIT.R,
                                                 config = {
                                                     align = "cm",
+<<<<<<< Updated upstream
                                                     padding = 0.03,
+=======
+                                                    minh = 0.36,
+                                                    colour = G.C.CLEAR,
+                                                }, 
+                                                nodes = {
+                                                    {
+                                                        n = G.UIT.T,
+                                                        config = {
+                                                            padding = 0.1,
+                                                            r = 0.1,
+                                                            text = self.st_counter.value_num > 1 and self.st_counter.text..'s' or self.st_counter.text,
+                                                            scale = self.st_counter.text_size,
+                                                            colour = self.st_counter.text_colour,
+                                                        }
+                                                    },
+                                                },
+                                            },
+                                            {
+                                                n = G.UIT.R,
+                                                config = {
+                                                    align = "cm",
+                                                    minw = 1.5,
+                                                    minh = 0.5,
+                                                    r = 0.1,
+                                                    padding = 0.05,
+                                                    colour = G.C.WHITE,
+>>>>>>> Stashed changes
                                                 }, 
                                                 nodes = {
                                                     {
                                                         n = G.UIT.R,
                                                         config = {
                                                             align = "cm",
+<<<<<<< Updated upstream
                                                         }, 
                                                         nodes = self.st_counter['_type'] == 'x mult' and {
                                                             {
@@ -523,6 +630,111 @@ function Card:generate_st_counter_defintion()
                                                                     scale = self.st_counter.value_size,
                                                                     text = self.ability.name == 'Obelisk' and self.st_counter.value_text or self.st_counter.prefix..self.st_counter.value,
                                                                     colour = self.st_counter.value_colour,
+=======
+                                                            padding = 0.03,
+                                                            colour = G.C.CLEAR,
+                                                        }, 
+                                                        nodes = {
+                                                            {
+                                                                n = G.UIT.R,
+                                                                config = {
+                                                                    align = "cm",
+                                                                    colour = G.C.CLEAR,
+                                                                }, 
+                                                                nodes = self.st_counter['_type'] == 'x mult' and {
+                                                                    {
+                                                                        n = G.UIT.C,
+                                                                        config = {
+                                                                            align = "cm",
+                                                                            padding = 0.02,
+                                                                            r = 0.1,
+                                                                            colour = G.C.RED,
+                                                                        },
+                                                                        nodes = {
+                                                                            {
+                                                                                n = G.UIT.T,
+                                                                                config = {
+                                                                                    align = "cm",
+                                                                                    scale = self.st_counter.value_size,
+                                                                                    text = 'X'..self.st_counter.value,
+                                                                                    colour = G.C.WHITE,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                }
+                                                                or self.st_counter['_type'] == 'chips/mult' and {
+                                                                    {
+                                                                        n = G.UIT.C,
+                                                                        config = {
+                                                                            align = "cm",
+                                                                            padding = 0.02,
+                                                                            colour = G.C.CLEAR,
+                                                                        },
+                                                                        nodes = {
+                                                                            {
+                                                                                n = G.UIT.T,
+                                                                                config = {
+                                                                                    align = "cm",
+                                                                                    scale = self.st_counter.value_size,
+                                                                                    text = '+'..(self.ability.name == 'Walkie Talkie' and (self.st_counter.value * 10) or self.ability.name == 'Scholar' and (self.st_counter.value * 20)),
+                                                                                    colour = G.C.BLUE,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        n = G.UIT.C,
+                                                                        config = {
+                                                                            align = "cm",
+                                                                            padding = 0.02,
+                                                                            colour = G.C.CLEAR,
+                                                                        },
+                                                                        nodes = {
+                                                                            {
+                                                                                n = G.UIT.T,
+                                                                                config = {
+                                                                                    align = "cm",
+                                                                                    scale = self.st_counter.value_size,
+                                                                                    text = ' / ',
+                                                                                    colour = G.C.L_BLACK,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                    {
+                                                                        n = G.UIT.C,
+                                                                        config = {
+                                                                            align = "cm",
+                                                                            padding = 0.02,
+                                                                            colour = G.C.CLEAR,
+                                                                        },
+                                                                        nodes = {
+                                                                            {
+                                                                                n = G.UIT.T,
+                                                                                config = {
+                                                                                    align = "cm",
+                                                                                    scale = self.st_counter.value_size,
+                                                                                    text = '+'..self.st_counter.value*4,
+                                                                                    colour = G.C.RED,
+                                                                                },
+                                                                            },
+                                                                        },
+                                                                    },
+                                                                }
+                                                                or {
+                                                                    {
+                                                                        n = G.UIT.T,
+                                                                        config = {
+                                                                            align = "cm",
+                                                                            padding = 0.1,
+                                                                            r = 0.1,
+                                                                            scale = self.st_counter.value_size,
+                                                                            text = self.ability.name == 'Obelisk' and self.st_counter.value_text or self.st_counter.prefix..self.st_counter.value,
+                                                                            colour = self.st_counter.value_colour ~= G.C.UI.TEXT_LIGHT and self.st_counter.value_colour or G.C.UI.TEXT_DARK,
+                                                                        },
+                                                                    },
+>>>>>>> Stashed changes
                                                                 },
                                                             },
                                                         },
@@ -534,11 +746,172 @@ function Card:generate_st_counter_defintion()
                                 },
                             },
                         },
+<<<<<<< Updated upstream
                     },
                 },
             }
         },
     }
+=======
+                    }
+                },
+            }
+        else
+            self.st_counter.definition = {
+                n = G.UIT.ROOT,
+                config = {
+                    align = 'cm',
+                    colour = G.C.CLEAR,
+                    padding = 0.02,
+                }, 
+                nodes = {
+                    {
+                        n = G.UIT.R,
+                        config = {
+                            align = "cm",
+                            colour = G.C.CLEAR,
+                        },
+                        nodes = {
+                            {
+                                n = G.UIT.R,
+                                config = {
+                                    align = "cm",
+                                    colour = lighten(G.C.JOKER_GREY, 0.5),
+                                    r = 0.1,
+                                    padding = 0.05,
+                                    emboss = 0.05,
+                                },
+                                nodes = {
+                                    {
+                                        n = G.UIT.R,
+                                        config = {
+                                            align = "cm",
+                                            colour = adjust_alpha(G.C.SET.Joker, 0.8),
+                                            r = 0.1,
+                                            padding = 0.1,
+                                        }, 
+                                        nodes = {
+                                            {
+                                                n = G.UIT.T,
+                                                config = {
+                                                    padding = 0.1,
+                                                    r = 0.1,
+                                                    text = self.st_counter.value_num > 1 and self.st_counter.text..'s:' or self.st_counter.text..':',
+                                                    scale = self.st_counter.text_size,
+                                                    colour = self.st_counter.text_colour,
+                                                }
+                                            },
+                                            self.st_counter['_type'] == 'x mult' and {
+                                                n = G.UIT.C,
+                                                config = {
+                                                    align = "cm",
+                                                    minw = 1.5,
+                                                    minh = 0.5,
+                                                    r = 0.1,
+                                                    padding = 0.05,
+                                                    colour = G.C.RED,
+                                                }, 
+                                                nodes = {
+                                                    {
+                                                        n = G.UIT.T,
+                                                        config = {
+                                                            align = "cm",
+                                                            scale = self.st_counter.value_size,
+                                                            text = 'X'..self.st_counter.value,
+                                                            colour = G.C.WHITE,
+                                                        },
+                                                    },
+                                                },
+                                            } 
+                                            or self.st_counter['_type'] == 'chips/mult' and {
+                                                n = G.UIT.C,
+                                                config = {
+                                                    align = "cm",
+                                                    padding = 0.02,
+                                                    colour = G.C.CLEAR,
+                                                },
+                                                nodes = {
+                                                    {
+                                                        n = G.UIT.T,
+                                                        config = {
+                                                            align = "cm",
+                                                            scale = self.st_counter.value_size,
+                                                            text = '+'..(self.ability.name == 'Walkie Talkie' and (self.st_counter.value * 10) or self.ability.name == 'Scholar' and (self.st_counter.value * 20)),
+                                                            colour = G.C.BLUE,
+                                                        },
+                                                    },
+                                                },
+                                                {
+                                                    n = G.UIT.C,
+                                                    config = {
+                                                        align = "cm",
+                                                        padding = 0.02,
+                                                        colour = G.C.CLEAR,
+                                                    },
+                                                    nodes = {
+                                                        {
+                                                            n = G.UIT.T,
+                                                            config = {
+                                                                align = "cm",
+                                                                scale = self.st_counter.value_size,
+                                                                text = ' ',
+                                                                colour = G.C.L_BLACK,
+                                                            },
+                                                        },
+                                                    },
+                                                },
+                                                {
+                                                    n = G.UIT.C,
+                                                    config = {
+                                                        align = "cm",
+                                                        padding = 0.02,
+                                                        colour = G.C.CLEAR,
+                                                    },
+                                                    nodes = {
+                                                        {
+                                                            n = G.UIT.T,
+                                                            config = {
+                                                                align = "cm",
+                                                                scale = self.st_counter.value_size,
+                                                                text = '+'..self.st_counter.value*4,
+                                                                colour = G.C.RED,
+                                                            },
+                                                        },
+                                                    },
+                                                }
+                                            }
+                                            or {
+                                                n = G.UIT.C,
+                                                config = {
+                                                    align = "cm",
+                                                    padding = 0.02,
+                                                    colour = G.C.CLEAR,
+                                                },
+                                                nodes = {
+                                                    {
+                                                        n = G.UIT.T,
+                                                        config = {
+                                                            align = "cm",
+                                                            padding = 0.1,
+                                                            r = 0.1,
+                                                            scale = self.st_counter.value_size,
+                                                            text = self.ability.name == 'Obelisk' and self.st_counter.value_text or self.st_counter.prefix..self.st_counter.value,
+                                                            colour = self.st_counter.value_colour,
+                                                        },
+                                                    },
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    }
+                },
+            }
+        end
+    end
+>>>>>>> Stashed changes
 end
 
 -- generates the alignment for the counter
@@ -575,6 +948,10 @@ end
 function Card:update_st_counter()
     self:generate_st_counter_defintion()
     self:generate_st_counter_align()
+<<<<<<< Updated upstream
+=======
+    
+>>>>>>> Stashed changes
     self:generate_st_counter_UI()
     if self.st_counter.shown then
         self:show_st_counter()
@@ -585,6 +962,7 @@ end
 -- sets it as a child of the description pop up
 
 function Card:show_st_counter()
+<<<<<<< Updated upstream
     local show_counter = false
     if (self.st_counter._type == 'money gen' or self.st_counter._type == 'value gen') and
     S.SETTINGS.modules.stattrack.features.joker_tracking.groups['money_generators'] then
@@ -609,6 +987,34 @@ function Card:show_st_counter()
         self:generate_st_counter_align()
         self:generate_st_counter_UI()
         self.children.h_popup.children.st_counter = self.st_counter.UI
+=======
+    if self.st_counter then
+        local show_counter = false
+        if (self.st_counter._type == 'money gen' or self.st_counter._type == 'value gen') and
+        S.SETTINGS.modules.stattrack.features.joker_tracking.groups['money_generators'] then
+            show_counter = true
+        elseif (self.st_counter._type == 'card gen' or self.st_counter._type == 'cards added' or self.st_counter._type == 'joker gen') and
+        S.SETTINGS.modules.stattrack.features.joker_tracking.groups['card_generators'] then
+            show_counter = true
+        elseif self.st_counter._type == '+ chips' and
+        S.SETTINGS.modules.stattrack.features.joker_tracking.groups['chips_plus'] then
+            show_counter = true
+        elseif self.st_counter._type == '+ mult' and
+        S.SETTINGS.modules.stattrack.features.joker_tracking.groups['mult_plus'] then
+            show_counter = true
+        elseif self.st_counter._type == 'x mult' and
+        S.SETTINGS.modules.stattrack.features.joker_tracking.groups['mult_mult'] then
+            show_counter = true
+        elseif self.st_counter and S.SETTINGS.modules.stattrack.features.joker_tracking.groups['miscellaneous'] then
+            show_counter = true
+        end
+        if show_counter then
+            self:generate_st_counter_defintion()
+            self:generate_st_counter_align()
+            self:generate_st_counter_UI()
+            self.children.h_popup.children.st_counter = self.st_counter.UI
+        end
+>>>>>>> Stashed changes
     end
 end
 
