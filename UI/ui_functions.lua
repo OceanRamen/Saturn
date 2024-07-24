@@ -328,7 +328,7 @@ function s_create_feature_options(args)
   return t
 end
 
-function s_create_config_options(settings)
+function s_create_config_options(settings, args)
   col_left = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
   col_right = { n = G.UIT.C, config = { align = "tl", padding = 0.05 }, nodes = {} }
 

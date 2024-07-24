@@ -23,6 +23,7 @@ function Saturn:set_globals()
               chips_plus = false, 
               mult_plus = false, 
               mult_mult = false,
+              compact_view = false,
             },
           },
         },
