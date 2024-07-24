@@ -733,9 +733,10 @@ payload = '''
 then
     self.counter = self.counter + 1
     return {
-        mult = self.ability.extra,
+        chips = self.ability.extra,
         card = self
     }
+    
 end
 '''
 match_indent = true
