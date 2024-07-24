@@ -4,7 +4,7 @@ function card_eval_status_text(a, b, c, d, e, f)
     card_eval_status_text_ref(a, b, c, d, e, f)
   end
 end
-local juice_card_ref
+local juice_card_ref = juice_card
 function juice_card(x)
   if not S.SETTINGS.modules.remove_animations.enabled then
     juice_card_ref(x)
