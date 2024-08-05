@@ -59,3 +59,30 @@ function deepcopy(orig)
   end
   return copy
 end
+
+function format_time(elapsed)
+    local totalMilliseconds = elapsed * 1000
+    local milliseconds = totalMilliseconds % 1000
+    local totalSeconds = math.floor(totalMilliseconds / 1000)
+    local seconds = totalSeconds % 60
+    local totalMinutes = math.floor(totalSeconds / 60)
+    local minutes = totalMinutes % 60
+    local hours = math.floor(totalMinutes / 60)
+    local output = ''
+    if hours > 0 then
+        output = output .. hours .. 'h '
+    end
+    if minutes > 0 then
+        output = output .. minutes .. 'm '
+    end
+    if seconds > 0 then
+        output = output .. seconds .. 's '
+    end
+    if milliseconds > 0 then
+        output = output .. math.floor(milliseconds)  .. 'ms'
+    end
+    if #output == 0 then
+        output = '0s'
+    end
+    return output
+end
