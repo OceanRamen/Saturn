@@ -11,13 +11,22 @@ end
 
 function Saturn:start_up()
   self:fetch_settings()
+  self:init_console()
 end
 
 function Saturn:update(dt)
+  if self.REROLL and self.REROLL.active then self:update_reroll(dt) end
+
+  if self.TIMER and self.TIMER.running then
+    self.TIMER:update(dt)
+    self.TIMER.disp = self.TIMER:getFormattedTime()
+  end
+
   if G.latest_uht and G.latest_uht.config and G.latest_uht.vals then
     s_update_hand_text(G.latest_uht.config, G.latest_uht.vals)
     G.latest_uht = nil
   end 
+
   if S.dollar_update then
     local dollar_UI = G.HUD:get_UIE_by_ID("dollar_text_UI")
     dollar_UI.config.object:update()
@@ -50,6 +59,43 @@ function Saturn:update(dt)
     }), "other")
     S.dollar_update = false
   end
+end
+
+function Saturn:key_press_update(key)
+  if key == "`" or self.CONSOLE.isOpen then
+      self:handle_console(key)
+  end
+end
+
+local game_start_run_ref = Game.start_run
+function Game:start_run(args)
+  game_start_run_ref(self, args)
+  if S.SETTINGS.modules.run_timer.enabled then
+    S.TIMER = Timer:new()
+    S.TIMER:start(onTimerStop)
+    Game.runTimerHUD = UIBox({
+      definition = create_UIBox_runTimer(),
+      config = { align = "cri", offset = { x = -0.3, y = 2.1 }, major = G.ROOM_ATTACH },
+    })
+  end
+end
+
+local win_game_ref = win_game
+function win_game()
+  if Saturn.TIMER and Saturn.TIMER.running then 
+    Saturn.TIMER:stop()
+    print(Saturn.TIMER.elapsed)
+  end
+  win_game_ref()
+end
+
+local game_update_game_over_ref = Game.update_game_over
+function Game:update_game_over(dt)
+  if Saturn.TIMER and Saturn.TIMER.running then 
+    Saturn.TIMER:stop()
+    print(Saturn.TIMER.elapsed)
+  end
+  game_update_game_over_ref(self, dt)
 end
 
 function Saturn:fetch_settings()
@@ -88,4 +134,5 @@ end
 
 function Saturn:write_settings()
   nativefs.write(self.MOD_PATH .. "user_settings.lua", STR_PACK(self.SETTINGS))
+  update_all_counters(true)
 end

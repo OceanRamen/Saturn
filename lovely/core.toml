@@ -32,3 +32,12 @@ position = "after"
 payload = "S:update(dt)"
 match_indent = true
 overwrite = false
+
+[[patches]] # key inputs
+[patches.pattern]
+target = "engine/controller.lua"
+pattern = "if self.text_input_hook then"
+position = "before"
+payload = "S:key_press_update(key)"
+match_indent = true
+overwrite = false

@@ -12,10 +12,8 @@ function Saturn:set_globals()
   self.SETTINGS = {
     modules = {
       stattrack = {
-        enabled = true,
         features = {
-          joker_tracking = {
-            enabled = true, 
+          joker_tracking = { 
             groups = {
               money_generators = true, 
               card_generators = true, 
@@ -23,9 +21,23 @@ function Saturn:set_globals()
               chips_plus = false, 
               mult_plus = false, 
               mult_mult = false,
-              compact_view = false,
             },
           },
+        },
+        enabled = true,
+      },
+      preferences = {
+        remove_animations = {
+          enabled = false,
+        },
+        compact_view = {
+          enabled = false,
+        },
+        show_stickers = {
+          enabled = false,
+        },
+        console = {
+          enabled = false,
         },
       },
       deckviewer_plus = {
@@ -34,6 +46,10 @@ function Saturn:set_globals()
           hide_played_cards = true,
         },
       },
+      run_timer = {
+        enabled = true,
+        config = {},
+      },
       challenger_plus = {
         enabled = true,
         features = {
@@ -41,9 +57,6 @@ function Saturn:set_globals()
           mass_use_button = true,
         }
       },
-      remove_animations = {
-        enabled = true,
-      }
     }
   }
 
