@@ -10,7 +10,7 @@ end
 
 G.FUNCS.saturn_features_button = function(e)
   S.TEMP_SETTINGS = deepcopy(S.SETTINGS)
-  return G.FUNCS.saturn_features()
+  return G.FUNCS.saturn_tabs()
 end
 
 function create_UIBox_runTimer()

@@ -1,6 +1,8 @@
 local lovely = require("lovely")
 local nativefs = require("nativefs")
 
+S.chosen = 'saturn_features'
+
 -- putting the saturn button on the main menu
 local create_UIBox_main_menu_buttons_ref = create_UIBox_main_menu_buttons
 function create_UIBox_main_menu_buttons()
@@ -27,7 +29,8 @@ end
 -- main tabs
 
 G.FUNCS.s_change_tab = function(e)
-  local tab_config = S.TAB_FUNCS[e.config.tab_func]()
+  S.chosen = e.config.tab_func
+  local tab_config = S.TAB_FUNCS[S.chosen]()
   G.OVERLAY_MENU:remove()
   G.OVERLAY_MENU = UIBox({
     	definition = s_create_options({
@@ -46,30 +49,16 @@ G.FUNCS.s_change_tab = function(e)
   G.OVERLAY_MENU:recalculate()
 end
 
--- tab functions
--- modules tab
-G.FUNCS.saturn_features = function(e)
+G.FUNCS.saturn_tabs = function(e)
   	G.SETTINGS.paused = true
-    
-  	local ref_table = S.TEMP_SETTINGS.modules
-  	local _buttons = {
-    	{label = 'StatTracker', toggle_ref = ref_table.stattrack, ref_value = 'enabled', button_ref = 'config_stattracker',},
-    	{label = 'DeckViewer+', toggle_ref = ref_table.deckviewer_plus, ref_value = 'enabled', button_ref = 'config_deckviewer',},
-    	{label = 'Challenger+', toggle_ref = ref_table.challenger_plus, ref_value = 'enabled', button_ref = 'config_challenger',},
-      {label = 'Run Timer', toggle_ref = ref_table.run_timer, ref_value = 'enabled', button_ref = 'config_run_timer',},
-  	}
-  	local _tabs = {
-    	{label = 'Modules'},
-    	{label = 'Options', button_ref = 's_change_tab', tab_func = 'saturn_options'},
-    	{label = 'Stats', button_ref = 's_change_tab', tab_func = 'saturn_stats'},
-  	}
+    local t = S.TAB_FUNCS[S.chosen]()
 
   	G.FUNCS.overlay_menu({
     	definition = s_create_options({
       		apply_func = 'apply_settings',
       		back_func = 'options',
-      		tabs = s_create_tabs(_tabs),
-      		nodes = s_create_buttons(_buttons),
+      		tabs = s_create_tabs(t._tabs),
+      		nodes = s_create_buttons(t._buttons),
     	})
   	})
 end
@@ -168,7 +157,7 @@ G.FUNCS.config_stattracker = function(e)
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
 		apply_func = 'apply_settings',
-		back_func = 'saturn_features',
+		back_func = 'saturn_tabs',
 		title = 'Joker StatTracker Options',
 		nodes = s_create_buttons(_buttons),
 		})
@@ -186,7 +175,7 @@ G.FUNCS.config_run_timer = function(e)
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
 		apply_func = 'apply_settings',
-		back_func = 'saturn_features',
+		back_func = 'saturn_tabs',
 		title = 'Run Timer Options',
 		nodes = s_create_buttons(_buttons),
 		})
@@ -205,7 +194,7 @@ G.FUNCS.config_deckviewer = function(e)
   G.FUNCS.overlay_menu({
     definition = s_create_options({
       apply_func = "apply_settings",
-      back_func = "saturn_features",
+      back_func = "saturn_tabs",
       title = 'Deckviewer+ Options',
       nodes = s_create_buttons(_buttons),
     })
@@ -225,7 +214,7 @@ G.FUNCS.config_challenger = function(e)
   G.FUNCS.overlay_menu({
     definition = s_create_options({
       apply_func = "apply_settings",
-      back_func = "saturn_features",
+      back_func = "saturn_tabs",
       title = 'Challenger+ Options',
       nodes = s_create_buttons(_buttons),
     })
@@ -245,7 +234,7 @@ G.FUNCS.view_jokers = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -260,7 +249,7 @@ G.FUNCS.view_tarots = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -275,7 +264,7 @@ G.FUNCS.view_planets = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -290,7 +279,7 @@ G.FUNCS.view_spectrals = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = 'saturn_stats',
+		back_func = 'saturn_tabs',
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -305,7 +294,7 @@ G.FUNCS.view_decks = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = 'saturn_stats',
+		back_func = 'saturn_tabs',
 		title = 'Click on a Deck to view Stats',
 		nodes = s_create_deck_display(deck_display),
 		})
