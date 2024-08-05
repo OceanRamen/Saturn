@@ -6,6 +6,33 @@ priority = 0
 
 [[patches]]
 [patches.pattern]
+target = "functions/state_events.lua"
+pattern = "if effects[ii].card then"
+position = "at"
+payload = "if effects[ii].card and not S.SETTINGS.modules.remove_animations.enabled then"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if G.GAME.blind then G.E_MANAGER:add_event(Event({ func = function() G.GAME.blind:set_blind(nil, true, nil); return true end })) end"
+position = "at"
+payload = "if G.GAME.blind and not (S.SETTINGS.modules.remove_animations.enabled and (S.calculating_joker or S.calculating_score or S.calculating_card)) then G.E_MANAGER:add_event(Event({ func = function() G.GAME.blind:set_blind(nil, true, nil); return true end })) end"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.edition and not silent then"
+position = "at"
+payload = "if self.edition and (not S.SETTINGS.modules.remove_animations.enabled or (not S.calculating_joker and not S.calculating_score and not S.calculating_card)) and not silent then"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
 target = "card.lua"
 pattern = "G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))"
 position = "at"

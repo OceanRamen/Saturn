@@ -6,7 +6,11 @@ VERSION = VERSION .. "-DEVELOPMENT"
 function Saturn:set_globals()
   self.VERSION = VERSION
   self.MOD_PATH = lovely.mod_dir .. "/Saturn/"
-
+  
+  self.calculating_joker = false
+  self.calculating_score = false
+  self.calculating_card = false
+  
   self.add_dollar_amt = 0
   self.dollar_update = false
   self.SETTINGS = {
