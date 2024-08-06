@@ -1,0 +1,74 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+
+[[patches]]
+[patches.pattern]
+target = "game.lua"
+pattern = "if (G.STATE == G.STATES.HAND_PLAYED) or (G.STATE == G.STATES.NEW_ROUND) then"
+position = "at"
+payload = "if (G.STATE == G.STATES.HAND_PLAYED) or (G.STATE == G.STATES.NEW_ROUND) or Incantation and Incantation.accelerate then"
+match_indent = true
+
+# Observatory
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra"
+position = "at"
+payload = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra^(self.ability.qty or 1)"
+match_indent = true
+
+# if context.ending_shop then
+# 	if G.consumeables.cards[1] then
+# 		G.E_MANAGER:add_event(Event({
+# 			func = function() 
+# 				local total, checked, center = 0, 0, nil
+# 				for i = 1, #G.consumeables.cards do
+# 					total = total + (G.consumeables.cards[i]:getQty())
+# 				end
+# 				local poll = pseudorandom(pseudoseed('perkeo'))*total
+# 				for i = 1, #G.consumeables.cards do
+# 					checked = checked + (G.consumeables.cards[i]:getQty())
+# 					if checked >= poll then
+# 						center = G.consumeables.cards[i]
+# 						break
+# 					end
+# 				end
+# 				local card = copy_card(center, nil)
+# 				card.ability.qty = 1
+# 				card:set_edition({negative = true}, true)
+# 				card:add_to_deck()
+# 				G.consumeables:emplace(card) 
+# 				return true
+# 			end}))
+# 		card_eval_status_text(context.blueprint_card or card, 'extra', nil, nil, nil, {message = localize('k_duplicated_ex')})
+# 		return {calculated = true}
+# 	end
+# end
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "local card = copy_card(pseudorandom_element(G.consumeables.cards, pseudoseed('perkeo')), nil)"
+position = "at"
+payload = """
+local total, checked, center = 0, 0, nil
+for i = 1, #G.consumeables.cards do
+  total = total + (G.consumeables.cards[i]:getQty())
+end
+local poll = pseudorandom(pseudoseed('perkeo'))*total
+for i = 1, #G.consumeables.cards do
+  checked = checked + (G.consumeables.cards[i]:getQty())
+  if checked >= poll then
+    center = G.consumeables.cards[i]
+    break
+  end
+end
+local card = copy_card(center, nil)
+card.ability.qty = 1
+"""
+match_indent = true
+overwrite = true

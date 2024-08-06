@@ -113,50 +113,50 @@ payload = """
 overwrite = false
 match_indent = true
 
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = "if self.ability.consumeable or self.ability.set == 'Joker' or (self.area and self.area == G.pack_cards) then"
-position = "before"
-payload = """
-if self.ability.consumeable and (self.area and self.area == G.consumeables) and G.FUNCS.check_mass_use({ config = { ref_table = self } }) then
-  if self.highlighted and self.area and self.area.config.type ~= 'shop' then
-    local x_off = (self.ability.consumeable and -0.1 or 0)
-    self.children.mass_use_button = UIBox{
-      definition = G.UIDEF.mass_use_button(self),
-      config = {
-        align = (self.area == G.consumeables) and "cl" or "bmi",
-        offset = (self.area == G.consumeables) and {x=-(x_off - 0.4),y=0} or {x=0,y=0.65},
-        parent = self
-      }
-    }
-  elseif self.children.mass_use_button then
-    self.children.mass_use_button:remove()
-    self.children.mass_use_button = nil
-  end
-end
-"""
-overwrite = false
-match_indent = true
+# [[patches]]
+# [patches.pattern]
+# target = "card.lua"
+# pattern = "if self.ability.consumeable or self.ability.set == 'Joker' or (self.area and self.area == G.pack_cards) then"
+# position = "before"
+# payload = """
+# if self.ability.consumeable and (self.area and self.area == G.consumeables) and G.FUNCS.check_mass_use({ config = { ref_table = self } }) then
+#   if self.highlighted and self.area and self.area.config.type ~= 'shop' then
+#     local x_off = (self.ability.consumeable and -0.1 or 0)
+#     self.children.mass_use_button = UIBox{
+#       definition = G.UIDEF.mass_use_button(self),
+#       config = {
+#         align = (self.area == G.consumeables) and "cl" or "bmi",
+#         offset = (self.area == G.consumeables) and {x=-(x_off - 0.4),y=0} or {x=0,y=0.65},
+#         parent = self
+#       }
+#     }
+#   elseif self.children.mass_use_button then
+#     self.children.mass_use_button:remove()
+#     self.children.mass_use_button = nil
+#   end
+# end
+# """
+# overwrite = false
+# match_indent = true
 
-[[patches]]
-[patches.pattern]
-target = "card.lua"
-pattern = "if self.children.use_button and self.highlighted then self.children.use_button:draw() end"
-position = "before"
-payload = """
-if self.children.mass_use_button and self.highlighted then
-  self.children.mass_use_button:draw()
-end
-"""
-overwrite = false
-match_indent = true
+# [[patches]]
+# [patches.pattern]
+# target = "card.lua"
+# pattern = "if self.children.use_button and self.highlighted then self.children.use_button:draw() end"
+# position = "before"
+# payload = """
+# if self.children.mass_use_button and self.highlighted then
+#   self.children.mass_use_button:draw()
+# end
+# """
+# overwrite = false
+# match_indent = true
 
-[[patches]]
-[patches.pattern]
-target = "functions/button_callbacks.lua"
-pattern = "if card.children.use_button then card.children.use_button:remove(); card.children.use_button = nil end"
-position = "before"
-payload = "if card.children.mass_use_button then card.children.mass_use_button:remove(); card.children.mass_use_button = nil end"
-overwrite = false
-match_indent = true
+# [[patches]]
+# [patches.pattern]
+# target = "functions/button_callbacks.lua"
+# pattern = "if card.children.use_button then card.children.use_button:remove(); card.children.use_button = nil end"
+# position = "before"
+# payload = "if card.children.mass_use_button then card.children.mass_use_button:remove(); card.children.mass_use_button = nil end"
+# overwrite = false
+# match_indent = true
