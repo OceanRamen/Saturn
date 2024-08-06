@@ -1,0 +1,16 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "engine/text.lua"
+pattern = "for _, c in utf8.chars(v) do"
+position = "at"
+payload = """
+for _, p in utf8.codes(v) do
+  local c = utf8.char(p)
+"""
+match_indent = true
+overwrite = true

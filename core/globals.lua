@@ -36,6 +36,9 @@ function Saturn:set_globals()
         show_stickers = {
           enabled = false,
         },
+        console = {
+          enabled = false,
+        },
       },
       deckviewer_plus = {
         enabled = true,
