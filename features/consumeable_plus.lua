@@ -1,7 +1,6 @@
 -- Modified version of https://github.com/jenwalter666/Incantation/blob/6787c7312d595b3a1a87e155428b9a9742693045/Incantation.lua
--- All credit goes to the creator
 
-Consumeable_plus = { consumable_in_use = false, accelerate = false }
+Stacker = { consumable_in_use = false, accelerate = false }
 
 local MaxStack = 9999
 local BulkUseLimit = 9999
@@ -296,9 +295,9 @@ function Card:use_consumeable(area, copier)
     )
     set_consumeable_usage(self, qty)
   else
-    Consumeable_plus.accelerate = qty > AccelerateThreshold
+    Stacker.accelerate = qty > AccelerateThreshold
     self.cardinuse = true
-    Consumeable_plus.consumable_in_use = true
+    Stacker.consumable_in_use = true
     local lim = math.min(qty, NaiveBulkUseCancel)
     local newqty = math.max(0, qty - lim)
     if not self.ability.qty then
@@ -322,8 +321,8 @@ function Card:use_consumeable(area, copier)
       delay = 0.1,
       blockable = true,
       func = function()
-        Consumeable_plus.consumable_in_use = false
-        Consumeable_plus.accelerate = false
+        Stacker.consumable_in_use = false
+        Stacker.accelerate = false
         if obj.keep_on_use and obj:keep_on_use(self) then
           self.ignorestacking = false
           self.ability.qty = obj.keep_on_use_retain_stack and qty or (newqty + 1)
@@ -341,7 +340,7 @@ end
 
 local startdissolveref = Card.start_dissolve
 function Card:start_dissolve(a, b, c, d)
-  if self.ability.qty and self.ability.qty > 1 and Consumeable_plus.consumable_in_use then
+  if self.ability.qty and self.ability.qty > 1 and Stacker.consumable_in_use then
     return
   end
   self.ignorestacking = true
@@ -549,11 +548,10 @@ function Card:create_stack_display()
           maxh = 1.2,
           minw = 0.5,
           maxw = 2,
-          r = 0.5,
+          r = 0.001,
           padding = 0.1,
           align = "cm",
-          -- colour = adjust_alpha(darken(G.C.BLACK, 0.6), 0.5),
-          colour = G.C.MULT,
+          colour = adjust_alpha(darken(G.C.BLACK, 0.6), 0.5),
           shadow = false,
           func = "disablestackdisplay",
           ref_table = self,
@@ -563,7 +561,7 @@ function Card:create_stack_display()
             n = G.UIT.T,
             config = {
               text = "x",
-              scale = 0.3,
+              scale = 0.4,
               colour = G.C.UI.TEXT_LIGHT,
             },
           },
@@ -580,11 +578,7 @@ function Card:create_stack_display()
       },
       config = {
         align = "tm",
-        offset = {
-          x = 0.75,
-          y = 0.45,
-        },
-        bond = "Weak",
+        bond = "Strong",
         parent = self,
       },
       states = {
