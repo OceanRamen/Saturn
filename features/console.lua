@@ -436,6 +436,15 @@ function Saturn:register_commands()
     self.registry:register(Command:new('quit', 'quits the game, usage: quit', function(args)
         G.FUNCS.quit()
     end))
+
+    self.registry:register(Command:new("merge_all", "merges all mergable cards, usage: merge_all", function(args)
+      for k, v in pairs(G.consumeables.cards) do 
+        if v:CanStack() and v:MergeAvailable() then
+          v:try_merge()
+        end
+      end
+    self:log_console("Merge completed")
+    end))
     
     self.registry:register(Command:new('lines', 'changes number of lines displayed: lines <number>', function(args)
         if #args == 0 then
