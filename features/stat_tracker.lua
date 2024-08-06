@@ -437,7 +437,7 @@ end
 
 function Card:save_counters(saveTable)
     self:should_init()
-    saveTable['counter'] = self.counter
+    saveTable['saturn_counter'] = self.counter
     return saveTable
 end
 
@@ -445,7 +445,15 @@ end
 
 function Card:load_counters(cardTable)
     if cardTable['counter'] then
-        self.counter_ref_table = cardTable['counter']
+      local counter_value = cardTable['counter']
+      self:init_counter()
+      if self:has_counter() and counter_value ~= 0 then
+        self:set_counter(counter_value)
+        self:display_counter(false)
+      end
+    end
+    if cardTable['saturn_counter'] then
+        self.counter_ref_table = cardTable['saturn_counter']
         self:init_counter(self.counter_ref_table)
         if self:has_counter() then
             self:display_counter(false)
@@ -460,7 +468,7 @@ end
 
 function Card:should_init()
     if self.ability and self.ability.set == 'Joker' and self.area == G.jokers then
-        if not self.has_counter() then
+        if not self:has_counter() then
             self:init_counter(self.counter_ref_table)
             self.counter_ref_table = self.counter
         end
