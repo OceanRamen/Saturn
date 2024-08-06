@@ -26,7 +26,7 @@ overwrite = true
 target = "functions/UI_definitions.lua"
 pattern = "local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})"
 position = "after"
-payload = "local saturn_settings = UIBox_button({button = 'saturn_preferences_button', label = {'Saturn'}, colour = G.C.SECONDARY_SET.Planet, minw = 5, focus_args = {snap_to = true}})"
+payload = "local saturn_settings = UIBox_button({button = 'saturn_features_button', label = {'Saturn'}, colour = G.C.SECONDARY_SET.Planet, minw = 5, focus_args = {snap_to = true}})"
 match_indent = true
 
 [[patches]]
