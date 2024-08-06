@@ -54,6 +54,12 @@ function Saturn:set_globals()
           mass_use_button = true,
         }
       },
+      consumeables_plus = {
+        enabled = true,
+        features = {
+          stacked_consumeables = true
+        }
+      }
     }
   }
 
