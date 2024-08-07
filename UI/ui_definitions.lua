@@ -247,7 +247,7 @@ G.FUNCS.view_jokers = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -262,7 +262,7 @@ G.FUNCS.view_tarots = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -277,7 +277,7 @@ G.FUNCS.view_planets = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = "saturn_stats",
+		back_func = "saturn_tabs",
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -292,7 +292,7 @@ G.FUNCS.view_spectrals = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = 'saturn_stats',
+		back_func = 'saturn_tabs',
 		title = 'Click on a Card to view Stats',
 		nodes = s_create_card_display(card_display),
 		})
@@ -307,7 +307,7 @@ G.FUNCS.view_decks = function(e)
 
 	G.FUNCS.overlay_menu({
 		definition = s_create_options({
-		back_func = 'saturn_stats',
+		back_func = 'saturn_tabs',
 		title = 'Click on a Deck to view Stats',
 		nodes = s_create_deck_display(deck_display),
 		})
