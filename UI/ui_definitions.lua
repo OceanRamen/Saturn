@@ -97,6 +97,8 @@ S.TAB_FUNCS.saturn_options = function(e)
     	{label = 'Animation Skip', toggle_ref = ref_table.remove_animations, ref_value = 'enabled',},
     	{label = 'Compact View', toggle_ref = ref_table.compact_view, ref_value = 'enabled'},
     	{label = 'Show Stickers', toggle_ref = ref_table.show_stickers, ref_value = 'enabled',},
+      {label = 'Console', toggle_ref = ref_table.console, ref_value = 'enabled',},
+
   	}
   	local _tabs = {
 		{label = "Modules", button_ref = 's_change_tab', tab_func = 'saturn_features'},

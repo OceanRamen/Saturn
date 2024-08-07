@@ -11,9 +11,11 @@ end
 
 function Saturn:start_up()
   self:fetch_settings()
+  self:init_console()
 end
 
 function Saturn:update(dt)
+  if self.REROLL and self.REROLL.active then self:update_reroll(dt) end
 
   if self.TIMER and self.TIMER.running then
     self.TIMER:update(dt)
@@ -60,6 +62,9 @@ function Saturn:update(dt)
 end
 
 function Saturn:key_press_update(key)
+  if key == "`" or self.CONSOLE.isOpen then
+      self:handle_console(key)
+  end
 end
 
 local game_start_run_ref = Game.start_run
