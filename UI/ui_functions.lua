@@ -5,7 +5,6 @@ G.FUNCS.apply_settings = function(e)
   S.SETTINGS = deepcopy(S.TEMP_SETTINGS)
   S:write_settings('settings')
   if not S.SETTINGS.modules.preferences.console.enabled then S.CONSOLE.isOpen = false end
-  G:set_language()
 end
 
 G.FUNCS.saturn_features_button = function(e)
@@ -13,62 +12,6 @@ G.FUNCS.saturn_features_button = function(e)
   return G.FUNCS.saturn_features()
 end
 
-function create_UIBox_runTimer()
-  return {
-    n = G.UIT.ROOT,
-    config = { align = "cm", padding = 0.03, colour = G.C.UI.TRANSPARENT_DARK, r = 0.1 },
-    nodes = {
-      {
-        n = G.UIT.R,
-        config = { align = "cm", padding = 0.05, colour = G.C.DYN_UI.MAIN, r = 0.1 },
-        nodes = {
-          {
-            n = G.UIT.R,
-            config = { align = "cm", colour = G.C.DYN_UI.BOSS_DARK, r = 0.1, minw = 1.5, padding = 0.08 },
-            nodes = {
-              { n = G.UIT.R, config = { align = "cm", minh = 0.0 }, nodes = {} },
-              {
-                n = G.UIT.R,
-                config = {
-                  id = "speedrun_timer_right",
-                  align = "cm",
-                  padding = 0.05,
-                  minw = 1.45,
-                  emboss = 0.05,
-                  r = 0.1,
-                },
-                nodes = {
-                  {
-                    n = G.UIT.R,
-                    config = { align = "cm" },
-                    nodes = {
-                      {
-                        n = G.UIT.O,
-                        config = {
-                          object = DynaText({
-                            string = { { ref_table = S.TIMER, ref_value = "disp" } },
-                            colours = { G.C.WHITE },
-                            shadow = true,
-                            bump = true,
-                            scale = 0.6,
-                            pop_in = 0.5,
-                            maxw = 5,
-                            silent = true,
-                          }),
-                          id = "timer",
-                        },
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
-  }
-end
 
 function s_create_toggle(args)
     args = args or {}

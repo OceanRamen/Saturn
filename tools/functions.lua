@@ -86,3 +86,12 @@ function format_time(elapsed)
     end
     return output
 end
+
+local function in_table(table, key)
+  for k, v in pairs(table) do
+    if v == key then
+      return true
+    end
+  end
+  return false
+end

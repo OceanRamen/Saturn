@@ -13,13 +13,13 @@ function Saturn:set_globals()
     modules = {
       stattrack = {
         features = {
-          joker_tracking = { 
+          joker_tracking = {
             groups = {
-              money_generators = true, 
-              card_generators = true, 
+              money_generators = true,
+              card_generators = true,
               miscellaneous = true,
-              chips_plus = false, 
-              mult_plus = false, 
+              chips_plus = false,
+              mult_plus = false,
               mult_mult = false,
             },
           },
@@ -48,22 +48,23 @@ function Saturn:set_globals()
       },
       run_timer = {
         enabled = true,
-        config = {},
+        config = {
+        },
       },
       challenger_plus = {
         enabled = true,
         features = {
           retry_button = true,
           mass_use_button = true,
-        }
+        },
       },
       consumeables_plus = {
         enabled = true,
         features = {
-          stacked_consumeables = true
-        }
-      }
-    }
+          stacked_consumeables = true,
+        },
+      },
+    },
   }
 
   self.UI = {

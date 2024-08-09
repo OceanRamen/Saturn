@@ -67,36 +67,6 @@ function Saturn:key_press_update(key)
   end
 end
 
-local game_start_run_ref = Game.start_run
-function Game:start_run(args)
-  game_start_run_ref(self, args)
-  if S.SETTINGS.modules.run_timer.enabled then
-    S.TIMER = Timer:new()
-    S.TIMER:start(onTimerStop)
-    Game.runTimerHUD = UIBox({
-      definition = create_UIBox_runTimer(),
-      config = { align = "cri", offset = { x = -0.3, y = 2.1 }, major = G.ROOM_ATTACH },
-    })
-  end
-end
-
-local win_game_ref = win_game
-function win_game()
-  if Saturn.TIMER and Saturn.TIMER.running then 
-    Saturn.TIMER:stop()
-    print(Saturn.TIMER.elapsed)
-  end
-  win_game_ref()
-end
-
-local game_update_game_over_ref = Game.update_game_over
-function Game:update_game_over(dt)
-  if Saturn.TIMER and Saturn.TIMER.running then 
-    Saturn.TIMER:stop()
-    print(Saturn.TIMER.elapsed)
-  end
-  game_update_game_over_ref(self, dt)
-end
 
 function Saturn:fetch_settings()
   if not nativefs.getInfo(self.MOD_PATH .. "user_settings.lua") then
