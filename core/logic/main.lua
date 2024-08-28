@@ -5,7 +5,7 @@ local is_dev = false
 
 Saturn = {
   -- Consts
-  VERSION = "0.2.3b",
+  VERSION = "0.2.4a",
   PATH = "",
   DEFAULTS = {},
   -- Vars

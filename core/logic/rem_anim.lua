@@ -98,7 +98,6 @@ function update_hand_text(config, vals)
     )
   then
     if G.latest_uht then
-      print(vals.chips, vals.mult)
       vals.chips = vals.chips or G.latest_uht.vals.chips
       vals.mult = vals.mult or G.latest_uht.vals.mult
     end
