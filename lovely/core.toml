@@ -1,0 +1,35 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.module]
+source = 'nativefs.lua'
+before = 'main.lua'
+name = 'nativefs'
+
+[[patches]]
+[patches.copy]
+target = "main.lua"
+position = "append"
+sources = [
+  "core/logic/main.lua",
+]
+
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})"
+position = "after"
+payload = "local saturn_settings = UIBox_button({button = 'saturn_config', label = {'Saturn'}, colour = darken(G.C.BLUE, 0.25), minw = 5, focus_args = {snap_to = true}})"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "local t = create_UIBox_generic_options({ contents = {"
+position = "after"
+payload = "saturn_settings,"
+match_indent = true

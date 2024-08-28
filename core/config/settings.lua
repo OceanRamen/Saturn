@@ -1,0 +1,1 @@
+return {["remove_animations"]=true,["enable_dramatic_final_hand"]=true,}

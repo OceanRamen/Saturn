@@ -1,0 +1,93 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+
+[[patches]]
+[patches.pattern]
+target = "functions/state_events.lua"
+pattern = "if effects[ii].card then"
+position = "at"
+payload = "if effects[ii].card and not Saturn.config.remove_animations then"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if G.GAME.blind then G.E_MANAGER:add_event(Event({ func = function() G.GAME.blind:set_blind(nil, true, nil); return true end })) end"
+position = "at"
+payload = "if G.GAME.blind and not (Saturn.config.remove_animations and (Saturn.calculating_joker or Saturn.calculating_score or Saturn.calculating_card)) then G.E_MANAGER:add_event(Event({ func = function() G.GAME.blind:set_blind(nil, true, nil); return true end })) end"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.edition and not silent then"
+position = "at"
+payload = "if self.edition and (not Saturn.config.remove_animations or (not Saturn.calculating_joker and not Saturn.calculating_score and not Saturn.calculating_card)) and not silent then"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "G.E_MANAGER:add_event(Event({func = (function() G.GAME.dollar_buffer = 0; return true end)}))"
+position = "at"
+payload = """
+if not Saturn.config.remove_animations then
+  G.E_MANAGER:add_event(Event({
+    func = (function()
+      G.GAME.dollar_buffer = 0
+      return true
+    end)
+  }))
+else
+  G.GAME.dollar_buffer = 0
+end
+"""
+match_indent = true
+overwrite = false
+
+# Juice Issues Patch from https://github.com/MathIsFun0/Talisman/blob/main/lovely.toml
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "func = (function() card:juice_up(0.7);return true end)"
+position = "at"
+payload = "func = (function() if card and card.juice_up then card:juice_up(0.7) end;return true end)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "if card then card:juice_up(0.8, 0.5) end"
+position = "at"
+payload = "if card and card.juice_up then card:juice_up(0.8, 0.5) end"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "card:juice_up(0.6, 0.1)"
+position = "at"
+payload = "if card and card.juice_up then card:juice_up(0.6, 0.1) end"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "func = (function() if eval_func(card) then if not first or first then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+position = "at"
+payload = "func = (function() if eval_func(card) then if card and card.juice_up then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "func = (function() if eval_func(card) then if not first or first then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+position = "at"
+payload = "func = (function() if eval_func(card) then if card and card.juice_up then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+match_indent = true
