@@ -1,0 +1,202 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+# patches mainly for jokers that would either mess up the probabilities queues
+
+[[patches]] # Hallucination
+[patches.pattern]
+target = "card.lua"
+pattern = '''if pseudorandom('halu'..G.GAME.round_resets.ante) < G.GAME.probabilities.normal/self.ability.extra then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # 8 Ball
+[patches.pattern]
+target = "card.lua"
+pattern = '''if (context.other_card:get_id() == 8) and (pseudorandom('8ball') < G.GAME.probabilities.normal/self.ability.extra) then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Business Card
+[patches.pattern]
+target = "card.lua"
+pattern = '''pseudorandom('business') < G.GAME.probabilities.normal/self.ability.extra then'''
+position = "after"
+payload = '''
+self:increment_counter(2)
+'''
+match_indent = true
+
+[[patches]] # Bloodstone
+[patches.pattern]
+target = "card.lua"
+pattern = '''pseudorandom('bloodstone') < G.GAME.probabilities.normal/self.ability.extra.odds then'''
+position = "after"
+payload = '''
+  self:increment_counter(self.ability.extra.Xmult)
+'''
+match_indent = true
+
+[[patches]] # Reserved Parking
+[patches.pattern]
+target = "card.lua"
+pattern = '''pseudorandom('parking') < G.GAME.probabilities.normal/self.ability.extra.odds then'''
+position = "after"
+payload = '''
+if not context.other_card.debuff then
+  self:increment_counter(self.ability.extra.dollars)
+end
+'''
+match_indent = true
+
+[[patches]] # Space Joker
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Space Joker' and pseudorandom('space') < G.GAME.probabilities.normal/self.ability.extra then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] #  Misprint
+[patches.pattern]
+target = "card.lua"
+pattern = '''local temp_Mult = pseudorandom('misprint', self.ability.extra.min, self.ability.extra.max)'''
+position = "after"
+payload = '''
+  self:increment_counter(temp_Mult)
+'''
+match_indent = true
+
+[[patches]] # Riff-raff
+[patches.pattern]
+target = "card.lua"
+pattern = '''local jokers_to_create = math.min(2, G.jokers.config.card_limit - (#G.jokers.cards + G.GAME.joker_buffer))'''
+position = "after"
+payload = '''
+  self:increment_counter(jokers_to_create)
+'''
+match_indent = true
+
+[[patches]] # Gift Card
+[patches.pattern]
+target = "card.lua"
+pattern = '''v.ability.extra_value = (v.ability.extra_value or 0) + self.ability.extra'''
+position = "after"
+payload = '''
+self:increment_counter(self.ability.extra)
+'''
+match_indent = true
+
+[[patches]] # Egg
+[patches.pattern]
+target = "card.lua"
+pattern = '''self.ability.extra_value = self.ability.extra_value + self.ability.extra'''
+position = "after"
+payload = '''
+self:increment_counter(self.ability.extra)
+'''
+match_indent = true
+
+[[patches]] # Ceremonial Dagger
+[patches.pattern]
+target = "card.lua"
+pattern = '''if my_pos and G.jokers.cards[my_pos+1] and not self.getting_sliced and not G.jokers.cards[my_pos+1].ability.eternal and not G.jokers.cards[my_pos+1].getting_sliced then'''
+position = "after"
+payload = '''
+self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Lucky Cat
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name ~= 'Seeing Double' and self.ability.x_mult > 1 and (self.ability.type == '' or next(context.poker_hands[self.ability.type])) then'''
+position = "after"
+payload = '''
+if self.ability.name == 'Lucky Cat' then
+  self:increment_counter(self.ability.x_mult)
+  self:set_counter(nil, self.ability.x_mult)
+end
+'''
+match_indent = true
+
+[[patches]] # Wee Joker
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Wee Joker' then'''
+position = "after"
+payload = '''
+  self:increment_counter(self.ability.extra.chips)
+  self:set_counter(nil, self.ability.extra.chips)
+'''
+match_indent = true
+
+[[patches]] # Matador
+[patches.pattern]
+target = "card.lua"
+pattern = '''if G.GAME.blind.triggered then'''
+position = "after"
+payload = '''
+  self:increment_counter(self.ability.extra)
+'''
+match_indent = true
+
+[[patches]] # Matador
+[patches.pattern]
+target = "card.lua"
+pattern = '''if self.ability.name == 'Cartomancer' and not (context.blueprint_card or self).getting_sliced and #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Sixth Sense
+[patches.pattern]
+target = "card.lua"
+pattern = '''if #G.consumeables.cards + G.GAME.consumeable_buffer < G.consumeables.config.card_limit then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Vagabond
+[patches.pattern]
+target = "card.lua"
+pattern = '''if G.GAME.dollars <= self.ability.extra then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Superposition
+[patches.pattern]
+target = "card.lua"
+pattern = '''if aces >= 1 and next(context.poker_hands["Straight"]) then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
+
+[[patches]] # Seance
+[patches.pattern]
+target = "card.lua"
+pattern = '''if next(context.poker_hands[self.ability.extra.poker_hand]) then'''
+position = "after"
+payload = '''
+  self:increment_counter(1)
+'''
+match_indent = true
