@@ -47,3 +47,28 @@ payload = """
   self.is_r_cursor_down = false
 """
 match_indent = true
+
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "create_option_cycle({label = localize('b_set_gamespeed'),scale = 0.8, options = {0.5, 1, 2, 4}, opt_callback = 'change_gamespeed', current_option = (G.SETTINGS.GAMESPEED == 0.5 and 1 or G.SETTINGS.GAMESPEED == 4 and 4 or G.SETTINGS.GAMESPEED + 1)}),"
+position = "at"
+payload = """
+create_option_cycle({
+      label = localize("b_set_gamespeed"),
+      scale = 0.8,
+      options = { 0.5, 1, 2, 4, 8, 16 },
+      opt_callback = "change_gamespeed",
+      current_option = (
+        G.SETTINGS.GAMESPEED == 0.5 and 1
+        or G.SETTINGS.GAMESPEED == 1 and 2
+        or G.SETTINGS.GAMESPEED == 2 and 3
+        or G.SETTINGS.GAMESPEED == 4 and 4
+        or G.SETTINGS.GAMESPEED == 8 and 5
+        or G.SETTINGS.GAMESPEED == 16 and 6
+        or 4
+      ),
+    }),
+"""
+match_indent = true

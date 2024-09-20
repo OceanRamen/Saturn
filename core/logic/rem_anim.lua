@@ -17,6 +17,7 @@ local function isCalculating()
     or Saturn.calculating_score
 end
 
+local caph = CardArea.parse_highlighted
 function Game:update(dt)
   gameUpdateRef(self, dt)
   if G.latest_uht and G.latest_uht.config and G.latest_uht.vals then
@@ -170,6 +171,9 @@ function format_delta(delta, value)
 end
 
 function sUpdateHandText(config, vals)
+  if not G.hand then
+    return false
+  end
   local col = G.C.GREEN
 
   -- Update chips
