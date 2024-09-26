@@ -133,7 +133,7 @@ function Controller:queue_R_cursor_press(x, y)
 end
 
 function Card:getAmt()
-  return (self.ability or {}).amt or 0
+  return (self.ability or {}).amt or 1
 end
 
 function Card:setAmt(amt)
