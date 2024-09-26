@@ -5,7 +5,7 @@ local is_dev = false
 
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.0-C",
+  VERSION = "alpha-0.2.0-D",
   PATH = "",
   DEFAULTS = {},
   -- Vars
@@ -31,13 +31,13 @@ Saturn = {
 
 local mod_dir = lovely.mod_dir -- Cache the base directory
 local found = false
-local search_str = "saturn" -- or "saturn-dev" depending on the environment
+local search_str = "saturn"    -- or "saturn-dev" depending on the environment
 
 for _, item in ipairs(nfs.getDirectoryItems(mod_dir)) do
   local itemPath = mod_dir .. "/" .. item
   -- Check if the item is a directory and contains the search string
   if
-    nfs.getInfo(itemPath, "directory") and string.lower(item):find(search_str)
+      nfs.getInfo(itemPath, "directory") and string.lower(item):find(search_str)
   then
     Saturn.PATH = itemPath
     found = true
