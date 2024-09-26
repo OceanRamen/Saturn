@@ -19,4 +19,7 @@ return {
 
   -- stacking
   enable_stacking = false,
+
+  -- deck viewer
+  hide_played = false,
 }

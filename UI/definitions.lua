@@ -112,7 +112,20 @@ Saturn.ui.opts.box = function()
           id = "enable_dramatic_final_hand",
           default = false,
           name = "Enable dramatic final hand",
-          desc = "Gives you time to shuffle Jokers during the final hand",
+          desc = "Gives you time to shuffle Jokers during the final hand.",
+          master = true,
+        },
+      },
+    },
+    deck_view = {
+      title = "Improved Deck Viewer",
+      desc = "Quality of life options for the Deck Viewer.",
+      opts = {
+        {
+          id = "hide_played",
+          default = false,
+          name = "Hide Played Cards",
+          desc = "Hides played cards in the deck viewer.",
           master = true,
         },
       },
