@@ -112,7 +112,7 @@ function Saturn.loadLogic()
   -- Loads other Saturn logic files for feature
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/rem_anim.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/stack.lua")))()
-  -- assert(load(nfs.read(Saturn.PATH .. "/core/logic/stats.lua")))()
+  assert(load(nfs.read(Saturn.PATH .. "/core/logic/hide_played.lua")))()
   -- UI
   assert(load(nfs.read(Saturn.PATH .. "/UI/definitions.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/UI/functions.lua")))()
