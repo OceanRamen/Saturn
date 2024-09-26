@@ -21,20 +21,22 @@ local total = 0
 local checked = 0
 local center = nil
 for i = 1, #G.consumeables.cards do
-  total = total + (G.consumeables.cards[i]:getAmt())
+  local amt = G.consumeables.cards[i]:getAmt()
+  total = total + amt
 end
 local poll = pseudorandom(pseudoseed('perkeo'))*total
 for i = 1, #G.consumeables.cards do
-  checked = checked + (G.consumeables.cards[i]:getAmt())
+  local amt = G.consumeables.cards[i]:getAmt()
+  checked = checked + amt
   if checked >= poll then
     center = G.consumeables.cards[i]
     break
   end
 end
 local card = copy_card(center, nil)
-
 card.ability.amt = 1
 """
+
 match_indent = true
 overwrite = true
 

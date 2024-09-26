@@ -21,6 +21,12 @@ local caph = CardArea.parse_highlighted
 function Game:update(dt)
   gameUpdateRef(self, dt)
   if G.latest_uht and G.latest_uht.config and G.latest_uht.vals then
+    if
+      Saturn.config.enable_dramatic_final_hand
+      and G.GAME.current_round.hands_left == 0
+    then
+      sUpdateHandTextDramatic(G.latest_uht.config, G.latest_uht.vals)
+    end
     sUpdateHandText(G.latest_uht.config, G.latest_uht.vals)
     G.latest_uht = nil
   end
@@ -90,14 +96,7 @@ function ease_dollars(mod, instant)
 end
 
 function update_hand_text(config, vals)
-  if
-    Saturn.config.remove_animations
-    and not Saturn.using_consumeable
-    and not (
-      Saturn.config.enable_dramatic_final_hand
-      and G.GAME.current_round.hands_left == 0
-    )
-  then
+  if Saturn.config.remove_animations and not Saturn.using_consumeable then
     if G.latest_uht then
       vals.chips = vals.chips or G.latest_uht.vals.chips
       vals.mult = vals.mult or G.latest_uht.vals.mult
@@ -171,6 +170,130 @@ function format_delta(delta, value)
 end
 
 function sUpdateHandText(config, vals)
+  if not G.hand then
+    return false
+  end
+  local col = G.C.GREEN
+
+  -- Update chips
+  if vals.chips and G.GAME.current_round.current_hand.chips ~= vals.chips then
+    local delta = (
+      type(vals.chips) == "number"
+      and type(G.GAME.current_round.current_hand.chips) == "number"
+    )
+        and (vals.chips - G.GAME.current_round.current_hand.chips)
+      or 0
+    delta, col = format_delta(delta, vals.chips)
+    G.GAME.current_round.current_hand.chips = vals.chips
+    G.hand_text_area.chips:update(0)
+    if vals.StatusText then
+      attention_text({
+        text = delta,
+        scale = 0.8,
+        hold = 1,
+        cover = G.hand_text_area.chips.parent,
+        cover_colour = mix_colours(G.C.CHIPS, col, 0.1),
+        emboss = 0.05,
+        align = "cm",
+        cover_align = "cr",
+      })
+    end
+  end
+
+  -- Update mult
+  if vals.mult and G.GAME.current_round.current_hand.mult ~= vals.mult then
+    local delta = (
+      type(vals.mult) == "number"
+      and type(G.GAME.current_round.current_hand.mult) == "number"
+    )
+        and (vals.mult - G.GAME.current_round.current_hand.mult)
+      or 0
+    delta, col = format_delta(delta, vals.mult)
+    G.GAME.current_round.current_hand.mult = vals.mult
+    G.hand_text_area.mult:update(0)
+    if vals.StatusText then
+      attention_text({
+        text = delta,
+        scale = 0.8,
+        hold = 1,
+        cover = G.hand_text_area.mult.parent,
+        cover_colour = mix_colours(G.C.MULT, col, 0.1),
+        emboss = 0.05,
+        align = "cm",
+        cover_align = "cl",
+      })
+    end
+    if not G.TAROT_INTERRUPT then
+      G.hand_text_area.mult:juice_up()
+    end
+  end
+
+  -- Update handname
+  if
+    vals.handname
+    and G.GAME.current_round.current_hand.handname ~= vals.handname
+  then
+    G.GAME.current_round.current_hand.handname = vals.handname
+    if not config.nopulse then
+      G.hand_text_area.handname.config.object:pulse(0.2)
+    end
+  end
+
+  -- Update chip total
+  if vals.chip_total then
+    G.GAME.current_round.current_hand.chip_total = vals.chip_total
+    G.hand_text_area.chip_total.config.object:pulse(0.5)
+  end
+
+  -- Update level
+  if
+    vals.level
+    and G.GAME.current_round.current_hand.hand_level
+      ~= " " .. localize("k_lvl") .. tostring(vals.level)
+  then
+    if vals.level == "" then
+      G.GAME.current_round.current_hand.hand_level = vals.level
+    else
+      G.GAME.current_round.current_hand.hand_level = " "
+        .. localize("k_lvl")
+        .. tostring(vals.level)
+      if type(vals.level) == "number" then
+        G.hand_text_area.hand_level.config.colour =
+          G.C.HAND_LEVELS[math.min(vals.level, 7)]
+      else
+        G.hand_text_area.hand_level.config.colour = G.C.HAND_LEVELS[1]
+      end
+      G.hand_text_area.hand_level:juice_up()
+    end
+  end
+
+  -- Play sound
+  if config.sound and not config.modded then
+    play_sound(config.sound, config.pitch or 1, config.volume or 1)
+  end
+
+  -- Handle modded configuration
+  if config.modded then
+    G.HUD_blind:get_UIE_by_ID("HUD_blind_debuff_1"):juice_up(0.3, 0)
+    G.HUD_blind:get_UIE_by_ID("HUD_blind_debuff_2"):juice_up(0.3, 0)
+    G.GAME.blind:juice_up()
+    G.E_MANAGER:add_event(Event({
+      trigger = "after",
+      delay = 0.06 * G.SETTINGS.GAMESPEED,
+      blockable = false,
+      blocking = false,
+      func = function()
+        play_sound("tarot2", 0.76, 0.4)
+        return true
+      end,
+    }))
+    play_sound("tarot2", 1, 0.4)
+  end
+
+  return true
+end
+
+function sUpdateHandTextDramatic(config, vals)
   if not G.hand then
     return false
   end
