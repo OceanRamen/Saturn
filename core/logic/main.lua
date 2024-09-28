@@ -5,7 +5,7 @@ local is_dev = false
 
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.0-D",
+  VERSION = "alpha-0.2.1-A",
   PATH = "",
   DEFAULTS = {},
   -- Vars
@@ -113,6 +113,7 @@ function Saturn.loadLogic()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/rem_anim.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/stack.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/hide_played.lua")))()
+  assert(load(nfs.read(Saturn.PATH .. "/core/logic/stat_tracking.lua")))()
   -- UI
   assert(load(nfs.read(Saturn.PATH .. "/UI/definitions.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/UI/functions.lua")))()

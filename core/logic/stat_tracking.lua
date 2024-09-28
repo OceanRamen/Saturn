@@ -5,12 +5,12 @@ function Controller:queue_R_cursor_press(x, y)
     self.hovering.target.ability
     and self.hovering.target.ability.set == "Joker"
   then
+    -- print(inspect(self.hovering.target.counter))
+    self.hovering.target:increment_counter(1)
     self.hovering.target:counter_lock()
   end
   r_click_ref(self, x, y)
 end
-
---- Fuck obelisk. We are removing it.
 
 local joker_counter_types = {
   -- Money Gen
@@ -67,47 +67,47 @@ local joker_counter_types = {
 
 local counter_type_table = {
   ["money_gen"] = {
-    text = "Money Generated",
+    text = "EARNED",
     colour = G.C.MONEY,
     prefix = "$",
   },
   ["value_gen"] = {
-    text = "Value Generated",
+    text = "EARNED",
     colour = G.C.MONEY,
     prefix = "$",
   },
   ["card_gen"] = {
-    text = "Cards Generated",
+    text = "GENERATED",
     colour = G.C.SECONDARY_SET.Tarot,
     prefix = "",
   },
   ["jokers_gen"] = {
-    text = "Jokers Generated",
+    text = "GENERATED",
     colour = G.C.RARITY[2],
     prefix = "",
   },
   ["cards_add"] = {
-    text = "Cards Added",
+    text = "CREATED",
     colour = G.C.CHANCE,
     prefix = "",
   },
   ["cards_rem"] = {
-    text = "Cards Removed",
-    colour = G.C.G.C.RED,
+    text = "REMOVED",
+    colour = G.C.RED,
     prefix = "",
   },
   ["jokers_rem"] = {
-    text = "Jokers Destroyed",
+    text = "DESTROYED",
     colour = G.C.RED,
     prefix = "",
   },
   ["hands_upgraded"] = {
-    text = "Hands Upgraded",
+    text = "UPGRADED",
     colour = G.C.HAND_LEVELS[6],
     prefix = "",
   },
   ["turned_gold"] = {
-    text = "Turned to Gold",
+    text = "SOLIDIFIED",
     colour = G.C.MONEY,
     prefix = "",
   },
@@ -117,17 +117,24 @@ local counter_type_table = {
     prefix = "",
   },
   ["retriggers"] = {
-    text = "Retriggers",
+    text = "RETRIGGERED",
     colour = G.C.GREEN,
     prefix = "",
   },
 }
 
+--- Init Counter
+local add_to_deck_ref = Card.add_to_deck
+function Card:add_to_deck(from_debuff)
+  add_to_deck_ref(self, from_debuff)
+  self:should_init()
+end
+
 --- Counter Load/Save
 
 local sr = Card.save
 function Card:save()
-  local ret = save_ref(self)
+  local ret = sr(self)
   ret = self:save_counters(ret)
   return ret
 end
@@ -189,7 +196,7 @@ end
 
 function Card:is_valid()
   local counter_type = joker_counter_types[self.ability.name]
-  return (counter_type and true) or false
+  return counter_type
 end
 
 function Card:has_counter()
@@ -357,6 +364,225 @@ function Card:get_counter_value()
   if self:has_counter() then
     return self.counter.counter_value
   end
+end
+
+-- Counter UI
+function Card:display_counter(hover)
+  if self.facing == "front" then
+    if hover then
+      local locked = false
+      if self.counter.locked then
+        self.counter.locked = false
+        locked = true
+      end
+      self.children.counter = nil
+      self.children.h_popup.children.counter = self:generate_counter_UI()
+      if locked then
+        self.counter.locked = true
+      end
+    else
+      if self.counter.locked then
+        self.children.counter = self:generate_counter_UI()
+      end
+    end
+  end
+end
+
+function Card:generate_counter_UI()
+  return UIBox({
+    definition = self:generate_counter_definition(),
+    config = self:generate_counter_config(),
+  })
+end
+
+function Card:generate_counter_definition()
+  local definition
+
+  local function create_text_node(text, scale, colour, vert)
+    local vert = vert or false
+    if type(text) == "table" then
+      local multi_line = {}
+      for i, v in ipairs(text) do
+        table.insert(multi_line, create_text_node(v, scale, colour, vert))
+      end
+      return {
+        n = (vert and G.UIT.C or G.UIT.R),
+        config = {
+          align = "cm",
+          colour = G.C.CLEAR,
+          padding = 0.05,
+        },
+        nodes = multi_line,
+      }
+    else
+      return {
+        n = G.UIT.T,
+        config = {
+          align = "cm",
+          text = text,
+          scale = scale,
+          colour = colour,
+          vert = vert,
+        },
+      }
+    end
+  end
+
+  local function create_counter_value_node(
+    counter_type,
+    prefix,
+    value,
+    colour,
+    size
+  )
+    function get_val_scale(text, size)
+      local size = size * 0.5
+      local longest = 0
+      if type(text) == "table" then
+        for i, v in ipairs(text) do
+          if #v > longest then
+            longest = #v
+          end
+        end
+        return size * longest
+      else
+        longest = #text
+        return size * longest
+      end
+    end
+    local scale = get_val_scale(
+      self.counter.counter_text,
+      self.counter.counter_text_size
+    ) * 0.75
+    return {
+      n = G.UIT.C,
+      config = {
+        align = "cm",
+        padding = 0.075,
+        colour = G.C.BLACK,
+        r = 0.1,
+        emboss = 0.05,
+      },
+      nodes = {
+        create_text_node(prefix .. value, scale, colour),
+      },
+    }
+  end
+
+  local function create_base_definition()
+    return {
+      n = G.UIT.ROOT,
+      config = {
+        align = "cm",
+        colour = G.C.CLEAR,
+        padding = 0.02,
+      },
+      nodes = {
+        {
+          n = G.UIT.R,
+          config = {
+            align = "cm",
+            colour = G.C.CLEAR,
+          },
+          nodes = {
+            {
+              n = G.UIT.R,
+              config = {
+                align = "cm",
+                colour = G.C.CLEAR,
+                r = 0.1,
+                padding = 0.05,
+                emboss = 0.05,
+              },
+              nodes = {
+                {
+                  n = G.UIT.R,
+                  config = {
+                    align = "cm",
+                    colour = HEX("22222266"),
+                    r = 0.1,
+                    padding = 0.075,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    }
+  end
+
+  definition = create_base_definition()
+  local counter_node = create_text_node(
+    -- (
+    --   self.counter.counter_value_num > 1 and self.counter.counter_text .. "s"
+    --   or self.counter.counter_text
+    -- ),
+    self.counter.counter_text,
+    self.counter.counter_text_size,
+    self.counter.counter_text_colour,
+    true
+  )
+
+  local value_node = create_counter_value_node(
+    self.counter.counter_type,
+    self.counter.counter_prefix,
+    self.counter.counter_value,
+    self.counter.counter_value_colour,
+    self.counter.counter_value_size
+  )
+
+  -- Initialize the nodes table if it does not exist
+  if not definition.nodes[1].nodes[1].nodes[1].nodes then
+    definition.nodes[1].nodes[1].nodes[1].nodes = {}
+  end
+
+  table.insert(definition.nodes[1].nodes[1].nodes[1].nodes, counter_node)
+  table.insert(definition.nodes[1].nodes[1].nodes[1].nodes, value_node)
+
+  return definition
+end
+
+function Card:generate_counter_config()
+  local config = nil
+  local offset_below = (
+    self.children.buy_button
+    or (self.area and self.area.config.view_deck)
+    or (self.area and self.area.config.type == "shop")
+  )
+      and true
+    or (self.T.y < G.CARD_H * 0.8) and true
+  if not self.counter.locked then
+    config = {
+      major = self.children.h_popup,
+      parent = self.children.h_popup,
+      xy_bond = "Strong",
+      r_bond = "Weak",
+      wh_bond = "Weak",
+      offset = {
+        x = 0,
+        y = offset_below and self.counter.counter_offset
+          or self.counter.counter_offset + 0.03 * -1,
+      },
+      type = offset_below and "bm" or "tm",
+    }
+  else
+    config = {
+      major = self,
+      parent = self,
+      xy_bond = "Strong",
+      r_bond = "Weak",
+      wh_bond = "Weak",
+      offset = {
+        x = 0,
+        y = offset_below and self.counter.counter_offset
+          or self.counter.counter_offset * -1,
+      },
+      type = "bm",
+    }
+  end
+
+  return config
 end
 
 function Card:counter_bonus() end
