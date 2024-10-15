@@ -31,13 +31,13 @@ Saturn = {
 
 local mod_dir = lovely.mod_dir -- Cache the base directory
 local found = false
-local search_str = "saturn"    -- or "saturn-dev" depending on the environment
+local search_str = "saturn" -- or "saturn-dev" depending on the environment
 
 for _, item in ipairs(nfs.getDirectoryItems(mod_dir)) do
   local itemPath = mod_dir .. "/" .. item
   -- Check if the item is a directory and contains the search string
   if
-      nfs.getInfo(itemPath, "directory") and string.lower(item):find(search_str)
+    nfs.getInfo(itemPath, "directory") and string.lower(item):find(search_str)
   then
     Saturn.PATH = itemPath
     found = true
@@ -112,7 +112,7 @@ function Saturn.loadLogic()
   -- Loads other Saturn logic files for feature
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/rem_anim.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/core/logic/stack.lua")))()
-  -- assert(load(nfs.read(Saturn.PATH .. "/core/logic/stats.lua")))()
+  assert(load(nfs.read(Saturn.PATH .. "/core/logic/hide_played.lua")))()
   -- UI
   assert(load(nfs.read(Saturn.PATH .. "/UI/definitions.lua")))()
   assert(load(nfs.read(Saturn.PATH .. "/UI/functions.lua")))()
@@ -133,30 +133,4 @@ local start_up_ref = Game.start_up
 function Game:start_up()
   start_up_ref(self)
   Saturn.initialize()
-end
-
-local setting_tabRef = G.UIDEF.settings_tab
-function G.UIDEF.settings_tab(tab)
-  local setting_tab = setting_tabRef(tab)
-  if tab == "Game" then
-    local speeds = create_option_cycle({
-      label = localize("b_set_gamespeed"),
-      scale = 0.8,
-      options = { 0.25, 0.5, 1, 2, 3, 4, 8, 16 },
-      opt_callback = "change_gamespeed",
-      current_option = (
-        G.SETTINGS.GAMESPEED == 0.25 and 1
-        or G.SETTINGS.GAMESPEED == 0.5 and 2
-        or G.SETTINGS.GAMESPEED == 1 and 3
-        or G.SETTINGS.GAMESPEED == 2 and 4
-        or G.SETTINGS.GAMESPEED == 3 and 5
-        or G.SETTINGS.GAMESPEED == 4 and 6
-        or G.SETTINGS.GAMESPEED == 8 and 7
-        or G.SETTINGS.GAMESPEED == 16 and 8
-        or 3
-      ),
-    })
-    setting_tab.nodes[1] = speeds
-  end
-  return setting_tab
 end

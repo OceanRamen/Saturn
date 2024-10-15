@@ -13,8 +13,8 @@ local gameUpdateRef = Game.update
 
 local function isCalculating()
   return Saturn.calculating_card
-    or Saturn.calculating_joker
-    or Saturn.calculating_score
+      or Saturn.calculating_joker
+      or Saturn.calculating_score
 end
 
 function Game:update(dt)
@@ -90,12 +90,12 @@ end
 
 function update_hand_text(config, vals)
   if
-    Saturn.config.remove_animations
-    and not Saturn.using_consumeable
-    and not (
-      Saturn.config.enable_dramatic_final_hand
-      and G.GAME.current_round.hands_left == 0
-    )
+      Saturn.config.remove_animations
+      and not Saturn.using_consumeable
+      and not (
+        Saturn.config.enable_dramatic_final_hand
+        and G.GAME.current_round.hands_left == 0
+      )
   then
     if G.latest_uht then
       vals.chips = vals.chips or G.latest_uht.vals.chips
@@ -137,10 +137,10 @@ function Card:start_materialize(dissolve_colours, silent, timefac)
 end
 
 function Card:start_dissolve(
-  dissolve_colours,
-  silent,
-  dissolve_time_fac,
-  no_juice
+    dissolve_colours,
+    silent,
+    dissolve_time_fac,
+    no_juice
 )
   if Saturn.config.remove_animations and isCalculating() then
     self:remove()
@@ -157,7 +157,7 @@ end
 
 function Card:set_seal(_seal, silent, immediate)
   local instant = Saturn.config.remove_animations and isCalculating()
-    or immediate
+      or immediate
   cardSetSealRef(self, _seal, silent, instant)
 end
 
@@ -175,11 +175,11 @@ function sUpdateHandText(config, vals)
   -- Update chips
   if vals.chips and G.GAME.current_round.current_hand.chips ~= vals.chips then
     local delta = (
-      type(vals.chips) == "number"
-      and type(G.GAME.current_round.current_hand.chips) == "number"
-    )
+          type(vals.chips) == "number"
+          and type(G.GAME.current_round.current_hand.chips) == "number"
+        )
         and (vals.chips - G.GAME.current_round.current_hand.chips)
-      or 0
+        or 0
     delta, col = format_delta(delta, vals.chips)
     G.GAME.current_round.current_hand.chips = vals.chips
     G.hand_text_area.chips:update(0)
@@ -200,11 +200,11 @@ function sUpdateHandText(config, vals)
   -- Update mult
   if vals.mult and G.GAME.current_round.current_hand.mult ~= vals.mult then
     local delta = (
-      type(vals.mult) == "number"
-      and type(G.GAME.current_round.current_hand.mult) == "number"
-    )
+          type(vals.mult) == "number"
+          and type(G.GAME.current_round.current_hand.mult) == "number"
+        )
         and (vals.mult - G.GAME.current_round.current_hand.mult)
-      or 0
+        or 0
     delta, col = format_delta(delta, vals.mult)
     G.GAME.current_round.current_hand.mult = vals.mult
     G.hand_text_area.mult:update(0)
@@ -227,8 +227,8 @@ function sUpdateHandText(config, vals)
 
   -- Update handname
   if
-    vals.handname
-    and G.GAME.current_round.current_hand.handname ~= vals.handname
+      vals.handname
+      and G.GAME.current_round.current_hand.handname ~= vals.handname
   then
     G.GAME.current_round.current_hand.handname = vals.handname
     if not config.nopulse then
@@ -244,19 +244,19 @@ function sUpdateHandText(config, vals)
 
   -- Update level
   if
-    vals.level
-    and G.GAME.current_round.current_hand.hand_level
+      vals.level
+      and G.GAME.current_round.current_hand.hand_level
       ~= " " .. localize("k_lvl") .. tostring(vals.level)
   then
     if vals.level == "" then
       G.GAME.current_round.current_hand.hand_level = vals.level
     else
       G.GAME.current_round.current_hand.hand_level = " "
-        .. localize("k_lvl")
-        .. tostring(vals.level)
+          .. localize("k_lvl")
+          .. tostring(vals.level)
       if type(vals.level) == "number" then
         G.hand_text_area.hand_level.config.colour =
-          G.C.HAND_LEVELS[math.min(vals.level, 7)]
+            G.C.HAND_LEVELS[math.min(vals.level, 7)]
       else
         G.hand_text_area.hand_level.config.colour = G.C.HAND_LEVELS[1]
       end

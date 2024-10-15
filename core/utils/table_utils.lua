@@ -55,3 +55,12 @@ function deepCopy(orig)
   end
   return copy
 end
+
+function inTable(table, key)
+  for k, v in pairs(table) do
+    if v == key then
+      return true
+    end
+  end
+  return false
+end

@@ -50,14 +50,14 @@ function Controller:R_cursor_release(x, y)
   x = x or self.cursor_position.x
   y = y or self.cursor_position.y
   if
-      (self.locked and (not G.SETTINGS.paused or G.screenwipe))
-      or self.locks.frame
+    (self.locked and (not G.SETTINGS.paused or G.screenwipe))
+    or self.locks.frame
   then
     return
   end
 
   self.r_cursor_up.T =
-  { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
+    { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
   self.r_cursor_up.time = G.TIMERS.TOTAL
   self.r_cursor_up.handled = false
   self.r_cursor_up.target = nil
@@ -76,36 +76,36 @@ function Controller:queue_R_cursor_press(x, y)
   y = y or self.cursor_position.y
 
   self.r_cursor_down.T =
-  { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
+    { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
   self.r_cursor_down.time = G.TIMERS.TOTAL
   self.r_cursor_down.handled = false
   self.r_cursor_down.target = nil
   self.is_r_cursor_down = true
 
   local press_node = (self.HID.touch and self.cursor_hover.target)
-      or self.hovering.target
-      or self.focused.target
+    or self.hovering.target
+    or self.focused.target
 
   if press_node then
     self.r_cursor_down.target = press_node.states.click.can and press_node
-        or press_node:can_drag()
-        or nil
+      or press_node:can_drag()
+      or nil
     if
-        type(self.r_cursor_down.target) == "table"
-        and self.r_cursor_down.target.__index == Card
+      type(self.r_cursor_down.target) == "table"
+      and self.r_cursor_down.target.__index == Card
     then
       local card = self.r_cursor_down.target
       if card.area == G.consumeables then
         if
-            love.keyboard.isDown("lshift")
-            and not Saturn.is_splitting
-            and not Saturn.is_merging
+          love.keyboard.isDown("lshift")
+          and not Saturn.is_splitting
+          and not Saturn.is_merging
         then
           card:dissolve_stack()
         elseif
-            love.keyboard.isDown("lctrl")
-            and not Saturn.is_splitting
-            and not Saturn.is_merging
+          love.keyboard.isDown("lctrl")
+          and not Saturn.is_splitting
+          and not Saturn.is_merging
         then
           if card:canMerge() and card:canSplit() then
             card:attemptMergeAll()
@@ -169,7 +169,7 @@ end
 
 function Card:canStack()
   return inTable(CAN_STACK, self.ability.set)
-      and (self.edition or {}).type == "negative"
+    and (self.edition or {}).type == "negative"
 end
 
 function Card:canSplit()
@@ -183,9 +183,9 @@ function Card:canMerge()
     if v then
       v.edition = v.edition or {}
       if
-          v ~= self
-          and (v.config or {}).center_key == (self.config or {}).center_key
-          and (v.edition.type or "") == (self.edition.type or "")
+        v ~= self
+        and (v.config or {}).center_key == (self.config or {}).center_key
+        and (v.edition.type or "") == (self.edition.type or "")
       then
         can_merge = true
       end
@@ -212,37 +212,37 @@ function Card:set_stack_cost()
   self.extra_cost = 0 + G.GAME.inflation
   if self.edition then
     self.extra_cost = self.extra_cost
-        + (self.edition.holo and 3 or 0)
-        + (self.edition.foil and 2 or 0)
-        + (self.edition.polychrome and 5 or 0)
-        + (self.edition.negative and 5 or 0)
+      + (self.edition.holo and 3 or 0)
+      + (self.edition.foil and 2 or 0)
+      + (self.edition.polychrome and 5 or 0)
+      + (self.edition.negative and 5 or 0)
   end
   self.cost = math.max(
     1,
     math.floor(
       (self.base_cost + self.extra_cost + 0.5)
-      * (100 - G.GAME.discount_percent)
-      / 100
+        * (100 - G.GAME.discount_percent)
+        / 100
     )
   )
   if
-      self.ability.set == "Booster" and G.GAME.modifiers.booster_ante_scaling
+    self.ability.set == "Booster" and G.GAME.modifiers.booster_ante_scaling
   then
     self.cost = self.cost + G.GAME.round_resets.ante - 1
   end
   if
-      self.ability.set == "Booster"
-      and not G.SETTINGS.tutorial_complete
-      and G.SETTINGS.tutorial_progress
-      and not G.SETTINGS.tutorial_progress.completed_parts["shop_1"]
+    self.ability.set == "Booster"
+    and not G.SETTINGS.tutorial_complete
+    and G.SETTINGS.tutorial_progress
+    and not G.SETTINGS.tutorial_progress.completed_parts["shop_1"]
   then
     self.cost = self.cost + 3
   end
   if
-      (
-        self.ability.set == "Planet"
-        or (self.ability.set == "Booster" and self.ability.name:find("Celestial"))
-      ) and #find_joker("Astronomer") > 0
+    (
+      self.ability.set == "Planet"
+      or (self.ability.set == "Booster" and self.ability.name:find("Celestial"))
+    ) and #find_joker("Astronomer") > 0
   then
     self.cost = 0
   end
@@ -250,17 +250,17 @@ function Card:set_stack_cost()
     self.cost = 1
   end
   self.ability.stack_cost = math.max(1, math.floor(self.cost / 2))
-      + (self.ability.extra_value or 0)
+    + (self.ability.extra_value or 0)
   if
-      self.area
-      and self.ability.couponed
-      and (self.area == G.shop_jokers or self.area == G.shop_booster)
+    self.area
+    and self.ability.couponed
+    and (self.area == G.shop_jokers or self.area == G.shop_booster)
   then
     self.cost = 0
   end
   self.ability.stack_cost = self.sell_cost * ((self.ability or {}).amt or 1)
   self.ability.stack_cost_label = self.facing == "back" and "?"
-      or self.ability.stack_cost
+    or self.ability.stack_cost
 end
 
 function getDupe(card)
@@ -275,9 +275,9 @@ end
 
 function isDupe(a, b)
   return a ~= b
-      and a.ability.set == b.ability.set
-      and a.config.center_key == b.config.center_key
-      and (a.edition.type or "") == (b.edition.type or "")
+    and a.ability.set == b.ability.set
+    and a.config.center_key == b.config.center_key
+    and (a.edition.type or "") == (b.edition.type or "")
 end
 
 function Card:dissolve_stack()
@@ -509,17 +509,17 @@ function Card:massUse()
         { sound = "button", volume = 0.7, pitch = 1.1, delay = 0 },
         { mult = 0, chips = 0, handname = "", level = "" }
       )
-      -- CASE: TAROT
+    -- CASE: TAROT
     elseif
-        card.ability.set == "Tarot"
-        and inTable(CAN_MASS_USE_INDIVIDUAL, card.ability.name)
+      card.ability.set == "Tarot"
+      and inTable(CAN_MASS_USE_INDIVIDUAL, card.ability.name)
     then
       local money_total = G.GAME.dollars
       stop_use()
       if card.ability.name == "The Hermit" then
         for i = 1, stack_amt do
           money_total = money_total
-              + math.max(0, math.min(money_total, card.ability.extra))
+            + math.max(0, math.min(money_total, card.ability.extra))
         end
         money_total = money_total - G.GAME.dollars
         G.E_MANAGER:add_event(Event({
@@ -580,19 +580,19 @@ end
 
 local function canPerformActions(skip_check)
   if
-      not skip_check
-      and (
-        (G.play and #G.play.cards > 0)
-        or G.CONTROLLER.locked
-        or (G.GAME.STOP_USE and G.GAME.STOP_USE > 0)
-      )
+    not skip_check
+    and (
+      (G.play and #G.play.cards > 0)
+      or G.CONTROLLER.locked
+      or (G.GAME.STOP_USE and G.GAME.STOP_USE > 0)
+    )
   then
     return false
   end
   if
-      G.STATE ~= G.STATES.HAND_PLAYED
-      and G.STATE ~= G.STATES.DRAW_TO_HAND
-      and G.STATE ~= G.STATES.PLAY_TAROT
+    G.STATE ~= G.STATES.HAND_PLAYED
+    and G.STATE ~= G.STATES.DRAW_TO_HAND
+    and G.STATE ~= G.STATES.PLAY_TAROT
   then
     return true
   else
@@ -603,12 +603,12 @@ end
 G.FUNCS.can_split_one = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canSplit()
-      and canPerformActions(nil)
-      and (card:getAmt() > 1)
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canSplit()
+    and canPerformActions(nil)
+    and (card:getAmt() > 1)
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
@@ -628,12 +628,12 @@ end
 G.FUNCS.can_split_half = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canSplit()
-      and canPerformActions(nil)
-      and (card:getAmt() > 1)
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canSplit()
+    and canPerformActions(nil)
+    and (card:getAmt() > 1)
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
@@ -653,12 +653,12 @@ end
 G.FUNCS.can_merge = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canStack()
-      and canPerformActions(nil)
-      and card:canMerge()
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canStack()
+    and canPerformActions(nil)
+    and card:canMerge()
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.DARK_EDITION
@@ -673,12 +673,12 @@ end
 G.FUNCS.can_merge_all = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canStack()
-      and canPerformActions(nil)
-      and card:canMerge()
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canStack()
+    and canPerformActions(nil)
+    and card:canMerge()
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.DARK_EDITION
@@ -703,16 +703,16 @@ end
 G.FUNCS.can_mass_use = function(e)
   local card = e.config.ref_table
   if
-      canPerformActions(nil)
-      and card:canMassUse()
-      and (inTable(CAN_MASS_USE, card.ability.set) or inTable(
-        CAN_MASS_USE_INDIVIDUAL,
-        card.config.center_key
-      ))
-      and (card:getAmt() > 1)
-      and card.highlighted
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    canPerformActions(nil)
+    and card:canMassUse()
+    and (inTable(CAN_MASS_USE, card.ability.set) or inTable(
+      CAN_MASS_USE_INDIVIDUAL,
+      card.config.center_key
+    ))
+    and (card:getAmt() > 1)
+    and card.highlighted
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.RED
@@ -734,11 +734,11 @@ end
 G.FUNCS.can_mass_sell = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and canPerformActions(nil)
-      and (card:getAmt() > 1)
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and canPerformActions(nil)
+    and (card:getAmt() > 1)
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
@@ -1348,48 +1348,47 @@ function set_consumeable_usage(card, amt)
   amt = math.floor(amt or 1)
   if card.config.center_key and card.ability.consumeable then
     if
-        G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key]
+      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key]
     then
-      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count = G.PROFILES[G.SETTINGS.profile]
-          .consumeable_usage[card.config.center_key].count
-          + amt
+      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count = G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count
+        + amt
     else
       G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key] =
-      { count = 1, order = card.config.center.order }
+        { count = 1, order = card.config.center.order }
     end
     if G.GAME.consumeable_usage[card.config.center_key] then
       G.GAME.consumeable_usage[card.config.center_key].count = G.GAME.consumeable_usage[card.config.center_key].count
-          + amt
+        + amt
     else
       G.GAME.consumeable_usage[card.config.center_key] =
-      { count = 1, order = card.config.center.order, set = card.ability.set }
+        { count = 1, order = card.config.center.order, set = card.ability.set }
     end
     G.GAME.consumeable_usage_total = G.GAME.consumeable_usage_total
-        or { tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, all = 0 }
+      or { tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, all = 0 }
     if card.config.center.set == "Tarot" then
       G.GAME.consumeable_usage_total.tarot = G.GAME.consumeable_usage_total.tarot
-          + amt
+        + amt
       G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet
-          + amt
+        + amt
     elseif card.config.center.set == "Planet" then
       G.GAME.consumeable_usage_total.planet = G.GAME.consumeable_usage_total.planet
-          + amt
+        + amt
       G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet
-          + amt
+        + amt
     elseif card.config.center.set == "Spectral" then
       G.GAME.consumeable_usage_total.spectral = G.GAME.consumeable_usage_total.spectral
-          + amt
+        + amt
     end
 
     G.GAME.consumeable_usage_total.all = G.GAME.consumeable_usage_total.all
-        + amt
+      + amt
 
     if not card.config.center.discovered then
       discover_card(card)
     end
 
     if
-        card.config.center.set == "Tarot" or card.config.center.set == "Planet"
+      card.config.center.set == "Tarot" or card.config.center.set == "Planet"
     then
       G.E_MANAGER:add_event(Event({
         trigger = "immediate",

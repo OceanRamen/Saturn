@@ -1,13 +1,14 @@
 local Stack = {}
 
 function Stack:new()
-  local stack = { items = {} }
+  local stack = { count = 0, items = {} }
   self.__index = self
   return setmetatable(stack, self)
 end
 
 function Stack:push(sort_id)
   table.insert(self.items, sort_id)
+  self.count = self.count + 1
   return self -- Return self for chaining
 end
 
@@ -15,11 +16,13 @@ function Stack:pop()
   if #self.items == 0 then
     return nil
   end
+  self.count = self.count - 1
   return table.remove(self.items)
 end
 
 function Stack:popMultiple(n)
   n = math.max(0, n or 1)
+  self.count = self.count - n
   local poppedItems = {}
 
   for i = 1, n do
@@ -30,7 +33,6 @@ function Stack:popMultiple(n)
       break -- Stop if stack is empty
     end
   end
-
   return poppedItems
 end
 
@@ -43,7 +45,15 @@ function Stack:isEmpty()
 end
 
 function Stack:size()
-  return #self.items
+  return self.count
+end
+
+function Stack:validateSize()
+  if self.count == #self.items then
+    return true
+  else
+    return false
+  end
 end
 
 function Stack:split(index)
@@ -56,6 +66,7 @@ function Stack:split(index)
   -- Resize original stack
   for i = #self.items, index, -1 do
     table.remove(self.items)
+    self.count = self.count - 1
   end
 
   return newStack
@@ -67,6 +78,7 @@ function Stack:merge(otherStack)
   end
   for _, value in ipairs(otherStack.items) do
     self:push(value)
+    self.count = self.count + 1
   end
   return self -- Return self for chaining
 end
