@@ -15,7 +15,7 @@ MAX_SIZE = 9999
 
 local Stack = require("stack")
 
-local REF = {}
+REF = {}
 
 function Card:shouldInit()
   if self:canStack() then
@@ -25,11 +25,13 @@ end
 
 function Card:canStack()
   return inTable(CAN_STACK_SET, self.ability.set)
-      and (self.edition or {}).type == "negative"
+    and (self.edition or {}).type == "negative"
 end
 
 function Card:canSplit()
-  return inTable(CAN_STACK_SET, self.ability.set) and ((self.stack or {}):getSize() > 1)
+  self:shouldInit()
+  return inTable(CAN_STACK_SET, self.ability.set)
+    and ((self.stack or {}):getSize() > 1)
 end
 
 function Card:canMerge()
@@ -43,16 +45,23 @@ function Card:canMerge()
 end
 
 function Card:canMassUse()
-  return (inTable(CAN_USE_SET, self.ability.set) or inTable(CAN_USE_KEY, self.config.center_key))
+  return (
+    inTable(CAN_USE_SET, self.ability.set)
+    or inTable(CAN_USE_KEY, self.config.center_key)
+  )
 end
 
 function Card:split(n)
   self:shouldInit()
-  if not self:canSplit() then return end
+  if not self:canSplit() then
+    return
+  end
   -- Ensure n is not bigger than stack size
   n = math.min(self.stack:getSize(), n)
   local card_limit = G.consumeables.config.card_limit
-  if (self.edition or {}).negative then card_limit = card_limit + 1 end
+  if (self.edition or {}).negative then
+    card_limit = card_limit + 1
+  end
   local split_index = self.stack:getSize() - n
   local new_stack = self.stack:split(split_index)
   local new_card = copy_card(self)
@@ -73,39 +82,50 @@ end
 
 function Card:tryMergeAll()
   self:shouldInit()
-  if not self:canStack() then return end
+  if not self:canStack() then
+    return
+  end
   local cards = {}
   for k, v in pairs(G.consumeables.cards) do
     if isCopy(v, self) then
       table.insert(cards, v)
     end
   end
-  if not #cards >= 1 then return end
+  if not (#cards >= 1) then
+    return
+  end
   self:createStackUI()
   Saturn.is_merging = true
   for k, v in pairs(cards) do
     v:shouldInit()
-    if (self.stack:getSize() + v.stack:getSize() < MAX_SIZE) then
-      G.E_MANAGER:add_event(Event({
-        delay = easedCurve(k, #cards),
-        func = function()
-          if k % 2 == 0 then
-            play_sound("card1", 1.3 + math.random() * 0.2, 0.2 * easedCurve(k, #cards, 0.6))
-          end
-          if k % 3 == 0 then
-            G.ROOM.jiggle = G.ROOM.jiggle + (easedCurve(k, #cards, 0.4))
-            play_sound(
-              "cardSlide1",
-              1.4 + math.random() * 0.2,
-              0.2 * easedCurve(k, #cards, 0.6)
-            )
-          end
-          self.stack:merge(v)
-          self:setStackCost()
-          v:remove()
-          return true
-        end
-      }), "other")
+    if self.stack:getSize() + v.stack:getSize() < MAX_SIZE then
+      G.E_MANAGER:add_event(
+        Event({
+          delay = easedCurve(k, #cards),
+          func = function()
+            if k % 2 == 0 then
+              play_sound(
+                "card1",
+                1.3 + math.random() * 0.2,
+                0.2 * easedCurve(k, #cards, 0.6)
+              )
+            end
+            if k % 3 == 0 then
+              G.ROOM.jiggle = G.ROOM.jiggle + (easedCurve(k, #cards, 0.4))
+              play_sound(
+                "cardSlide1",
+                1.4 + math.random() * 0.2,
+                0.2 * easedCurve(k, #cards, 0.6)
+              )
+            end
+            self.stack:merge(v)
+            self:setStackCost()
+            v:remove()
+            return true
+          end,
+        }),
+        "other"
+      )
     end
   end
   G.E_MANAGER:add_event(
@@ -124,14 +144,24 @@ end
 function Card:tryMerge(target, no_dissolve)
   self:shouldInit()
   self.edition = self.edition or {}
-  if not self:canStack() then return end
-  target = target or getDupe(self)
-  if target and not isDupe(target, self) then
-    target = getDupe(self)
+  if not self:canStack() then
+    return
+  end
+  target = target or getCopy(self)
+  if target and not isCopy(target, self) then
+    target = getCopy(self)
+  end
+  if not target then
+    error("Error: No valid target found for merging.")
+    return
   end
   target:shouldInit()
   no_dissolve = no_dissolve or false
-  if target and (target.stack:getSize() < MAX_SIZE) then
+  if not target.stack then
+    error("Error: Target stack is not initialized.")
+    return
+  end
+  if target.stack:getSize() < MAX_SIZE then
     target.stack:merge(self)
     target:createStackUI()
     target:juice_up(0.3, 0.4)
@@ -142,6 +172,8 @@ function Card:tryMerge(target, no_dissolve)
     else
       self:remove()
     end
+  else
+    error("Error: Target stack size exceeds the maximum limit.")
   end
 end
 
@@ -163,18 +195,24 @@ function Card:massUse()
         }
       )
       delay(1.3)
-      level_up_hand(self, self.ability.consumeable.hand_type, nil, self.stack:getSize())
+      level_up_hand(
+        self,
+        self.ability.consumeable.hand_type,
+        nil,
+        self.stack:getSize()
+      )
       update_hand_text(
         { sound = "button", volume = 0.7, pitch = 1.1, delay = 0 },
         { mult = 0, chips = 0, handname = "", level = "" }
       )
-    elseif self.ability.set == "Tarot" and inTable(CAN_USE_KEY, self.ability.name) then
+    elseif
+      self.ability.set == "Tarot" and inTable(CAN_USE_KEY, self.ability.name)
+    then
       local money = G.GAME.dollars
       stop_use()
       if self.ability.name == "The Hermit" then
         for i = 1, self.stack:getSize() do
-          money = money
-              + math.max(0, math.min(money, self.ability.extra))
+          money = money + math.max(0, math.min(money, self.ability.extra))
         end
         money = money - G.GAME.dollars
         G.E_MANAGER:add_event(Event({
@@ -235,13 +273,18 @@ end
 
 function Card:dissolveStack()
   self:shouldInit()
-  if not self:canSplit() then return end
+  if not self:canSplit() then
+    return
+  end
   local size = self.stack:getSize()
-  if not (size > 1) then return end
+  if not (size > 1) then
+    return
+  end
   local n = size - 1
   Saturn.is_splitting = true
   for i = 1, n do
-    G.E_MANAGER:add_event(Event({
+    G.E_MANAGER:add_event(
+      Event({
         delay = easedCurve(i, n),
         func = function()
           if i % 3 == 0 then
@@ -264,7 +307,7 @@ function Card:dissolveStack()
             card_limit = card_limit + 1
           end
           local new_card = copy_card(self)
-          new_card.stack:new()
+          new_card.stack = Stack:new()
           new_card.sort_id = self.stack:pop()
           new_card.ignoreStack = true
           new_card:add_to_deck()
@@ -295,37 +338,37 @@ function Card:setStackCost()
   self.extra_cost = 0 + G.GAME.inflation
   if self.edition then
     self.extra_cost = self.extra_cost
-        + (self.edition.holo and 3 or 0)
-        + (self.edition.foil and 2 or 0)
-        + (self.edition.polychrome and 5 or 0)
-        + (self.edition.negative and 5 or 0)
+      + (self.edition.holo and 3 or 0)
+      + (self.edition.foil and 2 or 0)
+      + (self.edition.polychrome and 5 or 0)
+      + (self.edition.negative and 5 or 0)
   end
   self.cost = math.max(
     1,
     math.floor(
       (self.base_cost + self.extra_cost + 0.5)
-      * (100 - G.GAME.discount_percent)
-      / 100
+        * (100 - G.GAME.discount_percent)
+        / 100
     )
   )
   if
-      self.ability.set == "Booster" and G.GAME.modifiers.booster_ante_scaling
+    self.ability.set == "Booster" and G.GAME.modifiers.booster_ante_scaling
   then
     self.cost = self.cost + G.GAME.round_resets.ante - 1
   end
   if
-      self.ability.set == "Booster"
-      and not G.SETTINGS.tutorial_complete
-      and G.SETTINGS.tutorial_progress
-      and not G.SETTINGS.tutorial_progress.completed_parts["shop_1"]
+    self.ability.set == "Booster"
+    and not G.SETTINGS.tutorial_complete
+    and G.SETTINGS.tutorial_progress
+    and not G.SETTINGS.tutorial_progress.completed_parts["shop_1"]
   then
     self.cost = self.cost + 3
   end
   if
-      (
-        self.ability.set == "Planet"
-        or (self.ability.set == "Booster" and self.ability.name:find("Celestial"))
-      ) and #find_joker("Astronomer") > 0
+    (
+      self.ability.set == "Planet"
+      or (self.ability.set == "Booster" and self.ability.name:find("Celestial"))
+    ) and #find_joker("Astronomer") > 0
   then
     self.cost = 0
   end
@@ -333,22 +376,26 @@ function Card:setStackCost()
     self.cost = 1
   end
   self.ability.stack_cost = math.max(1, math.floor(self.cost / 2))
-      + (self.ability.extra_value or 0)
+    + (self.ability.extra_value or 0)
   if
-      self.area
-      and self.ability.couponed
-      and (self.area == G.shop_jokers or self.area == G.shop_booster)
+    self.area
+    and self.ability.couponed
+    and (self.area == G.shop_jokers or self.area == G.shop_booster)
   then
     self.cost = 0
   end
   self.ability.stack_cost = self.sell_cost * ((self.stack or {}):getSize() or 1)
   self.ability.stack_cost_label = self.facing == "back" and "?"
-      or self.ability.stack_cost
+    or self.ability.stack_cost
 end
 
 function Card:createStackUI()
-  if self.children.stack_ui then return end
-  if not self:canStack() then return end
+  if self.children.stack_ui then
+    return
+  end
+  if not self:canStack() then
+    return
+  end
   self.children.stack_ui = G.UIDEF.counterStackSize(self)
 end
 
@@ -365,6 +412,9 @@ function Card:sell_card()
   if not self:canStack() then
     return REF.card_sell(self)
   end
+  if not (self.stack:getSize() > 1) then
+    return REF.card_sell(self)
+  end
   local sell_card = self:split(1)
   if sell_card then
     sell_card:sell_card()
@@ -375,11 +425,19 @@ end
 REF.add_to_deck = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
   REF.add_to_deck(self, from_debuff)
-  if not G.consumeables then return end
-  if not self:canStack() then return end
+  if not G.consumeables then
+    return
+  end
+  if not self:canStack() then
+    return
+  end
   self.stack = self.stack or Stack:new()
-  if (not self:canMerge()) or self.ignoreStack then return end
-  if not Saturn.config.enable_stacking then return end
+  if (not self:canMerge()) or self.ignoreStack then
+    return
+  end
+  if not Saturn.config.enable_stacking then
+    return
+  end
   G.E_MANAGER:add_event(Event({
     trigger = "after",
     delay = 0.1,
@@ -407,21 +465,48 @@ end
 
 REF.card_highlight = Card.highlight
 function Card:highlight(is_highlighted)
-  if not self:canStack() then goto ret end
-  if not self.added_to_deck then goto ret end
+  if not self:canStack() then
+    goto ret
+  end
+  if not self.added_to_deck then
+    goto ret
+  end
   if is_highlighted then
-    self.children.stackActionButtons = UIBox({
-      definition = G.UIDEF.buttonMassUseSell(self),
+    --DEBUG
+    if self.stack then
+      print(self.stack:getSize())
+    end
+    -- TODO: FIX
+    -- self.children.stackActionButtons = UIBox({
+    --   definition = G.UIDEF.buttonMassUseSell(self),
+    --   config = {
+    --     align = "cl",
+    --     offset = {
+    --       x = 0.6,
+    --       y = 0,
+    --     },
+    --     parent = self,
+    --   },
+    -- })
+    local y_offset = 0
+    if self:canSplit() then
+      y_offset = y_offset + 1
+    end
+    if self:canMerge() then
+      y_offset = y_offset + 1
+    end
+    self.children.stackActionContainer = UIBox({
+      definition = G.UIDEF.stackActionContainer(self),
       config = {
-        align = "cl",
+        align = "bmi",
         offset = {
-          x = 0.6,
-          y = 0,
+          x = 0,
+          y = y_offset,
         },
+        bond = "Strong",
         parent = self,
-      }
+      },
     })
-    self.children.stackActionContainer = G.UIDEF.stackActionContainer(self)
   else
     if self.children.stackActionButtons then
       self.children.stackActionButtons:remove()
@@ -433,55 +518,54 @@ function Card:highlight(is_highlighted)
     end
   end
   ::ret::
-  return REF.highlight(self, is_highlighted)
+  return REF.card_highlight(self, is_highlighted)
 end
 
 function set_consumeable_usage(card, amt)
   amt = math.floor(amt or 1)
   if card.config.center_key and card.ability.consumeable then
     if
-        G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key]
+      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key]
     then
-      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count = G.PROFILES[G.SETTINGS.profile]
-          .consumeable_usage[card.config.center_key].count
-          + amt
+      G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count = G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key].count
+        + amt
     else
       G.PROFILES[G.SETTINGS.profile].consumeable_usage[card.config.center_key] =
-      { count = 1, order = card.config.center.order }
+        { count = 1, order = card.config.center.order }
     end
     if G.GAME.consumeable_usage[card.config.center_key] then
       G.GAME.consumeable_usage[card.config.center_key].count = G.GAME.consumeable_usage[card.config.center_key].count
-          + amt
+        + amt
     else
       G.GAME.consumeable_usage[card.config.center_key] =
-      { count = 1, order = card.config.center.order, set = card.ability.set }
+        { count = 1, order = card.config.center.order, set = card.ability.set }
     end
     G.GAME.consumeable_usage_total = G.GAME.consumeable_usage_total
-        or { tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, all = 0 }
+      or { tarot = 0, planet = 0, spectral = 0, tarot_planet = 0, all = 0 }
     if card.config.center.set == "Tarot" then
       G.GAME.consumeable_usage_total.tarot = G.GAME.consumeable_usage_total.tarot
-          + amt
+        + amt
       G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet
-          + amt
+        + amt
     elseif card.config.center.set == "Planet" then
       G.GAME.consumeable_usage_total.planet = G.GAME.consumeable_usage_total.planet
-          + amt
+        + amt
       G.GAME.consumeable_usage_total.tarot_planet = G.GAME.consumeable_usage_total.tarot_planet
-          + amt
+        + amt
     elseif card.config.center.set == "Spectral" then
       G.GAME.consumeable_usage_total.spectral = G.GAME.consumeable_usage_total.spectral
-          + amt
+        + amt
     end
 
     G.GAME.consumeable_usage_total.all = G.GAME.consumeable_usage_total.all
-        + amt
+      + amt
 
     if not card.config.center.discovered then
       discover_card(card)
     end
 
     if
-        card.config.center.set == "Tarot" or card.config.center.set == "Planet"
+      card.config.center.set == "Tarot" or card.config.center.set == "Planet"
     then
       G.E_MANAGER:add_event(Event({
         trigger = "immediate",
@@ -513,14 +597,14 @@ function Controller:R_cursor_release(x, y)
   x = x or self.cursor_position.x
   y = y or self.cursor_position.y
   if
-      (self.locked and (not G.SETTINGS.paused or G.screenwipe))
-      or self.locks.frame
+    (self.locked and (not G.SETTINGS.paused or G.screenwipe))
+    or self.locks.frame
   then
     return
   end
 
   self.r_cursor_up.T =
-  { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
+    { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
   self.r_cursor_up.time = G.TIMERS.TOTAL
   self.r_cursor_up.handled = false
   self.r_cursor_up.target = nil
@@ -539,38 +623,38 @@ function Controller:queue_R_cursor_press(x, y)
   y = y or self.cursor_position.y
 
   self.r_cursor_down.T =
-  { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
+    { x = x / (G.TILESCALE * G.TILESIZE), y = y / (G.TILESCALE * G.TILESIZE) }
   self.r_cursor_down.time = G.TIMERS.TOTAL
   self.r_cursor_down.handled = false
   self.r_cursor_down.target = nil
   self.is_r_cursor_down = true
 
   local press_node = (self.HID.touch and self.cursor_hover.target)
-      or self.hovering.target
-      or self.focused.target
+    or self.hovering.target
+    or self.focused.target
 
   if press_node then
     self.r_cursor_down.target = press_node.states.click.can and press_node
-        or press_node:can_drag()
-        or nil
+      or press_node:can_drag()
+      or nil
     if
-        type(self.r_cursor_down.target) == "table"
-        and self.r_cursor_down.target.__index == Card
+      type(self.r_cursor_down.target) == "table"
+      and self.r_cursor_down.target.__index == Card
     then
       local card = self.r_cursor_down.target
       if card.area == G.consumeables then
         if
-            love.keyboard.isDown("lshift")
-            and not Saturn.is_splitting
-            and not Saturn.is_merging
+          love.keyboard.isDown("lshift")
+          and not Saturn.is_splitting
+          and not Saturn.is_merging
         then
-          card:dissolve_stack()
+          card:dissolveStack()
         elseif
-            love.keyboard.isDown("lctrl")
-            and not Saturn.is_splitting
-            and not Saturn.is_merging
+          love.keyboard.isDown("lctrl")
+          and not Saturn.is_splitting
+          and not Saturn.is_merging
         then
-          if card:canMerge() and card:canSplit() then
+          if card:canMerge() then
             card:tryMergeAll()
           end
         end

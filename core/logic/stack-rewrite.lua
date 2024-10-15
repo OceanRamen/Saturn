@@ -133,7 +133,8 @@ end
 
 ---CHECKS
 function Card:canStack()
-  return inTable(CAN_STACK, self.ability.set) and (self.edition or {}).type == "negative"
+  return inTable(CAN_STACK, self.ability.set)
+    and (self.edition or {}).type == "negative"
 end
 
 function Card:canSplit()
@@ -146,7 +147,7 @@ function Card:canMerge()
   for k, v in pairs(G.consumeables.cards) do
     if v then
       v.edition = v.edition or {}
-      if v ~= self and isDupe(self, v) then
+      if v ~= self and isCopy(self, v) then
         can_merge = true
         break
       end
@@ -156,7 +157,10 @@ function Card:canMerge()
 end
 
 function Card:canMassUse()
-  return (inTable(CAN_MASS_USE, self.ability.set) or inTable(CAN_MASS_USE_INDIVIDUAL, self.config.center_key))
+  return (
+    inTable(CAN_MASS_USE, self.ability.set)
+    or inTable(CAN_MASS_USE_INDIVIDUAL, self.config.center_key)
+  )
 end
 
 ref.load = Card.load

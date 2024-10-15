@@ -263,17 +263,17 @@ function Card:set_stack_cost()
     or self.ability.stack_cost
 end
 
-function getDupe(card)
+function getCopy(card)
   local cards = G.consumeables.cards
   for k, v in pairs(cards) do
-    if isDupe(v, card) then
+    if isCopy(v, card) then
       return v
     end
   end
   return nil
 end
 
-function isDupe(a, b)
+function isCopy(a, b)
   return a ~= b
     and a.ability.set == b.ability.set
     and a.config.center_key == b.config.center_key
@@ -390,7 +390,7 @@ function Card:attemptMergeAll()
   local cards = {}
   -- Add all duplicates to table cards
   for k, v in pairs(G.consumeables.cards) do
-    if isDupe(v, self) then
+    if isCopy(v, self) then
       table.insert(cards, v)
     end
   end
@@ -457,11 +457,11 @@ function Card:attemptMerge(target, no_dissolve)
   end
   target = target or nil
   if target then
-    if not isDupe(target, self) then
-      target = getDupe(self) or nil
+    if not isCopy(target, self) then
+      target = getCopy(self) or nil
     end
   else
-    target = getDupe(self) or nil
+    target = getCopy(self) or nil
   end
   no_dissolve = no_dissolve or false
   if target and (target:getAmt() < HARD_MAX) then
@@ -578,7 +578,7 @@ function Card:massSell()
   end
 end
 
-local function canPerformActions(skip_check)
+local function isActionable(skip_check)
   if
     not skip_check
     and (
@@ -605,7 +605,7 @@ G.FUNCS.can_split_one = function(e)
   if
     card.highlighted
     and card:canSplit()
-    and canPerformActions(nil)
+    and isActionable(nil)
     and (card:getAmt() > 1)
     and not Saturn.is_splitting
     and not Saturn.is_merging
@@ -630,7 +630,7 @@ G.FUNCS.can_split_half = function(e)
   if
     card.highlighted
     and card:canSplit()
-    and canPerformActions(nil)
+    and isActionable(nil)
     and (card:getAmt() > 1)
     and not Saturn.is_splitting
     and not Saturn.is_merging
@@ -655,7 +655,7 @@ G.FUNCS.can_merge = function(e)
   if
     card.highlighted
     and card:canStack()
-    and canPerformActions(nil)
+    and isActionable(nil)
     and card:canMerge()
     and not Saturn.is_splitting
     and not Saturn.is_merging
@@ -675,7 +675,7 @@ G.FUNCS.can_merge_all = function(e)
   if
     card.highlighted
     and card:canStack()
-    and canPerformActions(nil)
+    and isActionable(nil)
     and card:canMerge()
     and not Saturn.is_splitting
     and not Saturn.is_merging
@@ -703,7 +703,7 @@ end
 G.FUNCS.can_mass_use = function(e)
   local card = e.config.ref_table
   if
-    canPerformActions(nil)
+    isActionable(nil)
     and card:canMassUse()
     and (inTable(CAN_MASS_USE, card.ability.set) or inTable(
       CAN_MASS_USE_INDIVIDUAL,
@@ -735,7 +735,7 @@ G.FUNCS.can_mass_sell = function(e)
   local card = e.config.ref_table
   if
     card.highlighted
-    and canPerformActions(nil)
+    and isActionable(nil)
     and (card:getAmt() > 1)
     and not Saturn.is_splitting
     and not Saturn.is_merging

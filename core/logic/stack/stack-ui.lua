@@ -1,16 +1,16 @@
 G.FUNCS.canSplitOne = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canSplit()
-      and canPerformActions(nil)
-      and (card.stack:getSize() > 1)
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canSplit()
+    and isActionable(nil)
+    and (card.stack:getSize() > 1)
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
-    e.config.button = "split_one"
+    e.config.button = "splitOne"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
@@ -21,16 +21,16 @@ end
 G.FUNCS.canSplitHalf = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canSplit()
-      and canPerformActions(nil)
-      and (card.stack:getSize() > 1)
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canSplit()
+    and isActionable(nil)
+    and (card.stack:getSize() > 1)
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
-    e.config.button = "split_half"
+    e.config.button = "splitHalf"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
@@ -41,16 +41,16 @@ end
 G.FUNCS.canMerge = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canStack()
-      and canPerformActions(nil)
-      and card:canMerge()
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canStack()
+    and isActionable(nil)
+    and card:canMerge()
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.DARK_EDITION
-    e.config.button = "merge_card"
+    e.config.button = "merge"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
@@ -61,16 +61,16 @@ end
 G.FUNCS.canMergeAll = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and card:canStack()
-      and canPerformActions(nil)
-      and card:canMerge()
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and card:canStack()
+    and isActionable(nil)
+    and card:canMerge()
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.DARK_EDITION
-    e.config.button = "merge_all"
+    e.config.button = "mergeAll"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
@@ -81,20 +81,20 @@ end
 G.FUNCS.canMassUse = function(e)
   local card = e.config.ref_table
   if
-      canPerformActions(nil)
-      and card:canMassUse()
-      and (inTable(CAN_USE_SET, card.ability.set) or inTable(
-        CAN_USE_KEY,
-        card.config.center_key
-      ))
-      and (card.stack:getSize() > 1)
-      and card.highlighted
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    isActionable(nil)
+    and card:canMassUse()
+    and (inTable(CAN_USE_SET, card.ability.set) or inTable(
+      CAN_USE_KEY,
+      card.config.center_key
+    ))
+    and (card.stack:getSize() > 1)
+    and card.highlighted
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.RED
-    e.config.button = "mass_use"
+    e.config.button = "massUse"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
@@ -105,22 +105,21 @@ end
 G.FUNCS.canMassSell = function(e)
   local card = e.config.ref_table
   if
-      card.highlighted
-      and canPerformActions(nil)
-      and (card.stack:getSize())
-      and not Saturn.is_splitting
-      and not Saturn.is_merging
+    card.highlighted
+    and isActionable(nil)
+    and (card.stack:getSize())
+    and not Saturn.is_splitting
+    and not Saturn.is_merging
   then
     e.states.visible = true
     e.config.colour = G.C.GREEN
-    e.config.button = "mass_sell"
+    e.config.button = "massSell"
   else
     e.states.visible = false
     e.config.colour = G.C.UI.BACKGROUND_INACTIVE
     e.config.button = nil
   end
 end
-
 
 G.FUNCS.splitOne = function(e)
   local card = e.config.ref_table
@@ -153,9 +152,9 @@ G.FUNCS.massSell = function(e)
   card:massSell()
 end
 
-
 G.FUNCS.disableStackUI = function(e)
   local card = e.config.ref_table
+  -- e.states.visible = true
   if card.stack:getSize() > 1 then
     e.states.visible = true
   else
@@ -170,8 +169,6 @@ function G.UIDEF.counterStackSize(card)
     ["Spectral"] = lighten(G.C.GREEN, 0.3),
   }
   local colour = set_colour_map[card.ability.set] or G.C.GREEN
-  if card.children.stack_ui then return end
-  if not card:canStack() then return end
   local definition = {
     n = G.UIT.ROOT,
     config = {
@@ -204,7 +201,7 @@ function G.UIDEF.counterStackSize(card)
                   {
                     prefix = "+",
                     ref_table = card.stack,
-                    ref_value = "count"
+                    ref_value = "count",
                   },
                 },
                 colours = { colour },
@@ -227,7 +224,7 @@ function G.UIDEF.counterStackSize(card)
     offset = {
       x = -0.7,
       y = 1.2,
-    }
+    },
   }
   local states = {
     collide = { can = false },
@@ -473,7 +470,7 @@ end
 
 function G.UIDEF.buttonMerge(card)
   local merge = {
-    n = G.UIT.C,
+    n = G.UIT.R,
     config = {
       align = "cm",
       ref_table = card,
@@ -504,7 +501,7 @@ end
 
 function G.UIDEF.buttonMergeAll(card)
   local merge = {
-    n = G.UIT.C,
+    n = G.UIT.R,
     config = {
       align = "cm",
       ref_table = card,
@@ -535,7 +532,7 @@ end
 
 function G.UIDEF.buttonSplitOne(card)
   local t = {
-    n = G.UIT.C,
+    n = G.UIT.R,
     config = {
       align = "cm",
       ref_table = card,
@@ -566,7 +563,7 @@ end
 
 function G.UIDEF.buttonSplitHalf(card)
   local t = {
-    n = G.UIT.C,
+    n = G.UIT.R,
     config = {
       align = "cm",
       ref_table = card,
@@ -597,41 +594,35 @@ end
 
 -- Parent UI node for split, merge buttons
 function G.UIDEF.stackActionContainer(card)
-  local stackActions = UIBox({
-    definition = {
-      n = G.UIT.ROOT,
-      config = { padding = 0 },
-      nodes = {
+  local stackActions = {
+    n = G.UIT.ROOT,
+    config = { padding = 0, colour = G.C.CLEAR },
+    nodes = {
+      {
         n = G.UIT.R,
         config = {
-          padding = 0.5,
-          colour = G.C.UI.TRANSPARENT_DARK,
+          padding = 0.05,
+          colour = G.C.CLEAR,
         },
         nodes = {
-          card:canSplit() and {
-            G.UIDEF.buttonSplitOne(card)
-          } or {},
-          card:canSplit() and {
-            G.UIDEF.buttonSplitHalf(card)
-          } or {},
-          card:canMerge() and {
-            G.UIDEF.buttonMerge(card)
-          } or {},
-          card:canMergeAll() and {
-            G.UIDEF.buttonMergeAll(card)
-          } or {},
+          -- Not sure why this isn't working...?
+          --[[
+            card:canSplit() and G.UIDEF.buttonSplitOne(card) or nil,
+            card:canSplit() and G.UIDEF.buttonSplitHalf(card) or nil,
+            card:canMerge() and G.UIDEF.buttonMerge(card) or nil,
+            card:canMerge() and G.UIDEF.buttonMergeAll(card) or nil,
+          ]]
         },
-      }
-    },
-    config = {
-      align = "bmi",
-      offset = {
-        x = 0,
-        y = 0,
       },
-      bond = "Strong",
-      parent = card,
-    }
-  })
+    },
+  }
+  if card:canSplit() then
+    table.insert(stackActions.nodes[1].nodes, G.UIDEF.buttonSplitOne(card))
+    table.insert(stackActions.nodes[1].nodes, G.UIDEF.buttonSplitHalf(card))
+  end
+  if card:canMerge() then
+    table.insert(stackActions.nodes[1].nodes, G.UIDEF.buttonMerge(card))
+    table.insert(stackActions.nodes[1].nodes, G.UIDEF.buttonMergeAll(card))
+  end
   return stackActions
 end

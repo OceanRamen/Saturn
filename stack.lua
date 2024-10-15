@@ -1,4 +1,4 @@
-local Stack = {}
+Stack = {}
 
 function Stack:new()
   local stack = { count = 0, items = {} }
@@ -44,8 +44,8 @@ function Stack:isEmpty()
   return #self.items == 0
 end
 
-function Stack:size()
-  return self.count
+function Stack:getSize()
+  return self.count + 1
 end
 
 function Stack:validateSize()
@@ -73,13 +73,24 @@ function Stack:split(index)
 end
 
 function Stack:merge(otherStack)
-  if not otherStack or not otherStack.items then
-    return self -- Return self if other stack is invalid
+  if not otherStack or not otherStack.stack or not otherStack.stack.items then
+    error("Invalid stack provided for merging")
   end
-  for _, value in ipairs(otherStack.items) do
+  -- Add base stack Card
+  self:push(otherStack.sort_id)
+  for _, value in ipairs(otherStack.stack.items) do
+    if type(value) ~= "number" then
+      error(
+        "Invalid item type in other stack: expected number, got " .. type(value)
+      )
+    end
     self:push(value)
-    self.count = self.count + 1
   end
+
+  -- Debugging information
+  -- print("Merged stack size: " .. self:getSize())
+  -- print("Merged stack items: " .. table.concat(self.items, ", "))
+
   return self -- Return self for chaining
 end
 

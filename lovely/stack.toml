@@ -4,6 +4,13 @@ dump_lua = true
 priority = 0
 
 [[patches]]
+[patches.module]
+source = 'stack.lua'
+before = 'main.lua'
+name = 'stack'
+
+# TODO: REWORK TO NEW SYSTEM
+[[patches]]
 [patches.pattern]
 target = "card.lua"
 pattern = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra"
@@ -11,6 +18,7 @@ position = "at"
 payload = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra^(self.ability.amt or 1)"
 match_indent = true
 
+# TODO: REWORK TO NEW SYSTEM
 [[patches]]
 [patches.pattern]
 target = "card.lua"

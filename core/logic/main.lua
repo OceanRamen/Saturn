@@ -106,20 +106,41 @@ function Saturn.writeConfig()
 end
 
 function Saturn.loadLogic()
+  print("Loading Saturn files...")
+
+  local function safeLoad(filePath)
+    if nfs.getInfo(filePath) then
+      local chunk, err = load(nfs.read(filePath))
+      if chunk then
+        local success, execErr = pcall(chunk)
+        if not success then
+          error("Error executing file: " .. filePath .. "\n" .. execErr)
+        end
+      else
+        error("Error loading file: " .. filePath .. "\n" .. err)
+      end
+    else
+      error("File not found: " .. filePath)
+    end
+  end
+
   -- Utils
-  assert(load(nfs.read(Saturn.PATH .. "/core/utils/table_utils.lua")))()
+  safeLoad(Saturn.PATH .. "/core/utils/table_utils.lua")
+  safeLoad(Saturn.PATH .. "/core/utils/misc_funcs.lua")
 
   -- Loads other Saturn logic files for feature
-  assert(load(nfs.read(Saturn.PATH .. "/core/logic/rem_anim.lua")))()
-  assert(load(nfs.read(Saturn.PATH .. "/core/logic/stack.lua")))()
-  assert(load(nfs.read(Saturn.PATH .. "/core/logic/hide_played.lua")))()
+  safeLoad(Saturn.PATH .. "/core/logic/rem_anim.lua")
+  safeLoad(Saturn.PATH .. "/core/logic/stack/consumeable_stacking.lua")
+  safeLoad(Saturn.PATH .. "/core/logic/stack/stack-ui.lua")
+  -- safeLoad(Saturn.PATH .. "/core/logic/hide_played.lua")
+
   -- UI
-  assert(load(nfs.read(Saturn.PATH .. "/UI/definitions.lua")))()
-  assert(load(nfs.read(Saturn.PATH .. "/UI/functions.lua")))()
+  safeLoad(Saturn.PATH .. "/UI/definitions.lua")
+  safeLoad(Saturn.PATH .. "/UI/functions.lua")
 
   if is_dev == true then
-    assert(load(nfs.read(Saturn.PATH .. "/Testing/ui_tests.lua")))()
-    assert(load(nfs.read(Saturn.PATH .. "/Testing/stat_tests.lua")))()
+    safeLoad(Saturn.PATH .. "/Testing/ui_tests.lua")
+    safeLoad(Saturn.PATH .. "/Testing/stat_tests.lua")
   end
 end
 
