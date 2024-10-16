@@ -1,1 +1,1 @@
-return {["remove_animations"]=true,["track_stats"]=false,["enable_dramatic_final_hand"]=true,["enable_stacking"]=true,}
+return {["remove_animations"]=false,["track_stats"]=false,["enable_dramatic_final_hand"]=true,["enable_stacking"]=false,}

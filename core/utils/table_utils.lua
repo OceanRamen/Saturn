@@ -57,6 +57,10 @@ function deepCopy(orig)
 end
 
 function inTable(table, key)
+  if type(table) ~= "table" then
+    error("First argument must be a table")
+  end
+
   for k, v in pairs(table) do
     if v == key then
       return true

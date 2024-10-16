@@ -1,7 +1,7 @@
 Stack = {}
 
-function Stack:new()
-  local stack = { count = 0, items = {} }
+function Stack:new(template)
+  local stack = template or { count = 1, items = {} }
   self.__index = self
   return setmetatable(stack, self)
 end
@@ -45,7 +45,7 @@ function Stack:isEmpty()
 end
 
 function Stack:getSize()
-  return self.count + 1
+  return self.count
 end
 
 function Stack:validateSize()

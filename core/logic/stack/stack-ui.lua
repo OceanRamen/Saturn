@@ -134,6 +134,7 @@ end
 
 G.FUNCS.merge = function(e)
   local card = e.config.ref_table
+  card:highlight(false)
   card:tryMerge()
 end
 
@@ -152,14 +153,18 @@ G.FUNCS.massSell = function(e)
   card:massSell()
 end
 
-G.FUNCS.disableStackUI = function(e)
+G.FUNCS.shouldDisplayStackUI = function(e)
   local card = e.config.ref_table
-  -- e.states.visible = true
   if card.stack:getSize() > 1 then
     e.states.visible = true
   else
     e.states.visible = false
   end
+end
+
+G.FUNCS.disableStackUI = function(e)
+  local card = e.config.ref_table
+  e.states.visible = false
 end
 
 function G.UIDEF.counterStackSize(card)
@@ -175,7 +180,7 @@ function G.UIDEF.counterStackSize(card)
       align = "cm",
       colour = G.C.CLEAR,
       shadow = true,
-      func = "disableStackUI",
+      func = "shouldDisplayStackUI",
       ref_table = card,
     },
     nodes = {
@@ -252,8 +257,8 @@ function G.UIDEF.buttonMassUseSell(card)
           shadow = true,
           colour = G.C.UI.BACKGROUND_INACTIVE,
           one_press = true,
-          button = "mass_use",
-          func = "can_mass_use",
+          button = "massUse",
+          func = "canMassUse",
         },
         nodes = {
           {
@@ -349,8 +354,8 @@ function G.UIDEF.buttonMassUseSell(card)
           shadow = true,
           colour = G.C.UI.BACKGROUND_INACTIVE,
           one_press = true,
-          button = "mass_sell",
-          func = "can_mass_sell",
+          button = "massSell",
+          func = "canMassSell",
         },
         nodes = {
           {

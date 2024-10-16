@@ -1,16 +1,17 @@
 --- CONSTANTS
-local CAN_STACK_SET = {
+CAN_STACK_SET = {
   "Planet",
   "Tarot",
   "Spectral",
 }
-local CAN_USE_SET = {
+CAN_USE_SET = {
   "Planet",
 }
-local CAN_USE_KEY = {
+CAN_USE_KEY = {
   "The Hermit",
   "Temperance",
 }
+
 MAX_SIZE = 9999
 
 local Stack = require("stack")
@@ -18,7 +19,10 @@ local Stack = require("stack")
 REF = {}
 
 function Card:shouldInit()
-  if self:canStack() then
+  if
+    inTable(CAN_STACK_SET, self.ability.set)
+    and (self.edition or {}).type == "negative"
+  then
     self.stack = self.stack or Stack:new()
   end
 end
@@ -30,11 +34,11 @@ end
 
 function Card:canSplit()
   self:shouldInit()
-  return inTable(CAN_STACK_SET, self.ability.set)
-    and ((self.stack or {}):getSize() > 1)
+  return self:canStack() and (((self.stack or {}).count or 1) > 1)
 end
 
 function Card:canMerge()
+  self:shouldInit()
   self.editions = self.edition or {}
   for k, v in pairs(G.consumeables.cards) do
     if v and isCopy(self, v) then
@@ -62,6 +66,9 @@ function Card:split(n)
   if (self.edition or {}).negative then
     card_limit = card_limit + 1
   end
+  Saturn.is_splitting = true
+  self:highlight(false)
+  self.area:remove_from_highlighted(self)
   local split_index = self.stack:getSize() - n
   local new_stack = self.stack:split(split_index)
   local new_card = copy_card(self)
@@ -77,12 +84,19 @@ function Card:split(n)
   end
   G.consumeables.config.card_limit = card_limit
   play_sound("card3", 0.9 + math.random() * 0.1, 0.4)
+  Saturn.is_splitting = false
+  self:highlight(true)
+  self.area:add_to_highlighted(self)
   return new_card
 end
 
-function Card:tryMergeAll()
+function Card:tryMergeAll(no_highlight)
+  no_highlight = no_highlight or false
   self:shouldInit()
   if not self:canStack() then
+    return
+  end
+  if not self.stack then
     return
   end
   local cards = {}
@@ -98,7 +112,7 @@ function Card:tryMergeAll()
   Saturn.is_merging = true
   for k, v in pairs(cards) do
     v:shouldInit()
-    if self.stack:getSize() + v.stack:getSize() < MAX_SIZE then
+    if (self.stack.count + v.stack.count) < MAX_SIZE then
       G.E_MANAGER:add_event(
         Event({
           delay = easedCurve(k, #cards),
@@ -134,6 +148,10 @@ function Card:tryMergeAll()
       func = function()
         Saturn.is_merging = false
         self:juice_up(0.2, 0.3)
+        if not no_highlight then
+          self:highlight(true)
+          self.area:add_to_highlighted(self)
+        end
         return true
       end,
     }),
@@ -143,6 +161,9 @@ end
 
 function Card:tryMerge(target, no_dissolve)
   self:shouldInit()
+  if not self.stack then
+    return
+  end
   self.edition = self.edition or {}
   if not self:canStack() then
     return
@@ -161,7 +182,11 @@ function Card:tryMerge(target, no_dissolve)
     error("Error: Target stack is not initialized.")
     return
   end
-  if target.stack:getSize() < MAX_SIZE then
+  Saturn.is_merging = true
+  if self.children.stack_ui then
+    self.children.stack_ui.states.visible = false
+  end
+  if target.stack.count < MAX_SIZE then
     target.stack:merge(self)
     target:createStackUI()
     target:juice_up(0.3, 0.4)
@@ -175,11 +200,12 @@ function Card:tryMerge(target, no_dissolve)
   else
     error("Error: Target stack size exceeds the maximum limit.")
   end
+  Saturn.is_merging = false
 end
 
 function Card:massUse()
   self:shouldInit()
-  local size = (self.stack or {}):getSize()
+  local size = (self.stack or {}).count or 1
   if self:canMassUse() and size > 0 then
     if self.ability.set == "Planet" then
       update_hand_text(
@@ -251,7 +277,7 @@ end
 
 function Card:massSell()
   self:shouldInit()
-  local size = (self.stack or {}):getSize() or 1
+  local size = (self.stack or {}).count or 1
   if self:canStack() and size > 0 then
     local money = self.ability.stack_cost
     stop_use()
@@ -375,7 +401,7 @@ function Card:setStackCost()
   if self.ability.rental then
     self.cost = 1
   end
-  self.ability.stack_cost = math.max(1, math.floor(self.cost / 2))
+  self.ability.sell_cost = math.max(1, math.floor(self.cost / 2))
     + (self.ability.extra_value or 0)
   if
     self.area
@@ -384,7 +410,7 @@ function Card:setStackCost()
   then
     self.cost = 0
   end
-  self.ability.stack_cost = self.sell_cost * ((self.stack or {}):getSize() or 1)
+  self.ability.stack_cost = self.sell_cost * ((self.stack or {}).count or 1)
   self.ability.stack_cost_label = self.facing == "back" and "?"
     or self.ability.stack_cost
 end
@@ -397,14 +423,6 @@ function Card:createStackUI()
     return
   end
   self.children.stack_ui = G.UIDEF.counterStackSize(self)
-end
-
-REF.card_load = Card.load
-function Card:load(cardTable, other_card)
-  REF.card_load(self, cardTable, other_card)
-  if self.stack and self.stack:getSize() > 1 then
-    self:createStackUI()
-  end
 end
 
 REF.card_sell = Card.sell_card
@@ -420,19 +438,17 @@ function Card:sell_card()
     sell_card:sell_card()
   end
   self:highlight(true)
+  self.area:add_to_highlighted(self)
 end
 
 REF.add_to_deck = Card.add_to_deck
 function Card:add_to_deck(from_debuff)
   REF.add_to_deck(self, from_debuff)
-  if not G.consumeables then
+  self:shouldInit()
+  if self.ignoreStack then
     return
   end
-  if not self:canStack() then
-    return
-  end
-  self.stack = self.stack or Stack:new()
-  if (not self:canMerge()) or self.ignoreStack then
+  if not self:canMerge() then
     return
   end
   if not Saturn.config.enable_stacking then
@@ -441,17 +457,47 @@ function Card:add_to_deck(from_debuff)
   G.E_MANAGER:add_event(Event({
     trigger = "after",
     delay = 0.1,
-    fuc = function()
+    func = function()
       self:tryMerge(nil, true)
       return true
     end,
   }))
 end
 
+function Card:saveStack(save_table)
+  self:shouldInit()
+  save_table["stack"] = self.stack
+  return save_table
+end
+
+function Card:loadStack(card_table)
+  if card_table["stack"] then
+    self.stack = Stack:new(card_table["stack"])
+  end
+end
+
+REF.card_load = Card.load
+function Card:load(cardTable, other_card)
+  REF.card_load(self, cardTable, other_card)
+  self:loadStack(cardTable)
+  if ((self.stack or {}).count or 1) > 1 then
+    self:createStackUI()
+  end
+  self:setStackCost()
+  self:set_cost()
+end
+
+REF.card_save = Card.save
+function Card:save()
+  local ref_return = REF.card_save(self)
+  local ref_return = self:saveStack(ref_return)
+  return ref_return
+end
+
 REF.use_card = G.FUNCS.use_card
 G.FUNCS.use_card = function(e, mute, nosave)
   local card = e.config.ref_table
-  if (card.stack or {}):getSize() > 1 then
+  if ((card.stack or {}).count or 1) > 1 then
     card.highlighted = false
     local split = card:split(1)
     e.config.ref_table = split
@@ -465,6 +511,7 @@ end
 
 REF.card_highlight = Card.highlight
 function Card:highlight(is_highlighted)
+  self:shouldInit()
   if not self:canStack() then
     goto ret
   end
@@ -472,23 +519,18 @@ function Card:highlight(is_highlighted)
     goto ret
   end
   if is_highlighted then
-    --DEBUG
-    if self.stack then
-      print(self.stack:getSize())
-    end
-    -- TODO: FIX
-    -- self.children.stackActionButtons = UIBox({
-    --   definition = G.UIDEF.buttonMassUseSell(self),
-    --   config = {
-    --     align = "cl",
-    --     offset = {
-    --       x = 0.6,
-    --       y = 0,
-    --     },
-    --     parent = self,
-    --   },
-    -- })
-    local y_offset = 0
+    self.children.stackActionButtons = UIBox({
+      definition = G.UIDEF.buttonMassUseSell(self),
+      config = {
+        align = "cl",
+        offset = {
+          x = 0.6,
+          y = 0,
+        },
+        parent = self,
+      },
+    })
+    local y_offset = 0.2
     if self:canSplit() then
       y_offset = y_offset + 1
     end
@@ -648,14 +690,18 @@ function Controller:queue_R_cursor_press(x, y)
           and not Saturn.is_splitting
           and not Saturn.is_merging
         then
-          card:dissolveStack()
+          card:shouldInit()
+          if card:canSplit() then
+            card:dissolveStack()
+          end
         elseif
           love.keyboard.isDown("lctrl")
           and not Saturn.is_splitting
           and not Saturn.is_merging
         then
+          card:shouldInit()
           if card:canMerge() then
-            card:tryMergeAll()
+            card:tryMergeAll(true)
           end
         end
       end
