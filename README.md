@@ -1,16 +1,16 @@
 # Saturn
 
-![Saturn Banner](https://example.com/banner.png) <!-- Replace with actual banner image URL -->
-
 ## Table of Contents
 
 - [About](#about)
 - [Features](#features)
 - [Installation](#installation)
+  - [For New Users](#for-new-users)
+  - [If You Already Have Steamodded Installed](#if-you-already-have-steamodded-installed)
+  - [If You Already Have Lovely-injector Installed](#if-you-already-have-lovely-injector-installed)
+  - [If You Already Have Both Steamodded and Lovely-injector Installed](#if-you-already-have-both-steamodded-and-lovely-injector-installed)
 - [Configuration](#configuration)
-- [Usage](#usage)
 - [Contributing](#contributing)
-- [License](#license)
 - [Contact](#contact)
 
 ## About
@@ -20,73 +20,207 @@
 ## Features
 
 - **Animation Control**
-  - Speed up animations to maintain game flow.
-  - Skip animations entirely for a more streamlined experience.
-  
-- **Consumable Management**
-  - Stack consumable cards to reduce clutter and manage resources efficiently.
-  
-- **Enhanced Deck Viewer**
-  - Improved performance for deck viewing.
-  - Add filters to easily find specific cards.
-  
-- **Stat Tracking**
-  - Monitor global stats for cards and overall game performance.
-  - Dedicated stats pages for jokers, consumables, general statistics, and more.
-  
-- **Settings UI Overhaul**
-  - Aesthetic and readability improvements.
-  - Modular settings functions for easier customization.
-  
-- **Additional Quality Enhancements**
-  - Sticky Joker Counters.
-  - Mass Use buttons for consumables.
-  - Retry buttons in challenges.
-  - And much more!
+  - **Game Speed:** Adjust the game speed with options like 8x and 16x to suit your playstyle.
+  - **Remove Animations:** Eliminate in-game animations for a faster and more streamlined experience.
+  - **Enable Dramatic Final Hand:** Allows time to shuffle jokers during the final hand, adding strategic depth.
 
+- **Consumable Management**
+  - **Stacking:** Enable or disable the stacking of consumable cards. Options to split one or half of the stack help reduce UI clutter and manage resources efficiently.
+
+- **Enhanced Deck Viewer**
+  - **Hide Played Cards:** Automatically hides played cards in the deck viewer for a cleaner overview.
+  - **Performance Enhancements:** Toggle performance settings to ensure smoother deck management and reduce lag.
+
+- **Stat Tracking**
+  - **Global Stats:** Enable tracking of comprehensive game statistics to monitor your progress.
+  - **Category Selection:** Choose specific stat categories such as jokers, consumables, and general statistics for detailed insights.
+
+- **Settings UI Overhaul**
+  - **Aesthetic Improvements:** Enhance readability and visual appeal of the settings menu.
+  - **Modular Settings Functions:** Easily customize and manage settings with a flexible, modular interface.
+
+- **Additional Quality Enhancements**
+  - **Sticky Joker Counters:** Keep track of jokers more effectively with persistent counters.
+  - **Mass Use Buttons:** Quickly use multiple consumables at once, saving time and improving efficiency.
+  - **Retry Buttons in Challenges:** Easily retry challenges without navigating through multiple menus.
+  - **And More:** A variety of additional quality-of-life improvements to enhance your overall gaming experience.
+  
 ## Installation
 
-### Prerequisites
+Saturn installation varies depending on whether you already have **Steamodded** and/or **Lovely-injector** installed. Follow the appropriate section below based on your current setup.
+
+### For New Users
+
+If you're starting fresh and do not have **Steamodded** or **Lovely-injector** installed, follow these steps:
+
+#### Prerequisites
 
 - **Balatro** game installed.
-- [**Steamodded**](https://github.com/Steamopollys/Steamodded/) framework installed and properly configured for managing mods. Download the latest release from the [releases](https://github.com/Steamopollys/Steamodded/releases) page.
-- [**Lovely-injector**](https://github.com/ethangreen-dev/lovely-injector) runtime Lua injector framework. Download the latest release from the [releases](https://github.com/ethangreen-dev/lovely-injector/releases) page.
+- [**Steamodded**](https://github.com/Steamopollys/Steamodded/) framework installed and properly configured for managing mods.
+  - Download the latest release from the [Steamodded Releases](https://github.com/Steamopollys/Steamodded/releases) page.
+- [**Lovely-injector**](https://github.com/ethangreen-dev/lovely-injector) runtime Lua injector framework.
+  - Download the latest release from the [Lovely-injector Releases](https://github.com/ethangreen-dev/lovely-injector/releases) page.
 
-### Steps
+#### Steps
 
-1. **Create a Mod directory within your Balatro %appdata% directory:**
-   - Navigate to your Balatro %appdata% directory (`%appdata%/Balatro`) and create a new folder named `Mods` (if it doesn't already exist).
-
-   ```bash
-   cd %appdata%/Balatro
-   mkdir Mods
-   ```
-
-2. **Create a Steamodded directory within your Mods directory:**
-   - In this Mods directory and create a new folder named `Steamodded`.
+1. **Install Steamodded:**
+  - Navigate to your Balatro AppData directory and create a new folder named `Mods`.
+  - Create a new folder named `Steamodded` inside the `Mods` folder.
+  - Extract the contents of the Steamodded release into the `Steamodded` folder. Be sure you are extracting the entire folder, and not the zip file itself or the contents within the Steamodded release folder.
+  
    
    ```bash
-   mkdir Steamodded
+   # Navigate to your Balatro AppData directory 
+   cd %appdata%/Balatro
+   mkdir Mods
+   
+   # Create Steamodded directory
+   mkdir Mods/Steamodded
+   
+   # Extract Steamodded release contents
+   unzip path/to/Steamodded-release.zip -d Mods/Steamodded
    ```
 
-3. **Extract the contents of the Steamodded release into your Steamodded directory:**
-   - In this Steamodded directory, extract the contents of the Steamodded release into it (downloaded from the prerequisites section). Be sure you are extracting the contents of the Steamodded-main folder, and not the entire zip file or the Steamodded folder itself.
+2. **Install Lovely-injector:**
+   
+   - Extract the `version.dll` from the Lovely-injector release.
+   - Copy `version.dll` to your antivirus's exclusion list to prevent false positives.
+   
+3. **Add `version.dll` to Balatro's Steam Library Directory:**
+   
+   ```bash
+   # Navigate to your Balatro Steam install directory
+   cd ../SteamLibrary/steamapps/common/Balatro/
+   
+   # Copy version.dll to Steam Library directory
+   cp path/to/lovely-injector/version.dll ../SteamLibrary/steamapps/common/Balatro/
+   ```
 
-4. **Optional** Add `version.dll` from Lovely-injector to your antivirus's exclusion list.
-   - This may be necessary to prevent your antivirus from deleting the Lovely-injector files or flagging them as a false positive. If you are encountering issues with the mod, this may be the cause.
+4. **Install Saturn:**
+   
+   - Download the latest release of Saturn from the [Saturn Releases](https://github.com/Steamopollys/Saturn/releases) page.
+   - Extract the contents of the Saturn release into your `%appdata%/Balatro/Mods` directory. Be sure you are extracting the release folder, and not the zip file itself or the contents within the Saturn release folder.
+   
+   ```bash
+   unzip path/to/Saturn-release.zip -d %appdata%/Balatro/Mods/Steamodded
+   ```
 
-5. **Add version.dll to Balatro's Steamodded directory:**
-   - Navigate to your Balatro Steam install directory (`../SteamLibrary/steamapps/common/Balatro/`) and copy the `version.dll` file from the Lovely-injector release into the Steamodded directory. You can find this directory also by clicking `Manage -> Browse Local Files` in Steam.
+5. **Launch Balatro:**
+   
+   - Start Balatro from Steam.
+   - Navigate to the Mods section to ensure Saturn is listed and active.
 
-6. **Download the latest release of Saturn:**
-   - Navigate to the [releases](https://github.com/Steamopollys/Saturn/releases) page and download the latest release of Saturn.
+### If You Already Have Steamodded Installed
 
+If you already have **Steamodded** installed but not **Lovely-injector**, follow these steps to install Saturn:
 
-7. **Extract the contents of the Saturn release into your %appdata%/Balatro/Mods/Steamodded directory:**
-   - Unzip the contents of the Saturn release into the Steamodded directory. Be sure you are extracting the entire folder, and not the zip file itself or the contents within the Saturn release folder.
+#### Prerequisites
 
-8. **Launch Balatro:**
-   - Launch Balatro from Steam. You should now see the Saturn mod in the Mods section of the game menu.
+- **Balatro** game installed.
+- **Steamodded** framework already installed and configured.
+- [**Lovely-injector**](https://github.com/ethangreen-dev/lovely-injector) runtime Lua injector framework.
+  - Download the latest release from the [Lovely-injector Releases](https://github.com/ethangreen-dev/lovely-injector/releases) page.
+
+#### Steps
+
+1. **Install Lovely-injector:**
+   
+   - Extract the `version.dll` from the Lovely-injector release.
+   - Copy `version.dll` to your antivirus's exclusion list to prevent false positives.
+   
+2. **Add `version.dll` to Balatro's Steam Library Directory:**
+   
+   ```bash
+   # Navigate to your Balatro Steam install directory
+   cd ../SteamLibrary/steamapps/common/Balatro/
+   
+   # Copy version.dll to Steam Library directory
+   cp path/to/lovely-injector/version.dll ../SteamLibrary/steamapps/common/Balatro/
+   ```
+
+3. **Install Saturn:**
+   
+   - Download the latest release of Saturn from the [Saturn Releases](https://github.com/Steamopollys/Saturn/releases) page.
+   - Extract the contents of the Saturn release into your `%appdata%/Balatro/Mods` directory. Be sure you are extracting the release folder, and not the zip file itself or the contents within the Saturn release folder.
+   
+   ```bash
+   unzip path/to/Saturn-release.zip -d %appdata%/Balatro/Mods/Steamodded
+   ```
+
+4. **Launch Balatro:**
+   
+   - Start Balatro from Steam.
+   - Navigate to the Mods section to ensure Saturn is listed and active.
+
+### If You Already Have Lovely-injector Installed
+
+If you already have **Lovely-injector** installed but not **Steamodded**, follow these steps to install Saturn:
+
+#### Prerequisites
+
+- **Balatro** game installed.
+- [**Steamodded**](https://github.com/Steamopollys/Steamodded/) framework installed and properly configured for managing mods.
+- **Lovely-injector** runtime Lua injector framework already installed.
+
+#### Steps
+
+1. **Install Steamodded:**
+  - Navigate to your Balatro AppData directory and create a new folder named `Mods`.
+  - Create a new folder named `Steamodded` inside the `Mods` folder.
+  - Extract the contents of the Steamodded release into the `Steamodded` folder. Be sure you are extracting the entire folder, and not the zip file itself or the contents within the Steamodded release folder.
+  
+   
+   ```bash
+   # Navigate to your Balatro AppData directory 
+   cd %appdata%/Balatro
+   mkdir Mods
+   
+   # Create Steamodded directory
+   mkdir Mods/Steamodded
+   
+   # Extract Steamodded release contents
+   unzip path/to/Steamodded-release.zip -d Mods/Steamodded
+   ```
+
+2. **Add `version.dll` to Balatro's Steamodded Directory:**
+   
+   ```bash
+   # Navigate to your Balatro Steam install directory
+   cd ../SteamLibrary/steamapps/common/Balatro/
+   
+   # Copy version.dll to Steamodded directory
+   cp path/to/lovely-injector/version.dll Mods/Steamodded/
+   ```
+
+3. **Install Saturn:**
+   
+   - Download the latest release of Saturn from the [Saturn Releases](https://github.com/Steamopollys/Saturn/releases) page.
+   - Extract the contents of the Saturn release into your `%appdata%/Balatro/Mods/Steamodded` directory.
+   
+   ```bash
+   unzip path/to/Saturn-release.zip -d %appdata%/Balatro/Mods/Steamodded
+   ```
+
+4. **Launch Balatro:**
+   
+   - Start Balatro from Steam.
+   - Navigate to the Mods section to ensure Saturn is listed and active.
+
+### If You Already Have Both Steamodded and Lovely-injector Installed
+
+#### Steps
+
+1. **Install Saturn:**
+   - Download the latest release of Saturn from the [Saturn Releases](https://github.com/Steamopollys/Saturn/releases) page.
+   - Extract the contents of the Saturn release into your `%appdata%/Balatro/Mods/Steamodded` directory.
+   
+   ```bash
+   unzip path/to/Saturn-release.zip -d %appdata%/Balatro/Mods/Steamodded
+   ```
+
+2. **Launch Balatro:**
+   - Start Balatro from Steam.
+   - Navigate to the Mods section to ensure Saturn is listed and active.
 
 ## Configuration
 
@@ -116,7 +250,6 @@ Saturn comes with a set of configurable options to tailor the mod to your prefer
      
    - **Additional Features:**
      - Enable or disable features such as Sticky Joker Counters, Mass Use buttons, Retry buttons, and more.
-
 
 ## Contributing
 
