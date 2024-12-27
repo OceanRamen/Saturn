@@ -4,7 +4,7 @@ local nativefs = require("nativefs")
 G.FUNCS.apply_settings = function(e)
   S.SETTINGS = deepcopy(S.TEMP_SETTINGS)
   S:write_settings('settings')
-  G:set_language()
+  --G:set_language()
 end
 
 G.FUNCS.saturn_features_button = function(e)
