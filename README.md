@@ -45,10 +45,6 @@
 
 Saturn installation varies depending on whether you already have **Steamodded** and/or **Lovely-injector** installed. Follow the appropriate section below based on your current setup.
 
-### For New Users
-
-If you're starting fresh and do not have **Lovely-injector** installed, follow these steps:
-
 #### Prerequisites
 
 - **Balatro** game installed.
