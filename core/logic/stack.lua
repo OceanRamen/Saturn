@@ -169,7 +169,7 @@ end
 
 function Card:canStack()
   return inTable(CAN_STACK, self.ability.set)
-    and (self.edition or {}).type == "negative"
+    and self:getEditionType() == "negative"
 end
 
 function Card:canSplit()
@@ -178,20 +178,25 @@ end
 
 function Card:canMerge()
   local can_merge = false
-  self.edition = self.edition or {}
   for k, v in pairs(G.consumeables.cards) do
     if v then
-      v.edition = v.edition or {}
       if
         v ~= self
         and (v.config or {}).center_key == (self.config or {}).center_key
-        and (v.edition.type or "") == (self.edition.type or "")
+        and v:getEditionType() == self:getEditionType()
       then
         can_merge = true
       end
     end
   end
   return can_merge
+end
+
+function Card:getEditionType()
+  if self.edition then
+    return self.edition.type or ""
+  end
+  return ""
 end
 
 function Card:canMassUse()
@@ -211,11 +216,21 @@ end
 function Card:set_stack_cost()
   self.extra_cost = 0 + G.GAME.inflation
   if self.edition then
-    self.extra_cost = self.extra_cost
-      + (self.edition.holo and 3 or 0)
-      + (self.edition.foil and 2 or 0)
-      + (self.edition.polychrome and 5 or 0)
-      + (self.edition.negative and 5 or 0)
+    if G.P_CENTER_POOLS.Edition then
+      for k, v in pairs(G.P_CENTER_POOLS.Edition) do
+        if self.edition[v.key:sub(3)] then
+          if v.extra_cost then
+            self.extra_cost = self.extra_cost + v.extra_cost
+          end
+        end
+      end
+    else
+      self.extra_cost = self.extra_cost
+        + (self.edition.holo and 3 or 0)
+        + (self.edition.foil and 2 or 0)
+        + (self.edition.polychrome and 5 or 0)
+        + (self.edition.negative and 5 or 0)
+    end
   end
   self.cost = math.max(
     1,
@@ -277,7 +292,7 @@ function isDupe(a, b)
   return a ~= b
     and a.ability.set == b.ability.set
     and a.config.center_key == b.config.center_key
-    and (a.edition.type or "") == (b.edition.type or "")
+    and a:getEditionType() == b:getEditionType()
 end
 
 function Card:dissolve_stack()
@@ -451,7 +466,6 @@ function Card:attemptMergeAll()
 end
 
 function Card:attemptMerge(target, no_dissolve)
-  self.edition = self.edition or {}
   if not self:canStack() then
     return
   end
