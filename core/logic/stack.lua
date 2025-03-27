@@ -512,9 +512,13 @@ function Card:massUse()
             card.ability.consumeable.hand_type,
             "poker_hands"
           ),
-          chips = G.GAME.hands[card.ability.consumeable.hand_type].chips,
-          mult = G.GAME.hands[card.ability.consumeable.hand_type].mult,
-          level = G.GAME.hands[card.ability.consumeable.hand_type].level,
+          chips = to_big(
+            G.GAME.hands[card.ability.consumeable.hand_type].chips
+          ),
+          mult = to_big(G.GAME.hands[card.ability.consumeable.hand_type].mult),
+          level = to_big(
+            G.GAME.hands[card.ability.consumeable.hand_type].level
+          ),
         }
       )
       delay(1.3)
@@ -528,14 +532,17 @@ function Card:massUse()
       card.ability.set == "Tarot"
       and inTable(CAN_MASS_USE_INDIVIDUAL, card.ability.name)
     then
-      local money_total = G.GAME.dollars
+      local money_total = to_big(G.GAME.dollars)
       stop_use()
       if card.ability.name == "The Hermit" then
         for i = 1, stack_amt do
           money_total = money_total
-            + math.max(0, math.min(money_total, card.ability.extra))
+            + math.max(
+              to_big(0),
+              math.min(money_total, to_big(card.ability.extra))
+            )
         end
-        money_total = money_total - G.GAME.dollars
+        money_total = money_total - to_big(G.GAME.dollars)
         G.E_MANAGER:add_event(Event({
           trigger = "after",
           delay = 0.4,
@@ -548,9 +555,9 @@ function Card:massUse()
         }))
         delay(0.6)
       elseif card.ability.name == "Temperance" then
-        money_total = 0
+        money_total = to_big(0)
         for i = 1, stack_amt do
-          money_total = money_total + card.ability.money
+          money_total = money_total + to_big(card.ability.money)
         end
         G.E_MANAGER:add_event(Event({
           trigger = "after",

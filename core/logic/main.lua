@@ -5,7 +5,7 @@ local is_dev = false
 
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.0-D",
+  VERSION = "alpha-0.2.0-E",
   PATH = "",
   DEFAULTS = {},
   -- Vars
@@ -15,13 +15,15 @@ Saturn = {
   calculating_joker = false,
   calculating_score = false,
   using_consumeable = false,
-  dollars_add_amount = 0,
+  dollars_add_amount = to_big(0),
   dollars_update = false,
   -- stacking
   is_merging = false,
   is_splitting = false,
   waiting_to_merge = {},
   do_merge = false,
+
+  ignore_skip_for_money = false,
 
   -- UI
   ui = {

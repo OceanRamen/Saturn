@@ -1,0 +1,12 @@
+{
+	"id": "Saturn",
+	"name": "Saturn",
+	"display_name": "Saturn",
+	"author": ["OceanRamen"],
+	"description": "Quality of life mod for Balatro",
+	"prefix": "saturn",
+	"main_file": "steamodded.lua",
+	"priority": 0,
+	"version": "ALPHA-0.2.0-E",
+	"dependencies": []
+}

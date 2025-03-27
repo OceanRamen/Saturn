@@ -11,6 +11,13 @@ local cardSetSealRef = Card.set_seal
 local evalPlayRef = G.FUNCS.evaluate_play
 local gameUpdateRef = Game.update
 
+to_big = to_big or function(x)
+  return x
+end
+to_number = to_number or function(x)
+  return x
+end
+
 local function isCalculating()
   return Saturn.calculating_card
     or Saturn.calculating_joker
@@ -36,10 +43,10 @@ function Game:update(dt)
     dollars_ui.config.object:update()
     G.HUD:recalculate()
     local function _mod(mod)
-      mod = mod or 0
+      mod = mod or to_big(0)
       local text = "+" .. localize("$")
       local col = G.C.MONEY
-      if mod < 0 then
+      if mod < to_big(0) then
         text = "-" .. localize("$")
         col = G.C.RED
       end
@@ -58,7 +65,7 @@ function Game:update(dt)
         trigger = "immediate",
         func = function()
           _mod(Saturn.dollars_add_amount)
-          Saturn.dollars_add_amount = 0
+          Saturn.dollars_add_amount = to_big(0)
           return true
         end,
       }),
@@ -81,12 +88,13 @@ function juice_card(x)
 end
 
 function ease_dollars(mod, instant)
+  mod = to_big(mod)
   if Saturn.config.remove_animations then
-    if mod > 0 then
+    if mod > to_big(0) then
       inc_career_stat("c_dollars_earned", mod)
     end
-    Saturn.dollars_add_amount = Saturn.dollars_add_amount + mod
-    G.GAME.dollars = G.GAME.dollars + mod
+    Saturn.dollars_add_amount = to_big(Saturn.dollars_add_amount) + mod
+    G.GAME.dollars = to_big(G.GAME.dollars) + mod
     check_and_set_high_score("most_money", G.GAME.dollars)
     check_for_unlock({ type = "money" })
     Saturn.dollars_update = true
@@ -98,8 +106,8 @@ end
 function update_hand_text(config, vals)
   if Saturn.config.remove_animations and not Saturn.using_consumeable then
     if G.latest_uht then
-      vals.chips = vals.chips or G.latest_uht.vals.chips
-      vals.mult = vals.mult or G.latest_uht.vals.mult
+      vals.chips = vals.chips or to_big(G.latest_uht.vals.chips)
+      vals.mult = vals.mult or to_big(G.latest_uht.vals.mult)
     end
     G.latest_uht = { config = config, vals = vals }
   else
@@ -162,8 +170,9 @@ function Card:set_seal(_seal, silent, immediate)
 end
 
 function format_delta(delta, value)
-  local col = delta < 0 and G.C.RED or G.C.GREEN
-  if delta > 0 then
+  delta = to_big(delta)
+  local col = delta < to_big(0) and G.C.RED or G.C.GREEN
+  if delta > to_big(0) then
     delta = "+" .. delta
   end
   return tostring(delta), col
@@ -176,15 +185,23 @@ function sUpdateHandText(config, vals)
   local col = G.C.GREEN
 
   -- Update chips
-  if vals.chips and G.GAME.current_round.current_hand.chips ~= vals.chips then
+  if
+    vals.chips
+    and to_big(G.GAME.current_round.current_hand.chips) ~= to_big(vals.chips)
+  then
     local delta = (
-      type(vals.chips) == "number"
-      and type(G.GAME.current_round.current_hand.chips) == "number"
+      (type(vals.chips) == "number" or type(vals.chips) == "table")
+      and (
+        type(G.GAME.current_round.current_hand.chips) == "number"
+        or type(G.GAME.current_round.current_hand.chips) == "table"
+      )
     )
-        and (vals.chips - G.GAME.current_round.current_hand.chips)
-      or 0
+        and (to_big(vals.chips) - to_big(
+          G.GAME.current_round.current_hand.chips
+        ))
+      or to_big(0)
     delta, col = format_delta(delta, vals.chips)
-    G.GAME.current_round.current_hand.chips = vals.chips
+    G.GAME.current_round.current_hand.chips = to_big(vals.chips)
     G.hand_text_area.chips:update(0)
     if vals.StatusText then
       attention_text({
@@ -201,15 +218,21 @@ function sUpdateHandText(config, vals)
   end
 
   -- Update mult
-  if vals.mult and G.GAME.current_round.current_hand.mult ~= vals.mult then
+  if
+    vals.mult
+    and to_big(G.GAME.current_round.current_hand.mult) ~= to_big(vals.mult)
+  then
     local delta = (
-      type(vals.mult) == "number"
-      and type(G.GAME.current_round.current_hand.mult) == "number"
+      (type(vals.mult) == "number" or type(vals.mult) == "table")
+      and (
+        type(G.GAME.current_round.current_hand.mult) == "number"
+        or type(G.GAME.current_round.current_hand.mult) == "table"
+      )
     )
-        and (vals.mult - G.GAME.current_round.current_hand.mult)
-      or 0
+        and (to_big(vals.mult) - to_big(G.GAME.current_round.current_hand.mult))
+      or to_big(0)
     delta, col = format_delta(delta, vals.mult)
-    G.GAME.current_round.current_hand.mult = vals.mult
+    G.GAME.current_round.current_hand.mult = to_big(vals.mult)
     G.hand_text_area.mult:update(0)
     if vals.StatusText then
       attention_text({
@@ -240,14 +263,14 @@ function sUpdateHandText(config, vals)
   end
 
   -- Update chip total
-  if vals.chip_total then
-    G.GAME.current_round.current_hand.chip_total = vals.chip_total
+  if to_big(vals.chip_total) then
+    G.GAME.current_round.current_hand.chip_total = to_big(vals.chip_total)
     G.hand_text_area.chip_total.config.object:pulse(0.5)
   end
 
   -- Update level
   if
-    vals.level
+    to_big(vals.level)
     and G.GAME.current_round.current_hand.hand_level
       ~= " " .. localize("k_lvl") .. tostring(vals.level)
   then
@@ -257,9 +280,9 @@ function sUpdateHandText(config, vals)
       G.GAME.current_round.current_hand.hand_level = " "
         .. localize("k_lvl")
         .. tostring(vals.level)
-      if type(vals.level) == "number" then
+      if type(vals.level) == "number" or type(vals.level) == "table" then
         G.hand_text_area.hand_level.config.colour =
-          G.C.HAND_LEVELS[math.min(vals.level, 7)]
+          G.C.HAND_LEVELS[to_number(math.min(to_big(vals.level), to_big(7)))]
       else
         G.hand_text_area.hand_level.config.colour = G.C.HAND_LEVELS[1]
       end
@@ -300,15 +323,23 @@ function sUpdateHandTextDramatic(config, vals)
   local col = G.C.GREEN
 
   -- Update chips
-  if vals.chips and G.GAME.current_round.current_hand.chips ~= vals.chips then
+  if
+    vals.chips
+    and to_big(G.GAME.current_round.current_hand.chips) ~= to_big(vals.chips)
+  then
     local delta = (
-      type(vals.chips) == "number"
-      and type(G.GAME.current_round.current_hand.chips) == "number"
+      (type(vals.chips) == "number" or type(vals.chips) == "table")
+      and (
+        type(G.GAME.current_round.current_hand.chips) == "number"
+        or type(G.GAME.current_round.current_hand.chips) == "table"
+      )
     )
-        and (vals.chips - G.GAME.current_round.current_hand.chips)
-      or 0
+        and (to_big(vals.chips) - to_big(
+          G.GAME.current_round.current_hand.chips
+        ))
+      or to_big(0)
     delta, col = format_delta(delta, vals.chips)
-    G.GAME.current_round.current_hand.chips = vals.chips
+    G.GAME.current_round.current_hand.chips = to_big(vals.chips)
     G.hand_text_area.chips:update(0)
     if vals.StatusText then
       attention_text({
@@ -325,15 +356,21 @@ function sUpdateHandTextDramatic(config, vals)
   end
 
   -- Update mult
-  if vals.mult and G.GAME.current_round.current_hand.mult ~= vals.mult then
+  if
+    vals.mult
+    and to_big(G.GAME.current_round.current_hand.mult) ~= to_big(vals.mult)
+  then
     local delta = (
-      type(vals.mult) == "number"
-      and type(G.GAME.current_round.current_hand.mult) == "number"
+      (type(vals.mult) == "number" or type(vals.mult) == "table")
+      and (
+        type(G.GAME.current_round.current_hand.mult) == "number"
+        or type(G.GAME.current_round.current_hand.mult) == "table"
+      )
     )
-        and (vals.mult - G.GAME.current_round.current_hand.mult)
-      or 0
+        and (to_big(vals.mult) - to_big(G.GAME.current_round.current_hand.mult))
+      or to_big(0)
     delta, col = format_delta(delta, vals.mult)
-    G.GAME.current_round.current_hand.mult = vals.mult
+    G.GAME.current_round.current_hand.mult = to_big(vals.mult)
     G.hand_text_area.mult:update(0)
     if vals.StatusText then
       attention_text({
@@ -364,14 +401,14 @@ function sUpdateHandTextDramatic(config, vals)
   end
 
   -- Update chip total
-  if vals.chip_total then
-    G.GAME.current_round.current_hand.chip_total = vals.chip_total
+  if to_big(vals.chip_total) then
+    G.GAME.current_round.current_hand.chip_total = to_big(vals.chip_total)
     G.hand_text_area.chip_total.config.object:pulse(0.5)
   end
 
   -- Update level
   if
-    vals.level
+    to_big(vals.level)
     and G.GAME.current_round.current_hand.hand_level
       ~= " " .. localize("k_lvl") .. tostring(vals.level)
   then
@@ -381,9 +418,9 @@ function sUpdateHandTextDramatic(config, vals)
       G.GAME.current_round.current_hand.hand_level = " "
         .. localize("k_lvl")
         .. tostring(vals.level)
-      if type(vals.level) == "number" then
+      if type(vals.level) == "number" or type(vals.level) == "table" then
         G.hand_text_area.hand_level.config.colour =
-          G.C.HAND_LEVELS[math.min(vals.level, 7)]
+          G.C.HAND_LEVELS[to_number(math.min(to_big(vals.level), to_big(7)))]
       else
         G.hand_text_area.hand_level.config.colour = G.C.HAND_LEVELS[1]
       end
