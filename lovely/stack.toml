@@ -14,6 +14,23 @@ match_indent = true
 [[patches]]
 [patches.pattern]
 target = "card.lua"
+pattern = "message = localize{type = 'variable', key = 'a_xmult', vars = {G.P_CENTERS.v_observatory.config.extra}},"
+position = "at"
+payload = "message = localize{type = 'variable', key = 'a_xmult', vars = {number_format(G.P_CENTERS.v_observatory.config.extra^(self.ability.amt or 1))}},"
+match_indent = true
+
+# Patch smods' Observatory override, if patch above fails.
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/game_object.lua"]'
+pattern = "x_mult = card.ability.extra"
+position = "at"
+payload = "x_mult = card.ability.extra^(card.ability.amt or 1)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
 pattern = "local card = copy_card(pseudorandom_element(G.consumeables.cards, pseudoseed('perkeo')), nil)"
 position = "at"
 payload = """
@@ -33,12 +50,11 @@ for i = 1, #G.consumeables.cards do
     break
   end
 end
-local card = copy_card(center, nil)
+local card = copy_card(center, nil, nil, nil, true)
 card.ability.amt = 1
 """
 
 match_indent = true
-overwrite = true
 
 [[patches]]
 [patches.pattern]
