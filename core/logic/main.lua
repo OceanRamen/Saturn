@@ -3,6 +3,13 @@ local lovely = require("lovely")
 
 local is_dev = false
 
+to_big = to_big or function(x)
+  return x
+end
+to_number = to_number or function(x)
+  return x
+end
+
 Saturn = {
   -- Consts
   VERSION = "alpha-0.2.0-E",
