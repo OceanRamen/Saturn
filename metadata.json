@@ -7,6 +7,6 @@
 	"prefix": "saturn",
 	"main_file": "steamodded.lua",
 	"priority": 0,
-	"version": "ALPHA-0.2.0-E",
+	"version": "ALPHA-0.2.2-A",
 	"dependencies": []
 }
