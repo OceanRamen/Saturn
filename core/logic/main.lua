@@ -83,6 +83,10 @@ function Saturn.getDefaults()
   end
 end
 
+function Saturn.serialize_string(s)
+  return string.format("%q", s)
+end
+
 function Saturn.serialize_config(t, indent)
   indent = indent or ""
   local str = "{\n"
@@ -93,9 +97,9 @@ function Saturn.serialize_config(t, indent)
     elseif type(v) == "boolean" then
       str = str .. (v and "true" or "false")
     elseif type(v) == "string" then
-      str = str .. Handy.utils.serialize_string(v)
+      str = str .. Saturn.serialize_string(v)
     elseif type(v) == "table" then
-      str = str .. Handy.utils.serialize(v, indent .. "\t")
+      str = str .. Saturn.serialize_config(v, indent .. "\t")
     else
       -- not serializable
       str = str .. "nil"
@@ -104,21 +108,16 @@ function Saturn.serialize_config(t, indent)
   end
   for k, v in pairs(t) do
     if type(k) == "string" then
-      str = str
-        .. indent
-        .. "\t"
-        .. "["
-        .. Handy.utils.serialize_string(k)
-        .. "] = "
+      str = str .. indent .. "\t" .. "[" .. Saturn.serialize_string(k) .. "] = "
 
       if type(v) == "number" then
         str = str .. v
       elseif type(v) == "boolean" then
         str = str .. (v and "true" or "false")
       elseif type(v) == "string" then
-        str = str .. Handy.utils.serialize_string(v)
+        str = str .. Saturn.serialize_string(v)
       elseif type(v) == "table" then
-        str = str .. Handy.utils.serialize(v, indent .. "\t")
+        str = str .. Saturn.serialize_config(v, indent .. "\t")
       else
         -- not serializable
         str = str .. "nil"
