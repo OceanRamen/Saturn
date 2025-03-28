@@ -12,7 +12,7 @@ end
 
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.2-A",
+  VERSION = "alpha-0.2.2-B",
   PATH = "",
   DEFAULTS = {},
   -- Vars
@@ -83,34 +83,83 @@ function Saturn.getDefaults()
   end
 end
 
+function Saturn.serialize_config(t, indent)
+  indent = indent or ""
+  local str = "{\n"
+  for k, v in ipairs(t) do
+    str = str .. indent .. "\t"
+    if type(v) == "number" then
+      str = str .. v
+    elseif type(v) == "boolean" then
+      str = str .. (v and "true" or "false")
+    elseif type(v) == "string" then
+      str = str .. Handy.utils.serialize_string(v)
+    elseif type(v) == "table" then
+      str = str .. Handy.utils.serialize(v, indent .. "\t")
+    else
+      -- not serializable
+      str = str .. "nil"
+    end
+    str = str .. ",\n"
+  end
+  for k, v in pairs(t) do
+    if type(k) == "string" then
+      str = str
+        .. indent
+        .. "\t"
+        .. "["
+        .. Handy.utils.serialize_string(k)
+        .. "] = "
+
+      if type(v) == "number" then
+        str = str .. v
+      elseif type(v) == "boolean" then
+        str = str .. (v and "true" or "false")
+      elseif type(v) == "string" then
+        str = str .. Handy.utils.serialize_string(v)
+      elseif type(v) == "table" then
+        str = str .. Handy.utils.serialize(v, indent .. "\t")
+      else
+        -- not serializable
+        str = str .. "nil"
+      end
+      str = str .. ",\n"
+    end
+  end
+  str = str .. indent .. "}"
+  return str
+end
+
 -- Function to load the user configuration
 function Saturn.loadConfig()
-  -- Path to the user configuration file
-  local config_path = Saturn.PATH .. "/core/config/settings.lua"
-
-  -- Check if the user configuration file exists
-  if not nfs.getInfo(config_path) then
-    -- If the file does not exist, write a new configuration
-    Saturn.writeConfig()
+  local lovely_mod_config = get_compressed("config/Saturn.jkr")
+  if lovely_mod_config then
+    Saturn.config = STR_UNPACK(lovely_mod_config)
   else
-    -- Load the user configuration file
-    local config_loader = loadfile(config_path)
-
-    -- If the file is loaded successfully, execute it
-    if config_loader then
-      Saturn.config = config_loader() or Saturn.DEFAULTS
+    local config_path = Saturn.PATH .. "/core/config/settings.lua"
+    if not nfs.getInfo(config_path) then
+      Saturn.writeConfig()
     else
-      error("Failed to load config file.")
+      local config_loader = loadfile(config_path)
+      if config_loader then
+        Saturn.config = config_loader() or Saturn.DEFAULTS
+      else
+        Saturn.writeConfig()
+      end
     end
   end
 end
 
+-- Function to save the user configuration
 function Saturn.writeConfig()
-  local config_path = Saturn.PATH .. "/core/config/settings.lua"
-  local data = Saturn.config or Saturn.DEFAULTS or {}
-  local success, err = nfs.write(config_path, STR_PACK(data))
-  if not success then
-    error("Failed to write config file: " .. (err or "UNKNOWN ERROR"))
+  if SMODS and SMODS.save_mod_config and Saturn.current_mod then
+    Saturn.current_mod.config = Saturn.config or Saturn.DEFAULTS or {}
+    SMODS.save_mod_config(Saturn.current_mod)
+  else
+    love.filesystem.createDirectory("config")
+    local serialized = "return "
+      .. Saturn.serialize_config(Saturn.config or Saturn.DEFAULTS or {})
+    love.filesystem.write("config/Saturn.jkr", serialized)
   end
 end
 

@@ -4,6 +4,8 @@ local CAN_STACK = {
   "Planet",
   "Tarot",
   "Spectral",
+  "Energy",
+  "Item",
 }
 local CAN_MASS_USE = {
   "Planet",
