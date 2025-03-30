@@ -1,6 +1,7 @@
 -- Reference original functions
 local cardEvalStatusTextRef = card_eval_status_text
 local juiceCardRef = juice_card
+local cardJuiceUpRef = Card.juice_up
 local easeDollarsRef = ease_dollars
 local updateHandTextRef = update_hand_text
 local cardCalculateJokerRef = Card.calculate_joker
@@ -19,9 +20,7 @@ to_number = to_number or function(x)
 end
 
 local function isCalculating()
-  return Saturn.calculating_card
-    or Saturn.calculating_joker
-    or Saturn.calculating_score
+  return G.STATE_COMPLETE
 end
 
 local caph = CardArea.parse_highlighted
@@ -75,16 +74,25 @@ function Game:update(dt)
   end
 end
 
-function card_eval_status_text(card, eval_type, amt, percent, dir, extra)
-  if not Saturn.config.remove_animations then
-    cardEvalStatusTextRef(card, eval_type, amt, percent, dir, extra)
+function Card:juice_up(...)
+  if Saturn.config.remove_animations and isCalculating() then
+    return
   end
+  return cardJuiceUpRef(self, ...)
 end
 
-function juice_card(x)
-  if not Saturn.config.remove_animations then
-    juiceCardRef(x)
+function card_eval_status_text(...)
+  if Saturn.config.remove_animations and isCalculating() then
+    return
   end
+  cardEvalStatusTextRef(...)
+end
+
+function juice_card(...)
+  if Saturn.config.remove_animations and isCalculating() then
+    return
+  end
+  juiceCardRef(...)
 end
 
 function ease_dollars(mod, instant)
