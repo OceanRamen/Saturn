@@ -12,7 +12,7 @@ end
 
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.2-B",
+  VERSION = "alpha-0.2.2-C",
   PATH = "",
   DEFAULTS = {},
   -- Vars
