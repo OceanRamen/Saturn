@@ -10,9 +10,13 @@ to_number = to_number or function(x)
   return x
 end
 
+function isCalculating()
+  return G.STATE_COMPLETE
+end
+
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.2-C",
+  VERSION = "alpha-0.2.2-D",
   PATH = "",
   DEFAULTS = {},
   -- Vars

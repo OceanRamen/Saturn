@@ -104,7 +104,7 @@ function ease_dollars(mod, instant)
     Saturn.dollars_add_amount = to_big(Saturn.dollars_add_amount) + mod
     G.GAME.dollars = to_big(G.GAME.dollars) + mod
     check_and_set_high_score("most_money", G.GAME.dollars)
-    check_for_unlock({ type = "money" })
+    -- check_for_unlock({ type = "money" })
     Saturn.dollars_update = true
   else
     easeDollarsRef(mod, instant)
