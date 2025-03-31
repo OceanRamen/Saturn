@@ -16,6 +16,7 @@ return {
   -- Rem-Animations
   remove_animations = false,
   enable_dramatic_final_hand = false,
+  enable_animation_skip_pause = false,
 
   -- stacking
   enable_stacking = false,

@@ -109,10 +109,10 @@ Saturn.ui.opts.box = function()
           master = true,
         },
         {
-          id = "enable_dramatic_final_hand",
+          id = "enable_animation_skip_pause",
           default = false,
-          name = "Enable dramatic final hand",
-          desc = "Gives you time to shuffle Jokers during the final hand.",
+          name = "Pause after scoring",
+          desc = "Gives you time to shuffle Jokers before scoring animation end.",
           master = true,
         },
       },

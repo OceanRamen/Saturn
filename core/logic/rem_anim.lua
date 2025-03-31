@@ -146,6 +146,18 @@ G.FUNCS.evaluate_play = function(...)
   Saturn.calculating_score = true
   local ret = evaluatePlayRef(...)
   Saturn.calculating_score = false
+
+  if Saturn.config.enable_animation_skip_pause then
+    G.E_MANAGER:add_event(Event({
+      timer = "REAL",
+      trigger = "after",
+      delay = 3,
+      func = function()
+        return true
+      end,
+    }))
+  end
+
   return ret
 end
 
