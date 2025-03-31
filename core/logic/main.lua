@@ -22,6 +22,9 @@ Saturn = {
   calculating_joker = false,
   calculating_score = false,
   using_consumeable = false,
+
+  prevent_animation_skip = false,
+
   dollars_add_amount = to_big(0),
   dollars_update = false,
   -- stacking
@@ -181,15 +184,15 @@ function Saturn.loadLogic()
 end
 
 function Saturn.should_skip_animation(options)
-  if not Saturn.config.remove_animations then
+  if not Saturn.config.remove_animations or Saturn.prevent_animation_skip then
     return false
   end
   if options then
     if options.scoring then
-      return G.STATE_COMPLETE and Saturn.calculating_score
+      return Saturn.calculating_score
     end
   end
-  return G.STATE_COMPLETE or G.STATE == G.STATES.HAND_PLAYED
+  return true
 end
 
 function Saturn.initialize()

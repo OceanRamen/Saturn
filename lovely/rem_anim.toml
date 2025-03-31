@@ -51,6 +51,16 @@ end
 match_indent = true
 overwrite = false
 
+[[patches]]
+[patches.pattern]
+target = "functions/common_events.lua"
+pattern = "func = (function() if eval_func(card) then if not first or first then card:juice_up(0.1, 0.1) end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+position = "at"
+payload = "func = (function() if eval_func(card) then if not first or first then Saturn.prevent_animation_skip = true; card:juice_up(0.1, 0.1); Saturn.prevent_animation_skip = false; end;juice_card_until(card, eval_func, nil, 0.8) end return true end)"
+match_indent = true
+overwrite = false
+
+
 # Juice Issues Patch from https://github.com/MathIsFun0/Talisman/blob/main/lovely.toml
 [[patches]]
 [patches.pattern]
