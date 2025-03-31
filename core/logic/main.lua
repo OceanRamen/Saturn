@@ -10,13 +10,9 @@ to_number = to_number or function(x)
   return x
 end
 
-function isCalculating()
-  return G.STATE_COMPLETE
-end
-
 Saturn = {
   -- Consts
-  VERSION = "alpha-0.2.2-D",
+  VERSION = "alpha-0.2.2-E",
   PATH = "",
   DEFAULTS = {},
   -- Vars
@@ -182,6 +178,18 @@ function Saturn.loadLogic()
     assert(load(nfs.read(Saturn.PATH .. "/Testing/ui_tests.lua")))()
     assert(load(nfs.read(Saturn.PATH .. "/Testing/stat_tests.lua")))()
   end
+end
+
+function Saturn.should_skip_animation(options)
+  if not Saturn.config.remove_animations then
+    return false
+  end
+  if options then
+    if options.scoring then
+      return G.STATE_COMPLETE and Saturn.calculating_score
+    end
+  end
+  return G.STATE_COMPLETE or G.STATE == G.STATES.HAND_PLAYED
 end
 
 function Saturn.initialize()
