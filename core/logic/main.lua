@@ -165,6 +165,8 @@ function Saturn.writeConfig()
   end
 end
 
+function Saturn.hide_played_cards() end
+
 function Saturn.loadLogic()
   -- Utils
   assert(load(nfs.read(Saturn.PATH .. "/core/utils/table_utils.lua")))()
