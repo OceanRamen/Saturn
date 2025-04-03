@@ -85,6 +85,11 @@ end
 local cardEvalStatusTextRef = card_eval_status_text
 function card_eval_status_text(...)
   if Saturn.should_skip_animation() then
+    local args = { ... }
+    local extra = args[6]
+    if extra and extra.playing_cards_created then
+      playing_card_joker_effects(extra.playing_cards_created)
+    end
     return
   end
   return cardEvalStatusTextRef(...)
