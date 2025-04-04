@@ -4,40 +4,71 @@ dump_lua = true
 priority = 0
 
 [[patches]]
-[patches.copy]
-target = "main.lua"
-position = "append"
-sources = ["core/core.lua"]
-
-[[patches]]
 [patches.module]
 source = 'nativefs.lua'
 before = 'main.lua'
 name = 'nativefs'
 
 [[patches]]
-[patches.pattern]
-target = "game.lua"
-pattern = "self:load_profile(G.SETTINGS.profile or 1)"
-position = "after"
-payload = "S:start_up()"
-match_indent = true
-overwrite = false
+[patches.copy]
+target = "main.lua"
+position = "append"
+sources = [
+  "core/logic/main.lua",
+]
+
 
 [[patches]]
 [patches.pattern]
-target = "game.lua"
-pattern = "timer_checkpoint('e_manager', 'update')"
+target = "functions/UI_definitions.lua"
+pattern = "local settings = UIBox_button({button = 'settings', label = {localize('b_settings')}, minw = 5, focus_args = {snap_to = true}})"
 position = "after"
-payload = "S:update(dt)"
+payload = "local saturn_settings = UIBox_button_custom({button = 'saturn_config', label = {'Saturn'}, colour = darken(G.C.BLUE, 0.25), shadow = true, text_colour = G.C.ORANGE, minw = 5, focus_args = {snap_to = true}})"
 match_indent = true
-overwrite = false
 
-[[patches]] # key inputs
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "local t = create_UIBox_generic_options({ contents = {"
+position = "after"
+payload = "saturn_settings,"
+match_indent = true
+
+[[patches]]
 [patches.pattern]
 target = "engine/controller.lua"
-pattern = "if self.text_input_hook then"
+pattern = "self.cursor_down = {T = {x=0, y=0}, target = nil, time = 0, handled = true}"
 position = "before"
-payload = "S:key_press_update(key)"
+payload = """
+  self.r_cursor_down =
+    { T = { x = 0, y = 0 }, target = nil, time = 0, handled = true }
+  self.r_cursor_up =
+    { T = { x = 0, y = 0 }, target = nil, time = 0.1, handled = true }
+  self.is_r_cursor_down = false
+"""
 match_indent = true
-overwrite = false
+
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "create_option_cycle({label = localize('b_set_gamespeed'),scale = 0.8, options = {0.5, 1, 2, 4}, opt_callback = 'change_gamespeed', current_option = (G.SETTINGS.GAMESPEED == 0.5 and 1 or G.SETTINGS.GAMESPEED == 4 and 4 or G.SETTINGS.GAMESPEED + 1)}),"
+position = "at"
+payload = """
+create_option_cycle({
+      label = localize("b_set_gamespeed"),
+      scale = 0.8,
+      options = { 0.5, 1, 2, 4, 8, 16 },
+      opt_callback = "change_gamespeed",
+      current_option = (
+        G.SETTINGS.GAMESPEED == 0.5 and 1
+        or G.SETTINGS.GAMESPEED == 1 and 2
+        or G.SETTINGS.GAMESPEED == 2 and 3
+        or G.SETTINGS.GAMESPEED == 4 and 4
+        or G.SETTINGS.GAMESPEED == 8 and 5
+        or G.SETTINGS.GAMESPEED == 16 and 6
+        or 4
+      ),
+    }),
+"""
+match_indent = true

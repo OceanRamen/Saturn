@@ -1,0 +1,22 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "functions/UI_definitions.lua"
+pattern = "if wheel_flipped > 0 then flip_col = mix_colours(G.C.FILTER, G.C.WHITE,0.7) end"
+position = "after"
+payload = "Saturn.hide_played_cards(deck_tables, unplayed_only)"
+match_indent = true
+overwrite = false
+
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/overrides.lua"]'
+pattern = "if wheel_flipped > 0 then flip_col = mix_colours(G.C.FILTER, G.C.WHITE, 0.7) end"
+position = "after"
+payload = "Saturn.hide_played_cards(deck_tables, unplayed_only)"
+match_indent = true
+overwrite = false

@@ -1,0 +1,70 @@
+[manifest]
+version = "1.0.0"
+dump_lua = true
+priority = 0
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra"
+position = "at"
+payload = "Xmult_mod = G.P_CENTERS.v_observatory.config.extra^(self.ability.amt or 1)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "message = localize{type = 'variable', key = 'a_xmult', vars = {G.P_CENTERS.v_observatory.config.extra}},"
+position = "at"
+payload = "message = localize{type = 'variable', key = 'a_xmult', vars = {number_format(G.P_CENTERS.v_observatory.config.extra^(self.ability.amt or 1))}},"
+match_indent = true
+
+# Patch smods' Observatory override, if patch above fails.
+[[patches]]
+[patches.pattern]
+target = '=[SMODS _ "src/game_object.lua"]'
+pattern = "x_mult = card.ability.extra"
+position = "at"
+payload = "x_mult = card.ability.extra^(card.ability.amt or 1)"
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "local card = copy_card(pseudorandom_element(G.consumeables.cards, pseudoseed('perkeo')), nil)"
+position = "at"
+payload = """
+local total = 0
+local checked = 0
+local center = nil
+for i = 1, #G.consumeables.cards do
+  local amt = G.consumeables.cards[i]:getAmt()
+  total = total + amt
+end
+local poll = pseudorandom(pseudoseed('perkeo'))*total
+for i = 1, #G.consumeables.cards do
+  local amt = G.consumeables.cards[i]:getAmt()
+  checked = checked + amt
+  if checked >= poll then
+    center = G.consumeables.cards[i]
+    break
+  end
+end
+local card = copy_card(center, nil, nil, nil, true)
+card.ability.amt = 1
+"""
+
+match_indent = true
+
+[[patches]]
+[patches.pattern]
+target = "card.lua"
+pattern = "if self.children.use_button and self.highlighted then self.children.use_button:draw() end"
+position = "before"
+payload = """
+if self.children.stack_actions_button and self.highlighted then
+  self.children.stack_actions_button:draw()
+end
+"""
+overwrite = false
+match_indent = true
