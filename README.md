@@ -1,6 +1,6 @@
 # Saturn - Quality of life mod for Balatro
 
-**Saturn** is a lovely mod for [Balatro](https://www.playbalatro.com/) which introduces some Quality of Life features for better game expirience on endless mode.
+**Saturn** is a [Lovely](https://github.com/ethangreen-dev/lovely-injector) mod for [Balatro](https://www.playbalatro.com/) which introduces some Quality of Life features for better game experience on endless mode.
 
 ## Features
 
@@ -19,7 +19,7 @@
 
 ## Installation
 
-1. Install [lovely](https://github.com/ethangreen-dev/lovely-injector) by following instructions in repository page. Make sure your antivirus is not removing it;
+1. Install [Lovely](https://github.com/ethangreen-dev/lovely-injector) by following instructions in repository page. Make sure your antivirus is not removing it;
 2. Download [latest release](https://github.com/OceanRamen/Saturn/releases/latest) of mod by selecting `Source code (zip)` option;
 3. Put a folder from archive into game's `Mods` folder (can be found in `%appdata%/Balatro/Mods`). Make sure there's no "folder with folder with mod" situation;
 4. Start a game. If all done correctly, new button should appear in options menu;
